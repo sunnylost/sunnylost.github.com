@@ -669,17 +669,16 @@ _.size({one : 1, two : 2, three : 3});
 
       <p>
         <i>
-          Note: All array functions will also work on the <b>arguments</b> object.
-          However, Underscore functions are not designed to work on "sparse" arrays.
+		  注意： 所有数组函数同样适用于 <b>arguments</b> 对象。
+		  但是，Underscore 的函数并没有设计成工作在「稀疏」数组上。
         </i>
       </p>
 
       <p id="first">
         <b class="header">first</b><code>_.first(array, [n])</code>
-        <span class="alias">Alias: <b>head</b>, <b>take</b></span>
+        <span class="alias">别名： <b>head</b>, <b>take</b></span>
         <br />
-        Returns the first element of an <b>array</b>. Passing <b>n</b> will
-        return the first <b>n</b> elements of the array.
+		返回 <b>array</b> 的第一个元素。传入 <b>n</b> 会返回前 <b>n</b> 个元素。
       </p>
       <pre>
 _.first([5, 4, 3, 2, 1]);
@@ -689,9 +688,8 @@ _.first([5, 4, 3, 2, 1]);
       <p id="initial">
         <b class="header">initial</b><code>_.initial(array, [n])</code>
         <br />
-        Returns everything but the last entry of the array. Especially useful on
-        the arguments object. Pass <b>n</b> to exclude the last <b>n</b> elements
-        from the result.
+		返回数组中除最后一个元素外的所有元素。对操作 <b>arguments</b> 对象特别实用。
+		传入 <b>n</b> 表示结果中排除后 <b>n</b> 个元素。
       </p>
       <pre>
 _.initial([5, 4, 3, 2, 1]);
@@ -701,6 +699,7 @@ _.initial([5, 4, 3, 2, 1]);
       <p id="last">
         <b class="header">last</b><code>_.last(array, [n])</code>
         <br />
+		返回 <b>array</b> 中的最后一个元素。
         Returns the last element of an <b>array</b>. Passing <b>n</b> will return
         the last <b>n</b> elements of the array.
       </p>
