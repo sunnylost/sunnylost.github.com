@@ -610,7 +610,7 @@ _.sortBy([1, 2, 3, 4, 5, 6], function(num){ return Math.sin(num); });
       <p id="groupBy">
         <b class="header">groupBy</b><code>_.groupBy(list, iterator, [context])</code>
         <br />
-		拆分集合，按照对每个值运行 <b>iterator</b> 后的结果来分组。
+		拆分 <b>list</b> ，按照对每个值运行 <b>iterator</b> 后的结果来分组。
 		如果 <b>iterator</b> 是字符串而不是函数，则按照每个值上名为 <b>iterator</b> 的属性来分组。
       </p>
       <pre>
@@ -699,9 +699,8 @@ _.initial([5, 4, 3, 2, 1]);
       <p id="last">
         <b class="header">last</b><code>_.last(array, [n])</code>
         <br />
-		返回 <b>array</b> 中的最后一个元素。
-        Returns the last element of an <b>array</b>. Passing <b>n</b> will return
-        the last <b>n</b> elements of the array.
+		 返回 <b>array</b> 中的最后一个元素。
+        传入 <b>n</b> 会返回数组的后 <b>n</b> 个元素。
       </p>
       <pre>
 _.last([5, 4, 3, 2, 1]);
@@ -710,10 +709,10 @@ _.last([5, 4, 3, 2, 1]);
 
       <p id="rest">
         <b class="header">rest</b><code>_.rest(array, [index])</code>
-        <span class="alias">Alias: <b>tail, drop</b></span>
+        <span class="alias">别名： <b>tail， drop</b></span>
         <br />
-        Returns the <b>rest</b> of the elements in an array. Pass an <b>index</b>
-        to return the values of the array from that index onward.
+        返回数组中 <b>剩余的</b> 元素。
+        传入 <b>index</b> 会返回数组中包含从该索引开始的所有元素。
       </p>
       <pre>
 _.rest([5, 4, 3, 2, 1]);
@@ -723,9 +722,9 @@ _.rest([5, 4, 3, 2, 1]);
       <p id="compact">
         <b class="header">compact</b><code>_.compact(array)</code>
         <br />
-        Returns a copy of the <b>array</b> with all falsy values removed.
-        In JavaScript, <i>false</i>, <i>null</i>, <i>0</i>, <i>""</i>,
-        <i>undefined</i> and <i>NaN</i> are all falsy.
+        返回不包含任何假值的 <b>array</b> 副本。
+        在 JavaScript 中，<i>false</i>， <i>null</i>， <i>0</i>， <i>""</i>，
+        <i>undefined</i> 和 <i>NaN</i> 都是假值。
       </p>
       <pre>
 _.compact([0, 1, false, 2, '', 3]);
@@ -735,8 +734,8 @@ _.compact([0, 1, false, 2, '', 3]);
       <p id="flatten">
         <b class="header">flatten</b><code>_.flatten(array, [shallow])</code>
         <br />
-        Flattens a nested <b>array</b> (the nesting can be to any depth). If you
-        pass <b>shallow</b>, the array will only be flattened a single level.
+        平整嵌套 <b>array</b> (可以是任意嵌套深度)。
+        如果你传入 <b>shallow</b>，那么数组只会被平整一层。
       </p>
       <pre>
 _.flatten([1, [2], [3, [[4]]]]);
@@ -749,8 +748,7 @@ _.flatten([1, [2], [3, [[4]]]], true);
       <p id="without">
         <b class="header">without</b><code>_.without(array, [*values])</code>
         <br />
-        Returns a copy of the <b>array</b> with all instances of the <b>values</b>
-        removed.
+        返回一个不包括全部 <b>values</b> 实例的 <b>array</b> 副本。
       </p>
       <pre>
 _.without([1, 2, 1, 0, 3, 1, 4], 0, 1);
@@ -760,8 +758,7 @@ _.without([1, 2, 1, 0, 3, 1, 4], 0, 1);
       <p id="union">
         <b class="header">union</b><code>_.union(*arrays)</code>
         <br />
-        Computes the union of the passed-in <b>arrays</b>: the list of unique items,
-        in order, that are present in one or more of the <b>arrays</b>.
+        计算 <b>arrays</b> 的并集：一列唯一的项，按顺序排列，出现在一个或多个 <b>arrays</b> 中。
       </p>
       <pre>
 _.union([1, 2, 3], [101, 2, 1, 10], [2, 1]);
@@ -771,8 +768,8 @@ _.union([1, 2, 3], [101, 2, 1, 10], [2, 1]);
       <p id="intersection">
         <b class="header">intersection</b><code>_.intersection(*arrays)</code>
         <br />
-        Computes the list of values that are the intersection of all the <b>arrays</b>.
-        Each value in the result is present in each of the <b>arrays</b>.
+        计算出所有 <b>arrays</b> 的交集。
+        结果中的每一个值都存在于每个 <b>arrays</b> 中。
       </p>
       <pre>
 _.intersection([1, 2, 3], [101, 2, 1, 10], [2, 1]);
@@ -782,8 +779,7 @@ _.intersection([1, 2, 3], [101, 2, 1, 10], [2, 1]);
       <p id="difference">
         <b class="header">difference</b><code>_.difference(array, *others)</code>
         <br />
-        Similar to <b>without</b>, but returns the values from <b>array</b> that
-        are not present in the <b>other</b> arrays.
+        与 <b>without</b> 类似，但返回那些仅存在于 <b>array</b> 中而不存在于  <b>other</b> 数组中的值。
       </p>
       <pre>
 _.difference([1, 2, 3, 4, 5], [5, 2, 10]);
@@ -792,13 +788,11 @@ _.difference([1, 2, 3, 4, 5], [5, 2, 10]);
 
       <p id="uniq">
         <b class="header">uniq</b><code>_.uniq(array, [isSorted], [iterator])</code>
-        <span class="alias">Alias: <b>unique</b></span>
+        <span class="alias">别名： <b>unique</b></span>
         <br />
-        Produces a duplicate-free version of the <b>array</b>, using <i>===</i> to test
-        object equality. If you know in advance that the <b>array</b> is sorted,
-        passing <i>true</i> for <b>isSorted</b> will run a much faster algorithm.
-        If you want to compute unique items based on a transformation, pass an
-        <b>iterator</b> function.
+        生成出 <b>array</b> 的无重复版本，使用 <i>===</i> 来检测相等性。
+        如果你能确认 <b>array</b> 是经过排序的，为 <b>isSorted</b> 传入 <i>true</i> 将会使用更快的算法。 
+        如果你希望基于转换来计算唯一值，传入 <b>iterator</b> 函数。
       </p>
       <pre>
 _.uniq([1, 2, 1, 3, 1, 4]);
@@ -808,11 +802,9 @@ _.uniq([1, 2, 1, 3, 1, 4]);
       <p id="zip">
         <b class="header">zip</b><code>_.zip(*arrays)</code>
         <br />
-        Merges together the values of each of the <b>arrays</b> with the
-        values at the corresponding position. Useful when you have separate
-        data sources that are coordinated through matching array indexes.
-        If you're working with a matrix of nested arrays, <b>zip.apply</b>
-        can transpose the matrix in a similar fashion.
+        将 <b>arrays</b> 中相同位置的值合并。
+        当你拥有根据匹配的索引值来关联的单独数据源时，该方法会十分有用。
+        如果要操作一个嵌套数组的矩阵，<b>zip.apply</b> 会以同样的形式进行矩阵变换。
       </p>
       <pre>
 _.zip(['moe', 'larry', 'curly'], [30, 40, 50], [true, false, false]);
@@ -822,8 +814,8 @@ _.zip(['moe', 'larry', 'curly'], [30, 40, 50], [true, false, false]);
       <p id="object">
         <b class="header">object</b><code>_.object(list, [values])</code>
         <br />
-        Converts arrays into objects. Pass either a single list of
-        <tt>[key, value]</tt> pairs, or a list of keys, and a list of values.
+        将数组转成对象。
+        要么传入一个单独的 <tt>[key, value]</tt> 对列表，要么传入一个键列表与一个值列表。
       </p>
       <pre>
 _.object(['moe', 'larry', 'curly'], [30, 40, 50]);
@@ -836,13 +828,10 @@ _.object([['moe', 30], ['larry', 40], ['curly', 50]]);
       <p id="indexOf">
         <b class="header">indexOf</b><code>_.indexOf(array, value, [isSorted])</code>
         <br />
-        Returns the index at which <b>value</b> can be found in the <b>array</b>,
-        or <i>-1</i> if value is not present in the <b>array</b>. Uses the native
-        <b>indexOf</b> function unless it's missing. If you're working with a
-        large array, and you know that the array is already sorted, pass <tt>true</tt>
-        for <b>isSorted</b> to use a faster binary search ... or, pass a number as
-        the third argument in order to look for the first matching value in the
-        array after the given index.
+        返回 <b>value</b> 在 <b>array</b> 中的索引，若不存在则返回 <i>-1</i> 。
+        若存在原生 <b>indexOf</b> 函数则使用它。
+        如果操作的数组很大，并且你确认它已经排好顺序，为 <b>isSorted</b> 传入 <tt>true</tt> 来使用更快的二分法查找 ...
+        或者传入一个数字作为第三个参数，表明将从数组的该索引之后查找第一个匹配值。
       </p>
       <pre>
 _.indexOf([1, 2, 3], 2);
@@ -852,10 +841,8 @@ _.indexOf([1, 2, 3], 2);
       <p id="lastIndexOf">
         <b class="header">lastIndexOf</b><code>_.lastIndexOf(array, value, [fromIndex])</code>
         <br />
-        Returns the index of the last occurrence of <b>value</b> in the <b>array</b>,
-        or <i>-1</i> if value is not present. Uses the native <b>lastIndexOf</b>
-        function if possible. Pass <b>fromIndex</b> to start your search at a
-        given index.
+        返回 <b>array</b> 中最后出现的 <b>value</b> 的索引，若值不存在则返回 <i>-1</i> 。
+        如果可能的话使用原生的 <b>lastIndexOf</b>。传入 <b>fromIndex</b> 表示从给定索引开始查找。
       </p>
       <pre>
 _.lastIndexOf([1, 2, 3, 1, 2, 3], 2);
@@ -865,10 +852,8 @@ _.lastIndexOf([1, 2, 3, 1, 2, 3], 2);
       <p id="sortedIndex">
         <b class="header">sortedIndex</b><code>_.sortedIndex(list, value, [iterator], [context])</code>
         <br />
-        Uses a binary search to determine the index at which the <b>value</b>
-        <i>should</i> be inserted into the <b>list</b> in order to maintain the <b>list</b>'s
-        sorted order. If an <b>iterator</b> is passed, it will be used to compute
-        the sort ranking of each value, including the <b>value</b> you pass.
+        为了保持 <b>list</b> 的顺序，使用二分法查找来确定 <b>value</b> 插入进 <b>list</b> 的索引值。
+        若传入了 <b>iterator</b>，它会计算出每个值的顺序排名，当然也包括你传入的 <b>value</b>。
       </p>
       <pre>
 _.sortedIndex([10, 20, 30, 40, 50], 35);
@@ -878,11 +863,9 @@ _.sortedIndex([10, 20, 30, 40, 50], 35);
       <p id="range">
         <b class="header">range</b><code>_.range([start], stop, [step])</code>
         <br />
-        A function to create flexibly-numbered lists of integers, handy for
-        <tt>each</tt> and <tt>map</tt> loops. <b>start</b>, if omitted, defaults
-        to <i>0</i>; <b>step</b> defaults to <i>1</i>. Returns a list of integers
-        from <b>start</b> to <b>stop</b>, incremented (or decremented) by <b>step</b>,
-        exclusive.
+        用来创建编号灵活的整数列表，便于 <tt>each</tt> 与 <tt>map</tt> 循环。
+        若省略 <b>start</b> 则默认为 <i>0</i>；<b>step</b> 默认为 <i>1</i>。
+        返回一个整数列表，其值从 <b>start</b> 按照 <b>step</b> 增加(或减少)到 <b>stop</b>，但并不包括 <b>stop</b>。
       </p>
       <pre>
 _.range(10);
