@@ -880,15 +880,14 @@ _.range(0);
 =&gt; []
 </pre>
 
-      <h2 id="functions">Function (uh, ahem) Functions</h2>
+      <h2 id="functions">函数(呃，咳咳)函数</h2>
 
       <p id="bind">
         <b class="header">bind</b><code>_.bind(function, object, [*arguments])</code>
         <br />
-        Bind a <b>function</b> to an <b>object</b>, meaning that whenever
-        the function is called, the value of <i>this</i> will be the <b>object</b>.
-        Optionally, pass <b>arguments</b> to the <b>function</b> to pre-fill them,
-        also known as <b>partial application</b>.
+		将 <b>function</b> 绑定到 <b>object</b> 上，
+		这意味着无论何时去调用 <b>function</b> ，它的 <i>this</i> 值始终是 <b>object</b>。
+		你可以选择传入 <b>arguments</b> 来预先填充 <b>function</b> 的参数列表，这种方式称为 <b>偏函数用法( partial application )</b>。
       </p>
       <pre>
 var func = function(greeting){ return greeting + ': ' + this.name };
@@ -900,11 +899,10 @@ func();
       <p id="bindAll">
         <b class="header">bindAll</b><code>_.bindAll(object, [*methodNames])</code>
         <br />
-        Binds a number of methods on the <b>object</b>, specified by
-        <b>methodNames</b>, to be run in the context of that object whenever they
-        are invoked. Very handy for binding functions that are going to be used
-        as event handlers, which would otherwise be invoked with a fairly useless
-        <i>this</i>. <b>methodNames</b> are required.
+		将 <b>methodNames</b> 指定的多个方法绑定给 <b>object</b>，
+		无论何时调用这些方法，它们都会运行在 <b>object</b> 的上下文内。
+		用于绑定那些作为事件处理的函数会非常方便，因为通常来说，这些函数的 <i>this</i> 都是没有用的。
+		<b>methodNames</b> 参数不可省略。
       </p>
       <pre>
 var buttonView = {
@@ -920,9 +918,8 @@ jQuery('#underscore_button').bind('click', buttonView.onClick);
       <p id="partial">
         <b class="header">partial</b><code>_.partial(function, [*arguments])</code>
         <br />
-        Partially apply a function by filling in any number of its arguments,
-        <i>without</i> changing its dynamic <tt>this</tt> value. A close cousin
-        of <a href="#bind">bind</a>.
+		通过填写任意数量的参数来部分应用一个  <b>function</b>， <i>不会</i> 改变它的动态  <tt>this</tt> 值。
+		<a href="#bind">bind</a> 函数的近亲。
       </p>
       <pre>
 var add = function(a, b) { return a + b; };
@@ -934,12 +931,10 @@ add5(10);
       <p id="memoize">
         <b class="header">memoize</b><code>_.memoize(function, [hashFunction])</code>
         <br />
-        Memoizes a given <b>function</b> by caching the computed result. Useful
-        for speeding up slow-running computations. If passed an optional
-        <b>hashFunction</b>, it will be used to compute the hash key for storing
-        the result, based on the arguments to the original function. The default
-        <b>hashFunction</b> just uses the first argument to the memoized function
-        as the key.
+		通过缓存计算值来记忆给定的 <b>function</b> 。
+		适用于为运行缓慢的计算提速。
+		若传入可选参数 <b>hashFunction</b>，它将以原始函数的参数为基础，计算出 hash key 来保存结果。
+		默认的 <b>hashFunction</b> 将使用 <b>function</b> 的第一个参数作为 key。
       </p>
       <pre>
 var fibonacci = _.memoize(function(n) {
@@ -950,24 +945,22 @@ var fibonacci = _.memoize(function(n) {
       <p id="delay">
         <b class="header">delay</b><code>_.delay(function, wait, [*arguments])</code>
         <br />
-        Much like <b>setTimeout</b>, invokes <b>function</b> after <b>wait</b>
-        milliseconds. If you pass the optional <b>arguments</b>, they will be
-        forwarded on to the <b>function</b> when it is invoked.
+		与 <b>setTimeout</b> 类似，会在 <b>wait</b> 毫秒后调用 <b>function</b>。
+		如果传入额外 <b>arguments</b>，它们将在调用 <b>function</b> 时传给函数。
       </p>
       <pre>
 var log = _.bind(console.log, console);
 _.delay(log, 1000, 'logged later');
-=&gt; 'logged later' // Appears after one second.
+=&gt; 'logged later' // 一秒后出现。
 </pre>
 
       <p id="defer">
         <b class="header">defer</b><code>_.defer(function, [*arguments])</code>
         <br />
-        Defers invoking the <b>function</b> until the current call stack has cleared,
-        similar to using <b>setTimeout</b> with a delay of 0. Useful for performing
-        expensive computations or HTML rendering in chunks without blocking the UI thread
-        from updating. If you pass the optional <b>arguments</b>, they will be
-        forwarded on to the <b>function</b> when it is invoked.
+		延迟调用 <b>function</b> 直到当前调用栈清空，类似于使用延迟为0的 <b>setTimeout</b>。
+        Useful for performing expensive computations or HTML rendering in chunks without blocking the UI thread
+        from updating. 
+		额外传入的 <b>arguments</b> 会在 <b>function</b> 调用时传给它。
       </p>
       <pre>
 _.defer(function(){ alert('deferred'); });
@@ -977,11 +970,9 @@ _.defer(function(){ alert('deferred'); });
       <p id="throttle">
         <b class="header">throttle</b><code>_.throttle(function, wait)</code>
         <br />
-        Creates and returns a new, throttled version of the passed function,
-        that, when invoked repeatedly, will only actually call the original function
-        at most once per every <b>wait</b>
-        milliseconds. Useful for rate-limiting events that occur faster than you
-        can keep up with.
+		创建并返回一个新的、节流版本的 <b>function</b>，当重复调用新生成函数时，
+		每 <b>wait</b> 毫秒内最多执行一次原函数。
+		适用于限制触发频率过高的事件。
       </p>
       <pre>
 var throttled = _.throttle(updatePosition, 100);
@@ -991,21 +982,14 @@ $(window).scroll(throttled);
       <p id="debounce">
         <b class="header">debounce</b><code>_.debounce(function, wait, [immediate])</code>
         <br />
-        Creates and returns a new debounced version of the passed function that
-        will postpone its execution until after
-        <b>wait</b> milliseconds have elapsed since the last time it
-        was invoked. Useful for implementing behavior that should only happen
-        <i>after</i> the input has stopped arriving. For example: rendering a
-        preview of a Markdown comment, recalculating a layout after the window
-        has stopped being resized, and so on.
+		创建并返回一个防反弹版本的 <b>function</b>，它将延迟执行直到上次调用后过去了 <b>wait</b> 毫秒。
+		适用于实现输入停止 <i>后</i> 才发生的行为。比如：Markdown 留言的预览渲染，
+		停止调整窗口大小后去重新计算布局，等等。
       </p>
 
       <p>
-        Pass <tt>true</tt> for the <b>immediate</b> parameter to cause
-        <b>debounce</b> to trigger the function on the leading instead of the
-        trailing edge of the <b>wait</b> interval. Useful in circumstances like
-        preventing accidental double-clicks on a "submit" button from firing a
-        second time.
+		为 <b>immediate</b> 参数传入 <tt>true</tt> 会导致 <b>debounce</b> 在 <b>wait</b> 间隔之前而不是之后触发函数。
+		适用情况如：防止意外双击「submit」按钮导致重复提交。
       </p>
 
       <pre>
@@ -1016,41 +1000,36 @@ $(window).resize(lazyLayout);
       <p id="once">
         <b class="header">once</b><code>_.once(function)</code>
         <br />
-        Creates a version of the function that can only be called one time.
-        Repeated calls to the modified function will have no effect, returning
-        the value from the original call. Useful for initialization functions,
-        instead of having to set a boolean flag and then check it later.
+		创建一个只能被调用一次的 <b>function</b>。
+		重复调用修改后的函数将没有任何效果，始终返回第一次调用的结果。
+		适用于初始化函数，代替使用一个 boolean 标志以及后续对它的判断。
       </p>
       <pre>
 var initialize = _.once(createApplication);
 initialize();
 initialize();
-// Application is only created once.
+// Application 只会创建一次。
 </pre>
 
       <p id="after">
         <b class="header">after</b><code>_.after(count, function)</code>
         <br />
-        Creates a version of the function that will only be run after first
-        being called <b>count</b> times. Useful for grouping asynchronous responses,
-        where you want to be sure that all the async calls have finished, before
-        proceeding.
+		创建一个新版本的函数，当它被调用 <b>count</b> 次后才运行。
+		适用于对异步响应进行分组，能够保证所有异步调用结束后才处理。
       </p>
       <pre>
 var renderNotes = _.after(notes.length, render);
 _.each(notes, function(note) {
   note.asyncSave({success: renderNotes});
 });
-// renderNotes is run once, after all notes have saved.
+// 在所有 note 都保存后，renderNotes 会运行一次。
 </pre>
 
       <p id="wrap">
         <b class="header">wrap</b><code>_.wrap(function, wrapper)</code>
         <br />
-        Wraps the first <b>function</b> inside of the <b>wrapper</b> function,
-        passing it as the first argument. This allows the <b>wrapper</b> to
-        execute code before and after the <b>function</b> runs, adjust the arguments,
-        and execute it conditionally.
+		将 <b>function</b> 作为第一个参数包裹进 <b>wrapper</b> 函数中。
+		这会允许 <b>wrapper</b> 在 <b>function</b> 运行前后执行代码，调整参数，有条件的运行它。
       </p>
       <pre>
 var hello = function(name) { return "hello: " + name; };
@@ -1064,10 +1043,9 @@ hello();
       <p id="compose">
         <b class="header">compose</b><code>_.compose(*functions)</code>
         <br />
-        Returns the composition of a list of <b>functions</b>, where each function
-        consumes the return value of the function that follows. In math terms,
-        composing the functions <i>f()</i>, <i>g()</i>, and <i>h()</i> produces
-        <i>f(g(h()))</i>.
+		返回一列 <b>functions</b> 的组合，每个函数都将使用前一个函数的返回值。
+		用数学来描述，组合 <i>f()</i>， <i>g()</i>， 与 <i>h()</i> 函数将产生
+        <i>f(g(h()))</i>。
       </p>
       <pre>
 var greet    = function(name){ return "hi: " + name; };
