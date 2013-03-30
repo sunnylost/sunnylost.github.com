@@ -1055,12 +1055,12 @@ welcome('moe');
 =&gt; 'hi: moe!'
 </pre>
 
-      <h2 id="objects">Object Functions</h2>
+      <h2 id="objects">对象方法</h2>
 
       <p id="keys">
         <b class="header">keys</b><code>_.keys(object)</code>
         <br />
-        Retrieve all the names of the <b>object</b>'s properties.
+		获得 <b>object</b> 的所有属性名。
       </p>
       <pre>
 _.keys({one : 1, two : 2, three : 3});
@@ -1070,7 +1070,7 @@ _.keys({one : 1, two : 2, three : 3});
       <p id="values">
         <b class="header">values</b><code>_.values(object)</code>
         <br />
-        Return all of the values of the <b>object</b>'s properties.
+		获得 <b>object</b> 的所有属性值。
       </p>
       <pre>
 _.values({one : 1, two : 2, three : 3});
@@ -1080,7 +1080,7 @@ _.values({one : 1, two : 2, three : 3});
       <p id="pairs">
         <b class="header">pairs</b><code>_.pairs(object)</code>
         <br />
-        Convert an object into a list of <tt>[key, value]</tt> pairs.
+		将一个对象转型成一列 <tt>[key, value]</tt> 对形式。
       </p>
       <pre>
 _.pairs({one: 1, two: 2, three: 3});
@@ -1090,9 +1090,8 @@ _.pairs({one: 1, two: 2, three: 3});
       <p id="invert">
         <b class="header">invert</b><code>_.invert(object)</code>
         <br />
-        Returns a copy of the <b>object</b> where the keys have become the values
-        and the values the keys. For this to work, all of your object's values
-        should be unique and string serializable.
+		返回 <b>object</b> 的一个副本，将它的属性名与属性值互换。
+		若要使该方法生效，需要对象的属性值都是唯一的，并且可序列化。
       </p>
       <pre>
 _.invert({Moe: "Moses", Larry: "Louis", Curly: "Jerome"});
@@ -1101,10 +1100,10 @@ _.invert({Moe: "Moses", Larry: "Louis", Curly: "Jerome"});
 
       <p id="object-functions">
         <b class="header">functions</b><code>_.functions(object)</code>
-        <span class="alias">Alias: <b>methods</b></span>
+        <span class="alias">别名： <b>methods</b></span>
         <br />
-        Returns a sorted list of the names of every method in an object &mdash;
-        that is to say, the name of every function property of the object.
+		返回 <b>object</b> 中所有方法名的排序列表 &mdash;
+		换句话说，就是 <b>object</b> 中所有函数属性的名字。
       </p>
       <pre>
 _.functions(_);
@@ -1114,10 +1113,8 @@ _.functions(_);
       <p id="extend">
         <b class="header">extend</b><code>_.extend(destination, *sources)</code>
         <br />
-        Copy all of the properties in the <b>source</b> objects over to the
-        <b>destination</b> object, and return the <b>destination</b> object.
-        It's in-order, so the last source will override properties of the same
-        name in previous arguments.
+		复制全部 <b>source</b> 对象的所有属性到 <b>destination</b> 对象上，并返回 <b>source</b>。
+		该过程按顺序进行，因此最后一个 <b>source</b> 对象将会覆盖前一个参数的同名属性。
       </p>
       <pre>
 _.extend({name : 'moe'}, {age : 50});
@@ -1127,8 +1124,7 @@ _.extend({name : 'moe'}, {age : 50});
       <p id="pick">
         <b class="header">pick</b><code>_.pick(object, *keys)</code>
         <br />
-        Return a copy of the <b>object</b>, filtered to only have values for
-        the whitelisted <b>keys</b> (or array of valid keys).
+		返回过滤后的 <b>object</b> 的副本，只包含在白名单 <b>keys</b> (或是合法 key 的数组)中的值。
       </p>
       <pre>
 _.pick({name : 'moe', age: 50, userid : 'moe1'}, 'name', 'age');
@@ -1138,8 +1134,7 @@ _.pick({name : 'moe', age: 50, userid : 'moe1'}, 'name', 'age');
       <p id="omit">
         <b class="header">omit</b><code>_.omit(object, *keys)</code>
         <br />
-        Return a copy of the <b>object</b>, filtered to omit the blacklisted
-        <b>keys</b> (or array of keys).
+		返回 <b>object</b> 的副本，忽略黑名单 <b>keys</b> (或是包含 key 的数组) 中的值。
       </p>
       <pre>
 _.omit({name : 'moe', age : 50, userid : 'moe1'}, 'userid');
@@ -1149,6 +1144,7 @@ _.omit({name : 'moe', age : 50, userid : 'moe1'}, 'userid');
       <p id="defaults">
         <b class="header">defaults</b><code>_.defaults(object, *defaults)</code>
         <br />
+		
         Fill in undefined properties in <b>object</b> with values from the
         <b>defaults</b> objects, and return the <b>object</b>. As soon as the
         property is filled, further defaults will have no effect.
@@ -1189,10 +1185,10 @@ _.chain([1,2,3,200])
       <p id="has">
         <b class="header">has</b><code>_.has(object, key)</code>
         <br />
-        Does the object contain the given key? Identical to
-        <tt>object.hasOwnProperty(key)</tt>, but uses a safe reference to the
-        <tt>hasOwnProperty</tt> function, in case it's been
-        <a href="http://www.devthought.com/2012/01/18/an-object-is-not-a-hash/">overridden accidentally</a>.
+		<b>object</b> 是否包含 <b>key</b>？
+		等同于 <tt>object.hasOwnProperty(key)</tt>，
+		但会使用 <tt>hasOwnProperty</tt> 函数的更安全引用，
+		因为该引用在某些情况下会被  <a href="http://www.devthought.com/2012/01/18/an-object-is-not-a-hash/">意外覆盖(overridden accidentally)</a>。
       </p>
       <pre>
 _.has({a: 1, b: 2, c: 3}, "b");
@@ -1202,8 +1198,8 @@ _.has({a: 1, b: 2, c: 3}, "b");
       <p id="isEqual">
         <b class="header">isEqual</b><code>_.isEqual(object, other)</code>
         <br />
-        Performs an optimized deep comparison between the two objects, to determine
-        if they should be considered equal.
+		在两个对象间执行一个经过优化的深度比较，
+		检验它们是否相等。
       </p>
       <pre>
 var moe   = {name : 'moe', luckyNumbers : [13, 27, 34]};
@@ -1217,7 +1213,7 @@ _.isEqual(moe, clone);
       <p id="isEmpty">
         <b class="header">isEmpty</b><code>_.isEmpty(object)</code>
         <br />
-        Returns <i>true</i> if <b>object</b> contains no values.
+		如果 <b>object</b> 不包含任何值则返回 <i>true</i>。
       </p>
       <pre>
 _.isEmpty([1, 2, 3]);
@@ -1229,7 +1225,7 @@ _.isEmpty({});
       <p id="isElement">
         <b class="header">isElement</b><code>_.isElement(object)</code>
         <br />
-        Returns <i>true</i> if <b>object</b> is a DOM element.
+		如果 <b>object</b> 是一个 DOM 元素则返回 <i>true</i>。
       </p>
       <pre>
 _.isElement(jQuery('body')[0]);
@@ -1239,7 +1235,7 @@ _.isElement(jQuery('body')[0]);
       <p id="isArray">
         <b class="header">isArray</b><code>_.isArray(object)</code>
         <br />
-        Returns <i>true</i> if <b>object</b> is an Array.
+		如果 <b>object</b> 是数组则返回 <i>true</i>。
       </p>
       <pre>
 (function(){ return _.isArray(arguments); })();
@@ -1251,8 +1247,8 @@ _.isArray([1,2,3]);
       <p id="isObject">
         <b class="header">isObject</b><code>_.isObject(value)</code>
         <br />
-        Returns <i>true</i> if <b>value</b> is an Object. Note that JavaScript
-        arrays and functions are objects, while (normal) strings and numbers are not.
+		如果 <b>value</b> 是对象则返回 <i>true</i>。
+		注意，在 JavaScript 中数组与函数都是对象，(通常来说)字符串与数字都不是。
       </p>
       <pre>
 _.isObject({});
@@ -1264,7 +1260,7 @@ _.isObject(1);
       <p id="isArguments">
         <b class="header">isArguments</b><code>_.isArguments(object)</code>
         <br />
-        Returns <i>true</i> if <b>object</b> is an Arguments object.
+		如果 <b>object</b> 是 Arguments 对象则返回 <i>true</i>。
       </p>
       <pre>
 (function(){ return _.isArguments(arguments); })(1, 2, 3);
@@ -1276,7 +1272,7 @@ _.isArguments([1,2,3]);
       <p id="isFunction">
         <b class="header">isFunction</b><code>_.isFunction(object)</code>
         <br />
-        Returns <i>true</i> if <b>object</b> is a Function.
+		如果 <b>object</b> 是函数则返回 <i>true</i>。
       </p>
       <pre>
 _.isFunction(alert);
@@ -1286,7 +1282,7 @@ _.isFunction(alert);
       <p id="isString">
         <b class="header">isString</b><code>_.isString(object)</code>
         <br />
-        Returns <i>true</i> if <b>object</b> is a String.
+		如果 <b>object</b> 是字符串则返回 <i>true</i>。
       </p>
       <pre>
 _.isString("moe");
@@ -1296,7 +1292,7 @@ _.isString("moe");
       <p id="isNumber">
         <b class="header">isNumber</b><code>_.isNumber(object)</code>
         <br />
-        Returns <i>true</i> if <b>object</b> is a Number (including <tt>NaN</tt>).
+		如果 <b>object</b> 是数字(包括 <tt>NaN</tt>)则返回 <i>true</i>。
       </p>
       <pre>
 _.isNumber(8.4 * 5);
@@ -1306,7 +1302,7 @@ _.isNumber(8.4 * 5);
       <p id="isFinite">
         <b class="header">isFinite</b><code>_.isFinite(object)</code>
         <br />
-        Returns <i>true</i> if <b>object</b> is a finite Number.
+		如果 <b>object</b> 是有限数字则返回 <i>true</i>。
       </p>
       <pre>
 _.isFinite(-101);
@@ -1319,7 +1315,7 @@ _.isFinite(-Infinity);
       <p id="isBoolean">
         <b class="header">isBoolean</b><code>_.isBoolean(object)</code>
         <br />
-        Returns <i>true</i> if <b>object</b> is either <i>true</i> or <i>false</i>.
+		如果 <b>object</b> 是 <i>true</i> 或 <i>false</i> 则返回 <i>true</i>。
       </p>
       <pre>
 _.isBoolean(null);
@@ -1329,7 +1325,7 @@ _.isBoolean(null);
       <p id="isDate">
         <b class="header">isDate</b><code>_.isDate(object)</code>
         <br />
-        Returns <i>true</i> if <b>object</b> is a Date.
+		如果 <b>object</b> 是日期对象则返回 <i>true</i>。
       </p>
       <pre>
 _.isDate(new Date());
@@ -1339,7 +1335,7 @@ _.isDate(new Date());
       <p id="isRegExp">
         <b class="header">isRegExp</b><code>_.isRegExp(object)</code>
         <br />
-        Returns <i>true</i> if <b>object</b> is a RegExp.
+		如果 <b>object</b> 是正则表达式则返回 <i>true</i>。
       </p>
       <pre>
 _.isRegExp(/moe/);
@@ -1349,9 +1345,9 @@ _.isRegExp(/moe/);
       <p id="isNaN">
         <b class="header">isNaN</b><code>_.isNaN(object)</code>
         <br />
-        Returns <i>true</i> if <b>object</b> is <i>NaN</i>.<br /> Note: this is not
-        the same as the native <b>isNaN</b> function, which will also return
-        true if the variable is <i>undefined</i>.
+		如果 <b>object</b> 是 <i>NaN</i> 则返回 <i>true</i>。
+		<br />
+		注意：与原生 <b>isNaN</b> 函数不同的是，如果参数是 <i>undefined</i> 则也会返回 <i>true</i>。
       </p>
       <pre>
 _.isNaN(NaN);
@@ -1365,7 +1361,7 @@ _.isNaN(undefined);
       <p id="isNull">
         <b class="header">isNull</b><code>_.isNull(object)</code>
         <br />
-        Returns <i>true</i> if the value of <b>object</b> is <i>null</i>.
+		如果 <b>object</b> 值是 <i>NaN</i> 则返回 <i>true</i>。
       </p>
       <pre>
 _.isNull(null);
@@ -1377,20 +1373,20 @@ _.isNull(undefined);
       <p id="isUndefined">
         <b class="header">isUndefined</b><code>_.isUndefined(value)</code>
         <br />
-        Returns <i>true</i> if <b>value</b> is <i>undefined</i>.
+		如果 <b>value</b> 是 <i>undefined</i> 则返回 <i>true</i>。
       </p>
       <pre>
 _.isUndefined(window.missingVariable);
 =&gt; true
 </pre>
 
-      <h2 id="utility">Utility Functions</h2>
+      <h2 id="utility">工具函数</h2>
 
       <p id="noConflict">
         <b class="header">noConflict</b><code>_.noConflict()</code>
         <br />
-        Give control of the "_" variable back to its previous owner. Returns
-        a reference to the <b>Underscore</b> object.
+		将 "_" 变量的控制权交还给它之前的拥有者。
+		返回 <b>Underscore</b> 对象的引用。
       </p>
       <pre>
 var underscore = _.noConflict();</pre>
@@ -1398,10 +1394,9 @@ var underscore = _.noConflict();</pre>
       <p id="identity">
         <b class="header">identity</b><code>_.identity(value)</code>
         <br />
-        Returns the same value that is used as the argument. In math:
-        <tt>f(x) = x</tt><br />
-        This function looks useless, but is used throughout Underscore as
-        a default iterator.
+		返回参数的原值。
+		在数学中表示为：<tt>f(x) = x</tt><br />
+		该函数看起来毫无用途，实际上它作为默认递归器贯穿于 Underscore 始终。
       </p>
       <pre>
 var moe = {name : 'moe'};
@@ -1411,10 +1406,10 @@ moe === _.identity(moe);
       <p id="times">
         <b class="header">times</b><code>_.times(n, iterator, [context])</code>
         <br />
-        Invokes the given iterator function <b>n</b> times. Each invocation of
-        <b>iterator</b> is called with an <tt>index</tt> argument.
+		调用 <b>n</b> 次给定的 iterator 函数。
+		每次调用 <b>iterator</b> 都会传入一个 <tt>index</tt> 参数。
         <br />
-        <i>Note: this example uses the <a href="#chaining">chaining syntax</a></i>.
+        <i>注意：这个例子使用了 <a href="#chaining">链式语法(chaining syntax)</a></i>。
       </p>
       <pre>
 _(3).times(function(n){ genie.grantWishNumber(n); });</pre>
@@ -1422,9 +1417,8 @@ _(3).times(function(n){ genie.grantWishNumber(n); });</pre>
       <p id="random">
         <b class="header">random</b><code>_.random(min, max)</code>
         <br />
-        Returns a random integer between <b>min</b> and <b>max</b>, inclusive.
-        If you only pass one argument, it will return a number between <tt>0</tt>
-        and that number.
+		返回一个在 <b>min</b> 与 <b>max</b> 之间的随机整数，包含这两个值。
+		如果你只传入一个参数，会返回一个在 <tt>0</tt> 与该参数之间的数字。
       </p>
       <pre>
 _.random(0, 100);
@@ -1433,9 +1427,8 @@ _.random(0, 100);
       <p id="mixin">
         <b class="header">mixin</b><code>_.mixin(object)</code>
         <br />
-        Allows you to extend Underscore with your own utility functions. Pass
-        a hash of <tt>{name: function}</tt> definitions to have your functions
-        added to the Underscore object, as well as the OOP wrapper.
+		允许使用自己的工具函数来扩展 Underscore。
+		传入一个形如 <tt>{name: function}</tt> 的散列表定义，会将你自己的函数增加到 Underscore 对象与 OOP 包装器上。
       </p>
       <pre>
 _.mixin({
@@ -1450,8 +1443,8 @@ _("fabio").capitalize();
       <p id="uniqueId">
         <b class="header">uniqueId</b><code>_.uniqueId([prefix])</code>
         <br />
-        Generate a globally-unique id for client-side models or DOM elements
-        that need one. If <b>prefix</b> is passed, the id will be appended to it.
+		为客户端模型或 DOM 元素生成一个全局唯一的 id。
+		如果传入 <b>prefix</b> ，则会把它追加到 id 前面。
       </p>
       <pre>
 _.uniqueId('contact_');
@@ -1460,8 +1453,8 @@ _.uniqueId('contact_');
       <p id="escape">
         <b class="header">escape</b><code>_.escape(string)</code>
         <br />
-        Escapes a string for insertion into HTML, replacing
-        <tt>&amp;</tt>, <tt>&lt;</tt>, <tt>&gt;</tt>, <tt>&quot;</tt>, <tt>&#x27;</tt>, and <tt>&#x2F;</tt> characters.
+		转义一个插入到 HTML 中的字符串，
+		替换如下字符：<tt>&amp;</tt>， <tt>&lt;</tt>， <tt>&gt;</tt>， <tt>&quot;</tt>， <tt>&#x27;</tt>, 与 <tt>&#x2F;</tt>。
       </p>
       <pre>
 _.escape('Curly, Larry &amp; Moe');
@@ -1470,10 +1463,10 @@ _.escape('Curly, Larry &amp; Moe');
       <p id="unescape">
         <b class="header">unescape</b><code>_.unescape(string)</code>
         <br />
-        The opposite of <a href="#escape"><b>escape</b></a>, replaces
-        <tt>&amp;amp;</tt>, <tt>&amp;lt;</tt>, <tt>&amp;gt;</tt>,
-        <tt>&amp;quot;</tt>, <tt>&amp;#x27;</tt>, and <tt>&amp;#x2F;</tt>
-        with their unescaped counterparts.
+		<a href="#escape"><b>escape</b></a> 的相反方法，
+		将<tt>&amp;amp;</tt>， <tt>&amp;lt;</tt>， <tt>&amp;gt;</tt>，
+        <tt>&amp;quot;</tt>， <tt>&amp;#x27;</tt>， 与 <tt>&amp;#x2F;</tt>
+		替换为未转义字符。
       </p>
       <pre>
 _.unescape('Curly, Larry &amp;amp; Moe');

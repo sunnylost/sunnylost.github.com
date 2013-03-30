@@ -199,7 +199,11 @@ Underscore may be freely distributed under the MIT license.
                             <div class="pilwrap">
                                 <a class="pilcrow" href="#section-13">&#182;</a>
                             </div>
-                            <p>The cornerstone, an <code>each</code> implementation, aka <code>forEach</code>. Handles objects with the built-in <code>forEach</code>, arrays, and raw objects. Delegates to <strong>ECMAScript 5</strong>'s native <code>forEach</code> if available.</p>
+                            <p>
+							基础函数，名为 <code>each</code> 的实现，又称为 <code>forEach</code>。
+							处理带有内置 <code>forEach</code> 方法的对象、数组与原始对象。
+							若存在 <strong>ECMAScript 5</strong> 的原生 <code>forEach</code>，则委托给它执行。
+							</p>
                         </td>
                         <td class="code">
                             <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">each</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">each</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">forEach</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">iterator</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
@@ -226,7 +230,9 @@ Underscore may be freely distributed under the MIT license.
                             <div class="pilwrap">
                                 <a class="pilcrow" href="#section-14">&#182;</a>
                             </div>
-                            <p>Return the results of applying the iterator to each element. Delegates to <strong>ECMAScript 5</strong>'s native <code>map</code> if available.</p>
+                            <p>
+							对每个元素应用 iterator 然后返回结果。
+							若存在 <strong>ECMAScript 5</strong> 的原生 <code>map</code>，则委托给它执行。</p>
                         </td>
                         <td class="code">
                             <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">map</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">collect</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">iterator</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
@@ -248,7 +254,9 @@ Underscore may be freely distributed under the MIT license.
                             <div class="pilwrap">
                                 <a class="pilcrow" href="#section-15">&#182;</a>
                             </div>
-                            <p><strong>Reduce</strong> builds up a single result from a list of values, aka <code>inject</code>, or <code>foldl</code>. Delegates to <strong>ECMAScript 5</strong>'s native <code>reduce</code> if available.</p>
+                            <p><strong>Reduce</strong> 通过一列值生成单一结果，又名 <code>inject</code> 或 <code>foldl</code>。
+							若存在 <strong>ECMAScript 5</strong> 的原生 <code>reduce</code>，则委托给它执行。
+							</p>
                         </td>
                         <td class="code">
                             <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">foldl</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">inject</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">iterator</span><span class="p">,</span> <span class="nx">memo</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
@@ -277,7 +285,8 @@ Underscore may be freely distributed under the MIT license.
                             <div class="pilwrap">
                                 <a class="pilcrow" href="#section-16">&#182;</a>
                             </div>
-                            <p>The right-associative version of reduce, also known as <code>foldr</code>. Delegates to <strong>ECMAScript 5</strong>'s native <code>reduceRight</code> if available.</p>
+                            <p>reduce 的右关联版，另一个常用名为 <code>foldr</code>。
+							若存在 <strong>ECMAScript 5</strong> 的原生 <code>reduceRight</code>，则委托给它执行。</p>
                         </td>
                         <td class="code">
                             <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">reduceRight</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">foldr</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">iterator</span><span class="p">,</span> <span class="nx">memo</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
@@ -312,7 +321,7 @@ Underscore may be freely distributed under the MIT license.
                             <div class="pilwrap">
                                 <a class="pilcrow" href="#section-17">&#182;</a>
                             </div>
-                            <p>Return the first value which passes a truth test. Aliased as <code>detect</code>.</p>
+                            <p>返回第一个通过真值测试的值。别名为 <code>detect</code>。</p>
                         </td>
                         <td class="code">
                             <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">find</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">detect</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">iterator</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
