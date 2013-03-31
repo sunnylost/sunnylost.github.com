@@ -375,7 +375,7 @@
         <td><i>40kb， 未压缩，包含大量注释</i></td>
       </tr>
       <tr>
-        <td><a href="underscore-min.js">生产版(1.4.4)</a></td>
+        <td><a href="underscore-min.js">发布版(1.4.4)</a></td>
         <td><i>4kb， 最小化并压缩</i></td>
       </tr>
       <tr>
@@ -447,7 +447,7 @@ var sum = _.reduce([1, 2, 3], function(memo, num){ return memo + num; }, 0);
         <b class="header">reduceRight</b><code>_.reduceRight(list, iterator, memo, [context])</code>
         <span class="alias">别名： <b>foldr</b></span>
         <br />
-		<b>reduce</b> 的右关联版本。为 JavaScript 1.8版本中 <b>reduceRight</b> 的委托。
+		<b>reduce</b> 的右结合版本。为 JavaScript 1.8版本中 <b>reduceRight</b> 的委托。
 		<b>Foldr</b> 在 JavaScript 中不像在拥有 lazy evaluation 的语言中那么有用。
       </p>
       <pre>
@@ -958,8 +958,7 @@ _.delay(log, 1000, 'logged later');
         <b class="header">defer</b><code>_.defer(function, [*arguments])</code>
         <br />
 		延迟调用 <b>function</b> 直到当前调用栈清空，类似于使用延迟为0的 <b>setTimeout</b>。
-        Useful for performing expensive computations or HTML rendering in chunks without blocking the UI thread
-        from updating. 
+       适用于执行耗费大的运算或渲染大块 HTML 时不会阻塞 UI 线程更新。
 		额外传入的 <b>arguments</b> 会在 <b>function</b> 调用时传给它。
       </p>
       <pre>
@@ -1043,7 +1042,7 @@ hello();
       <p id="compose">
         <b class="header">compose</b><code>_.compose(*functions)</code>
         <br />
-		返回一列 <b>functions</b> 的组合，每个函数都将使用前一个函数的返回值。
+		返回一列 <b>functions</b> 组合后的复合函数，每个函数都将使用前一个函数的返回值。
 		用数学来描述，组合 <i>f()</i>， <i>g()</i>， 与 <i>h()</i> 函数将产生
         <i>f(g(h()))</i>。
       </p>
@@ -1080,7 +1079,7 @@ _.values({one : 1, two : 2, three : 3});
       <p id="pairs">
         <b class="header">pairs</b><code>_.pairs(object)</code>
         <br />
-		将一个对象转型成一列 <tt>[key, value]</tt> 对形式。
+		将一个对象转型成 <tt>[key, value]</tt> 形式的数组。
       </p>
       <pre>
 _.pairs({one: 1, two: 2, three: 3});
@@ -1144,10 +1143,8 @@ _.omit({name : 'moe', age : 50, userid : 'moe1'}, 'userid');
       <p id="defaults">
         <b class="header">defaults</b><code>_.defaults(object, *defaults)</code>
         <br />
-		
-        Fill in undefined properties in <b>object</b> with values from the
-        <b>defaults</b> objects, and return the <b>object</b>. As soon as the
-        property is filled, further defaults will have no effect.
+		 使用 <b>defaults</b> 中的值来填充 <b>object</b> 中未定义的属性。
+        一旦属性填充完毕，后续的 <b>defaults</b> 对象将不再对该属性生效。
       </p>
       <pre>
 var iceCream = {flavor : "chocolate"};
@@ -1158,8 +1155,8 @@ _.defaults(iceCream, {flavor : "vanilla", sprinkles : "lots"});
       <p id="clone">
         <b class="header">clone</b><code>_.clone(object)</code>
         <br />
-        Create a shallow-copied clone of the <b>object</b>. Any nested objects
-        or arrays will be copied by reference, not duplicated.
+        创建一个 <b>object</b> 的浅拷贝版本。
+        任何内嵌的对象或数组都将拷贝引用，而不是副本。
       </p>
       <pre>
 _.clone({name : 'moe'});
@@ -1169,8 +1166,8 @@ _.clone({name : 'moe'});
       <p id="tap">
         <b class="header">tap</b><code>_.tap(object, interceptor)</code>
         <br />
-        Invokes <b>interceptor</b> with the <b>object</b>, and then returns <b>object</b>.
-        The primary purpose of this method is to "tap into" a method chain, in order to perform operations on intermediate results within the chain.
+        使用 <b>object</b> 来调用 <b>interceptor</b>，然后返回 <b>object</b>。
+        该方法的主要用途是「接入」一个方法链，在链中对中间结果执行操作。
       </p>
       <pre>
 _.chain([1,2,3,200])
@@ -1475,8 +1472,7 @@ _.unescape('Curly, Larry &amp;amp; Moe');
       <p id="result">
         <b class="header">result</b><code>_.result(object, property)</code>
         <br />
-        If the value of the named <b>property</b> is a function then invoke it
-        with the <b>object</b> as context; otherwise, return it.
+        如果名为 <b>property</b> 的值是一个函数，则将 <b>object</b> 作为函数的上下文来调用它；否则的话，直接返回属性值。
       </p>
       <pre>
 var object = {cheese: 'crumpets', stuff: function(){ return 'nonsense'; }};
@@ -1488,17 +1484,18 @@ _.result(object, 'stuff');
       <p id="template">
         <b class="header">template</b><code>_.template(templateString, [data], [settings])</code>
         <br />
-        Compiles JavaScript templates into functions that can be evaluated
-        for rendering. Useful for rendering complicated bits of HTML from JSON
-        data sources. Template functions can both interpolate variables, using
-        <tt>&lt;%= &hellip; %&gt;</tt>, as well as execute arbitrary JavaScript code, with
-        <tt>&lt;% &hellip; %&gt;</tt>. If you wish to interpolate a value, and have
+        将 JavaScript 模板编译成可用于页面呈现的函数。
+        适用于通过 JSON 数据源来渲染复杂的 HTML 结构。
+        模板函数既可以使用 <tt>&lt;%= &hellip; %&gt;</tt> 来插入变量，
+        又能使用 <tt>&lt;% &hellip; %&gt;</tt> 来插入任意 JavaScript 代码。
+        
+        如果你只是想对模板做一次性操作，那么可以传入 <b>data</b> 作为 <b>template</b> 的第二个参数，
+        这样做会返回渲染值而并非一个模板函数。
+        参数 <b>settings</b> 必须是一个 hash，它含有用于覆盖 <tt>_.templateSettings</tt> 的值。
+         If you wish to interpolate a value, and have
         it be HTML-escaped, use <tt>&lt;%- &hellip; %&gt;</tt> When you evaluate a template function, pass in a
         <b>data</b> object that has properties corresponding to the template's free
-        variables. If you're writing a one-off, you can pass the <b>data</b>
-        object as the second parameter to <b>template</b> in order to render
-        immediately instead of returning a template function.  The <b>settings</b> argument
-        should be a hash containing any <tt>_.templateSettings</tt> that should be overridden.
+        variables.
       </p>
 
       <pre>
@@ -1515,8 +1512,8 @@ template({value : '&lt;script&gt;'});
 =&gt; "&lt;b&gt;&amp;lt;script&amp;gt;&lt;/b&gt;"</pre>
 
       <p>
-        You can also use <tt>print</tt> from within JavaScript code.  This is
-        sometimes more convenient than using <tt>&lt;%= ... %&gt;</tt>.
+        你还可以在 JavaScript 代码中使用 <tt>print</tt>。
+        有时它会比使用 <tt>&lt;%= ... %&gt;</tt> 更方便。
       </p>
 
       <pre>
@@ -1573,9 +1570,8 @@ _.template("Using 'with': <%= data.answer %>", {answer: 'no'}, {variable: 'data'
       <h2 id="chaining">Chaining</h2>
 
       <p>
-        You can use Underscore in either an object-oriented or a functional style,
-        depending on your preference. The following two lines of code are
-        identical ways to double a list of numbers.
+        你可以根据自己喜好，以面向对象或函数式的风格来使用 Underscore。
+        下面两行代码使用了相同的方法来加倍一列数字。
       </p>
 
     <pre>
@@ -1620,8 +1616,8 @@ _.chain(lyrics)
       <p id="chain">
         <b class="header">chain</b><code>_.chain(obj)</code>
         <br />
-        Returns a wrapped object. Calling methods on this object will continue
-        to return wrapped objects until <tt>value</tt> is used.
+        返回一个包装的对象。
+        在该对象上调用方法将会持续返回包装对象直到你调用了 <tt>value</tt>。
       </p>
       <pre>
 var stooges = [{name : 'curly', age : 25}, {name : 'moe', age : 21}, {name : 'larry', age : 23}];
@@ -1636,39 +1632,37 @@ var youngest = _.chain(stooges)
       <p id="value">
         <b class="header">value</b><code>_(obj).value()</code>
         <br />
-        Extracts the value of a wrapped object.
+        提取包装对象的值。
       </p>
       <pre>
 _([1, 2, 3]).value();
 =&gt; [1, 2, 3]
 </pre>
 
-      <h2 id="links">Links &amp; Suggested Reading</h2>
+      <h2 id="links">链接 &amp; 推荐阅读</h2>
 
       <p>
-        The Underscore documentation is also available in
-        <a href="http://learning.github.com/underscore/">Simplified Chinese</a>.
+        Underscore 文档也提供了
+        <a href="http://learning.github.com/underscore/">简体中文</a>。(不是我这个……)
       </p>
 
       <p>
         <a href="http://mirven.github.com/underscore.lua/">Underscore.lua</a>,
-        a Lua port of the functions that are applicable in both languages.
-        Includes OOP-wrapping and chaining.
+        Lua 版 Underscore，函数在两个语言中通用。
+        包括面向对象包装和链式调用。
         (<a href="http://github.com/mirven/underscore.lua">source</a>)
       </p>
 
       <p>
-        <a href="http://underscorem.org">Underscore.m</a>, an Objective-C port
-        of many of the Underscore.js functions, using a syntax that encourages
-        chaining.
-        (<a href="https://github.com/robb/Underscore.m">source</a>)
+        <a href="http://underscorem.org">Underscore.m</a>, 一个 Objective-C 版的 Underscore，实现了大部分函数，
+        鼓励使用链式语法。
+        (<a href="https://github.com/robb/Underscore.m">源码</a>)
       </p>
 
       <p>
-        <a href="http://kmalakoff.github.com/_.m/">_.m</a>, an alternative
-        Objective-C port that tries to stick a little closer to the original
-        Underscore.js API.
-        (<a href="https://github.com/kmalakoff/_.m">source</a>)
+        <a href="http://kmalakoff.github.com/_.m/">_.m</a>, 另一个 Objective-C 版本，
+        为了缩小与原始 Underscore.js API 的差异。
+        (<a href="https://github.com/kmalakoff/_.m">源码</a>)
       </p>
 
       <p>
