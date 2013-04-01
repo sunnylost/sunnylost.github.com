@@ -336,7 +336,7 @@
     <p>
       <a href="http://github.com/documentcloud/underscore/">Underscore</a> 是万能腰带一样的类库，
 	  它像 <a href="http://prototypejs.org/doc/latest/">Prototype.js</a>
-      (或 <a href="http://www.ruby-doc.org/core/classes/Enumerable.html">Ruby</a>) 那样提供了大量函数式编程的支持，但又不会扩展任何 JavaScript 内置对象。它是搭配在 <a href="http://docs.jquery.com">jQuery</a> 燕尾服上的领带，也是 <a href="http://backbonejs.org">Backbone.js</a> 的一条背带。
+      (或 <a href="http://www.ruby-doc.org/core/classes/Enumerable.html">Ruby</a>) 那样提供了大量函数式编程的支持，但又不会扩展任何 JavaScript 内置对象。它是搭配在 <a href="http://docs.jquery.com">jQuery</a> 燕尾服上的领带，也是 <a href="http://backbonejs.org">Backbone.js</a> 的不可或缺的一部分。
     </p>
 
     <p>
@@ -1488,14 +1488,11 @@ _.result(object, 'stuff');
         适用于通过 JSON 数据源来渲染复杂的 HTML 结构。
         模板函数既可以使用 <tt>&lt;%= &hellip; %&gt;</tt> 来插入变量，
         又能使用 <tt>&lt;% &hellip; %&gt;</tt> 来插入任意 JavaScript 代码。
-        
+        如果你想插入一个值，并对其进行 HTML 转义，则在你定义模板函数时使用 <tt>&lt;%- &hellip; %&gt;</tt>，
+		然后传入含有同样属性的 <b>data</b> 对象。
         如果你只是想对模板做一次性操作，那么可以传入 <b>data</b> 作为 <b>template</b> 的第二个参数，
-        这样做会返回渲染值而并非一个模板函数。
+        这样做会返回渲染值而非一个模板函数。
         参数 <b>settings</b> 必须是一个 hash，它含有用于覆盖 <tt>_.templateSettings</tt> 的值。
-         If you wish to interpolate a value, and have
-        it be HTML-escaped, use <tt>&lt;%- &hellip; %&gt;</tt> When you evaluate a template function, pass in a
-        <b>data</b> object that has properties corresponding to the template's free
-        variables.
       </p>
 
       <pre>
@@ -1522,16 +1519,14 @@ compiled({epithet: "stooge"});
 =&gt; "Hello stooge."</pre>
 
       <p>
-        If ERB-style delimiters aren't your cup of tea, you can change Underscore's
-        template settings to use different symbols to set off interpolated code.
-        Define an <b>interpolate</b> regex to match expressions that should be
-        interpolated verbatim, an <b>escape</b> regex to match expressions that should
-        be inserted after being HTML escaped, and an <b>evaluate</b> regex to match
-        expressions that should be evaluated without insertion into the resulting
-        string. You may define or omit any combination of the three.
-        For example, to perform
+		如果你不喜欢 ERB 风格的分隔符，可以修改 Underscore 的模板设置，使用不同的符号来分隔插入的代码。
+		定义一个 <b>interpolate</b> 正则表达式来逐字替换匹配的语句，
+		<b>escape</b> 正则表达式则用于匹配那些需要 HTML 转义后插入的语句，
+		还有 <b>evaluate</b> 正则表达式用于匹配那些只需要执行而不会插入最终结果的语句。
+		你可以定义或省略三者的任意组合。
+		例如，要执行
         <a href="http://github.com/janl/mustache.js#readme">Mustache.js</a>
-        style templating:
+        风格的模板：
       </p>
 
       <pre>
@@ -1544,10 +1539,9 @@ template({name : "Mustache"});
 =&gt; "Hello Mustache!"</pre>
 
       <p>
-        By default, <b>template</b> places the values from your data in the local scope
-        via the <tt>with</tt> statement.  However, you can specify a single variable name
-        with the <b>variable</b> setting. This can significantly improve the speed
-        at which a template is able to render.
+		默认的，<b>template</b> 借助 <tt>with</tt> 语句在局部作用域内获取数据的值。
+		然而，你还可以在 <b>variable</b> 设置里指定一个变量名。
+		这将显著提高模板的渲染速度。
       </p>
 
       <pre>
@@ -1555,11 +1549,9 @@ _.template("Using 'with': <%= data.answer %>", {answer: 'no'}, {variable: 'data'
 =&gt; "Using 'with': no"</pre>
 
       <p>
-        Precompiling your templates can be a big help when debugging errors you can't
-        reproduce.  This is because precompiled templates can provide line numbers and
-        a stack trace, something that is not possible when compiling templates on the client.
-        The <b>source</b> property is available on the compiled template
-        function for easy precompilation.
+		在调试无法重现的错误时，预编译你的模板将会帮上大忙。
+		这是因为预编译模板会提供错误代码的行号与栈跟踪，这些对于在客户端编译的模板是无法提供的。
+		编译好的模板函数提供了 <b>source</b> 属性用于简单的预编译。
       </p>
 
       <pre>&lt;script&gt;
@@ -1579,11 +1571,10 @@ _.map([1, 2, 3], function(n){ return n * 2; });
 _([1, 2, 3]).map(function(n){ return n * 2; });</pre>
 
       <p>
-        Calling <tt>chain</tt> will cause all future method calls to return
-        wrapped objects. When you've finished the computation, use
-        <tt>value</tt> to retrieve the final value. Here's an example of chaining
-        together a <b>map/flatten/reduce</b>, in order to get the word count of
-        every word in a song.
+		调用 <tt>chain</tt> 方法将会导致后续方法调用时全部返回包装对象。
+		在你结束运算后，使用 <tt>value</tt> 来获取最终值。
+		下面是一个同时使用了 <b>map/flatten/reduce</b> 的链式语法例子，
+		用来获得一首歌中每个单词出现的次数。
       </p>
 
 <pre>
@@ -1606,11 +1597,9 @@ _.chain(lyrics)
 =&gt; {lumberjack : 2, all : 4, night : 2 ... }</pre>
 
       <p>
-        In addition, the
-        <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/prototype">Array prototype's methods</a>
-        are proxied through the chained Underscore object, so you can slip a
-        <tt>reverse</tt> or a <tt>push</tt> into your chain, and continue to
-        modify the array.
+		此外，
+        <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/prototype">数组原型的方法</a>通过链式的 Underscore 对象来代理，
+		这样你就可以在链式调用中增加一个 <tt>reverse</tt> 或是一个 <tt>push</tt>，然后依然能够继续修改数组。
       </p>
 
       <p id="chain">
@@ -1647,73 +1636,71 @@ _([1, 2, 3]).value();
       </p>
 
       <p>
-        <a href="http://mirven.github.com/underscore.lua/">Underscore.lua</a>,
+        <a href="http://mirven.github.com/underscore.lua/">Underscore.lua</a>，
         Lua 版 Underscore，函数在两个语言中通用。
         包括面向对象包装和链式调用。
         (<a href="http://github.com/mirven/underscore.lua">source</a>)
       </p>
 
       <p>
-        <a href="http://underscorem.org">Underscore.m</a>, 一个 Objective-C 版的 Underscore，实现了大部分函数，
+        <a href="http://underscorem.org">Underscore.m</a>， 一个 Objective-C 版的 Underscore，实现了大部分函数，
         鼓励使用链式语法。
         (<a href="https://github.com/robb/Underscore.m">源码</a>)
       </p>
 
       <p>
-        <a href="http://kmalakoff.github.com/_.m/">_.m</a>, 另一个 Objective-C 版本，
+        <a href="http://kmalakoff.github.com/_.m/">_.m</a>， 另一个 Objective-C 版本，
         为了缩小与原始 Underscore.js API 的差异。
         (<a href="https://github.com/kmalakoff/_.m">源码</a>)
       </p>
 
       <p>
-        <a href="http://brianhaveri.github.com/Underscore.php/">Underscore.php</a>,
-        a PHP port of the functions that are applicable in both languages.
-        Includes OOP-wrapping and chaining.
-        (<a href="http://github.com/brianhaveri/Underscore.php">source</a>)
+        <a href="http://brianhaveri.github.com/Underscore.php/">Underscore.php</a>，
+		PHP 版 Underscore，函数在两个语言中通用。
+        包括面向对象包装和链式调用。
+        (<a href="http://github.com/brianhaveri/Underscore.php">源码</a>)
       </p>
 
       <p>
-        <a href="http://vti.github.com/underscore-perl/">Underscore-perl</a>,
-        a Perl port of many of the Underscore.js functions,
-        aimed at on Perl hashes and arrays.
-        (<a href="https://github.com/vti/underscore-perl/">source</a>)
+        <a href="http://vti.github.com/underscore-perl/">Underscore-perl</a>，
+		一个 Perl 版的 Underscore，实现了大部分函数，
+        主要针对于 Perl 的 hash 与数组。
+        (<a href="https://github.com/vti/underscore-perl/">源码</a>)
       </p>
 
       <p>
-        <a href="http://russplaysguitar.github.com/UnderscoreCF/">Underscore.cfc</a>,
-        a Coldfusion port of many of the Underscore.js functions.
-        (<a href="https://github.com/russplaysguitar/underscorecf">source</a>)
+        <a href="http://russplaysguitar.github.com/UnderscoreCF/">Underscore.cfc</a>，
+		一个 Coldfusion 版的 Underscore，实现了大部分函数。
+        (<a href="https://github.com/russplaysguitar/underscorecf">源码</a>)
       </p>
 
       <p>
-        <a href="https://github.com/edtsech/underscore.string">Underscore.string</a>,
-        an Underscore extension that adds functions for string-manipulation:
-        <tt>trim</tt>, <tt>startsWith</tt>, <tt>contains</tt>, <tt>capitalize</tt>,
-        <tt>reverse</tt>, <tt>sprintf</tt>, and more.
+        <a href="https://github.com/edtsech/underscore.string">Underscore.string</a>，
+		一个 Underscore 扩展，增加了字符串操作函数：<tt>trim</tt>， <tt>startsWith</tt>， <tt>contains</tt>， <tt>capitalize</tt>，
+        <tt>reverse</tt>， <tt>sprintf</tt>，还有更多。
       </p>
 
       <p>
-        Ruby's <a href="http://ruby-doc.org/core/classes/Enumerable.html">Enumerable</a> module.
+        Ruby 的 <a href="http://ruby-doc.org/core/classes/Enumerable.html">枚举</a> 模块。
       </p>
 
       <p>
-        <a href="http://www.prototypejs.org/">Prototype.js</a>, which provides
-        JavaScript with collection functions in the manner closest to Ruby's Enumerable.
+        <a href="http://www.prototypejs.org/">Prototype.js</a>， 为 JavaScript 提供了集合函数，与 Ruby 的枚举类似。
       </p>
 
       <p>
-        Oliver Steele's
-        <a href="http://osteele.com/sources/javascript/functional/">Functional JavaScript</a>,
-        which includes comprehensive higher-order function support as well as string lambdas.
+        Oliver Steele的
+        <a href="http://osteele.com/sources/javascript/functional/">函数式 JavaScript</a>，
+		提供了全面的高阶函数支持与字符串 lambda。
       </p>
 
       <p>
-        Michael Aufreiter's <a href="http://github.com/michael/data">Data.js</a>,
-        a data manipulation + persistence library for JavaScript.
+        Michael Aufreiter 的 <a href="http://github.com/michael/data">Data.js</a>，
+		一个 JavaScript 的数据操作与持久化类库。
       </p>
 
       <p>
-        Python's <a href="http://docs.python.org/library/itertools.html">itertools</a>.
+        Python 的 <a href="http://docs.python.org/library/itertools.html">迭代工具</a>。
       </p>
 
       <h2 id="changelog">Change Log</h2>

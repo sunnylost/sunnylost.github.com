@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{{ Mustache }}</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<style type="text/css">
+			#logo {
+				color: #000;
+				height: 180px;
+				width: 200px;
+				-webkit-transform: rotate(-90deg);
+				-moz-transform: rotate(-90deg);
+				text-align: center;
+				display: block;
+				font-size: 250px;
+				font-family: Georgia;
+				margin: 0 auto;
+				margin-bottom: -30px;
+			}
+			
+			h2 {
+				padding-bottom: 10px;
+			}
+			
+			p {
+				letter-spacing: 1px;
+			}
+			
+			blockquote p {
+				color: #777;
+				font-size: 13.5px;
+			}
+			
+			.hero-unit {
+				padding-left: 0px;
+			}
+			
+			code {
+				color: #0034DA;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container-fluid container">
+			<div class="row-fluid">
+				<div class="span3">
+					<ul class="nav nav-list affix">
+						<li class="nav-header">Mustache</li>
+						<li><a href="#intro">简介</a></li>
+						<li><a href="#where">用在哪儿</a></li>
+						<li><a href="#who">谁在用</a></li>
+						<li><a href="#usage">使用</a></li>
+						<li class="nav-header">模板</li>
+						<li><a href="#variable">变量</a></li>
+						<li><a href="#sections">Section</a></li>
+						<li><a href="#">False 值或空列表</a></li>
+						<li><a href="#">非空列表</a></li>
+						<li><a href="#">函数</a></li>
+						<li><a href="#">反向 Section</a></li>
+						<li><a href="#">注释</a></li>
+						<li><a href="#">子模板</a></li>
+						<li><a href="#">设置分隔符</a></li>
+						<li><a href="#compile">编译模板</a></li>
+						<li class="nav-header"></li>
+						<li><a href="#">JavaScript 库的插件</a></li>
+						<li class="nav-header"></li>
+						<li><a href="#test">测试</a></li>
+						<li class="nav-header"></li>
+						<li><a href="#thanks">感谢</a></li>
+					</ul>
+				</div>
+				<div class="span9">
+					<div class="hero-unit">
+						<h1 id="logo">}</h1>
+					</div>
+					<div class="span12">
+						<h2 id="intro">mustache.js - JavaScript 版轻逻辑 mustache 模板</h2>
+						<blockquote>
+							<p title="What could be more logical awesome than no logic at all?">
+								有什么是比没有逻辑更合乎逻辑的事儿？
+							</p>
+						</blockquote>
+						<p title="What could be more logical awesome than no logic at all?">
+							<a href="http://github.com/janl/mustache.js">mustache.js</a> 是 <a href="http://mustache.github.com/">mustache</a> 模板系统的 JavaScript 实现。
+						</p>
+						<p>
+						<a href="http://mustache.github.com/">Mustache</a> 是一个轻逻辑模板语法。
+						它可以用于 HTML、配置文件、源代码 —— 任何文件。
+						它通过使用散列表或对象提供的值来扩展模板中的标签。
+						</p>
+						<p>
+						我们称它为「轻逻辑(logic-less)」的原因是它根本就不支持 if 语句、else 子句、for 循环。
+						相反的是它只支持标签(tag)。
+						有的标签被一个值替换，有的不做替换，还有的会被一列值替换。
+						</p>
+						<p>
+						如果想浏览下与语言无关的 mustache 模板语法，请查看 <code>mustache(5)</code> <a href="http://mustache.github.com/mustache.5.html">帮助手册</a>。
+						</p>
+					</div>
+					
+					<div class="span12">
+						<h2 id="where">在哪使用 mustache.js？</h2>
+						<p>
+						你可以在任何能使用 JavaScript 的地方用 mustache.js 渲染 mustache 模板。
+						这些地方包括浏览器、服务器端环境(比如说 <a href="http://nodejs.org/">node</a>)，<a href="http://couchdb.apache.org/">CouchDB</a> 视图。
+						</p>
+						<p>
+						mustache.js 同时支持 <a href="http://www.commonjs.org/">CommonJS</a> 模块 API，与<a href="https://github.com/amdjs/amdjs-api/wiki/AMD">异步模块定义</a>API(就是 AMD)。
+						</p>
+					</div>
+					
+					<div class="span12">
+						<h2 id="who">谁在使用 mustache.js？</h2>
+						<p>
+						一份不断更新的 mustache.js 使用者列表保存在<a href="http://wiki.github.com/janl/mustache.js/beard-competition"> Github wiki 上</a>。如果你或你的公司在使用 mustache.js，那就赶紧把你们的名字添加上吧！
+						</p>
+					</div>
+					
+					<div class="span12">
+						<h2 id="usage">使用</h2>
+						<p>
+						下面是一个如何使用 mustache.js 的简单例子：
+						</p>
+						<pre>
+							<code>
+var view = {
+  title: "Joe",
+  calc: function () {
+	return 2 + 4;
+  }
+};
+
+var output = Mustache.render("{{title}} spends {{calc}}", view);</code>
+						</pre>
+						<p>
+						在这里例子中，<code>Mustache.render</code> 接受两个参数： 1) mustache 模板与 2) 包含数据和代码的视图对象来渲染模板。
+						</p>
+					</div>
+					
+					<div class="span12">
+						<h2>模板</h2>
+						<P>
+						A mustache template is a string that contains any number of mustache tags. Tags are indicated by the double mustaches that surround them. {{person}} is a tag, as is {{#person}}. In both examples we refer to person as the tag's key.
+						</p>
+						<p>
+						There are several types of tags available in mustache.js.
+						</p>
+					</div>
+					
+					<div class="span12">
+						<h2 id="variable">变量</h2>
+					</div>
+					
+					<div class="span12">
+						<h2 id="sections">Sections</h2>
+					</div>
+					
+					<div class="span12">
+						<h2 id="empty"></h2>
+					</div>
+					
+					<div class="span12">
+						<h2></h2>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+		<!--script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+		<script src="../bootstrap/js/bootstrap.min.js"></script -->
+	</body>
+</html>
