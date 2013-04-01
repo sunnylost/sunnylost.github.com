@@ -47,11 +47,11 @@
 			}
 		</style>
 	</head>
-	<body>
+	<body data-spy="scroll" data-target=".bs-docs-sidebar">
 		<div class="container-fluid container">
 			<div class="row-fluid">
-				<div class="span3">
-					<ul class="nav nav-list affix">
+				<div class="span3 bs-docs-sidebar">
+					<ul class="nav nav-list affix well">
 						<li class="nav-header">Mustache</li>
 						<li><a href="#intro">简介</a></li>
 						<li><a href="#where">用在哪儿</a></li>
@@ -59,12 +59,12 @@
 						<li><a href="#usage">使用</a></li>
 						<li class="nav-header">模板</li>
 						<li><a href="#variable">变量</a></li>
-						<li><a href="#sections">片段</a></li>
+						<li><a href="#sections">区块</a></li>
 						<li><a href="#empty">False 值或空列表</a></li>
 						<li><a href="#non-empty">非空列表</a></li>
 						<li><a href="#function">函数</a></li>
-						<li><a href="#invert">反向片段</a></li>
-						<li><a href="#comment">注释</a></li>
+						<li><a href="#invert">反向区块</a></li>
+						<li><a href="#comments">注释</a></li>
 						<li><a href="#partials">子模板</a></li>
 						<li><a href="#delimiter">设置分隔符</a></li>
 						<li><a href="#compile">编译模板</a></li>
@@ -170,8 +170,7 @@ var output = Mustache.render("{{title}} spends {{calc}}", view);</code></pre>
 <pre><code>{
   "name": "Chris",
   "company": "&lt;b&gt;GitHub&lt;/b&gt;"
-}</code>
-</pre>
+}</code></pre>
 					<p>
 					模板：
 					</p>
@@ -190,6 +189,8 @@ var output = Mustache.render("{{title}} spends {{calc}}", view);</code></pre>
 * &lt;b&gt;GitHub&lt;/b&gt;</code></pre>
 					<p>
 					JavaScript 中的点符号可以用来访问视图中对象的属性。
+                 </p>
+                 <p>
 					视图：
 					</p>
 <pre><code>{
@@ -212,32 +213,31 @@ var output = Mustache.render("{{title}} spends {{calc}}", view);</code></pre>
 					</div>
 					
 					<div class="span12">
-						<h3  id="sections">片段(section)</h3>
+						<h3  id="sections">区块(section)</h3>
 						<p>
-						片段会渲染文本块一次或多次，这要取决于当前上下文内的键值。
+						区块会渲染文本块一次或多次，这要取决于当前上下文内的键值。
 						</p>
 						<p>
-						一个片段以 <code>#</code> 开始，以 <code>/</code> 结束。
-						也就是说，<code>{{#person}}</code> 表示 <code>person</code> 片段的开始，而 <code>{{/person}}</code> 表示该片段的结束。
-						两个标签间的文本就是这个片段的「块(block)」。
+						一个区块以 <code>#</code> 开始，以 <code>/</code> 结束。
+						也就是说，<code>{{#person}}</code> 表示 <code>person</code> 区块的开始，而 <code>{{/person}}</code> 表示该区块的结束。
+						两个标签间的文本就是这个区块的「块(block)」。
 						</p>
 						<p>
-						片段的行为由给定的键值决定。
+						区块的行为由给定的键值决定。
 						</p>
 					</div>
 					
 					<div class="span12">
 						<h3 id="empty">False 值或空列表</h3>
 						<p>
-						如果 <code>person</code> 键不存在，或者存在但值为 <code>null</code>、 <code>undefined</code>、 <code>false</code>， 或者是一个空的列表，(片段的)块将不会被渲染。
+						如果 <code>person</code> 键不存在，或者存在但值为 <code>null</code>、 <code>undefined</code>、 <code>false</code>， 或者是一个空的列表，(区块的)块将不会被渲染。
 						</p>
 						<p>
 						视图：
 						</p>
 <pre><code>{
   "person": false
-}</code>
-</pre>
+}</code></pre>
 					<P>
 					模板：
 					</p>
@@ -254,7 +254,7 @@ Never shown!
 					<div class="span12">
 						<h3 id="non-empty">非空列表</h3>
 						<p>
-						如果 <code>person</code> 键存在，并且值不是 <code>null</code>、 <code>undefined</code>、 <code>false</code>， 并且不是一个空的列表，(片段的)块将会渲染一或多次。
+						如果 <code>person</code> 键存在，并且值不是 <code>null</code>、 <code>undefined</code>、 <code>false</code>， 并且不是一个空的列表，(区块的)块将会渲染一或多次。
 						</p>
 						<p>
 						当键值是一个列表时，块会为列表的每个条目渲染一次。在每次迭代过程中，块的上下文都会设置成列表中的当前条目。
@@ -269,66 +269,324 @@ Never shown!
     { "name": "Larry" },
     { "name": "Curly" }
   ]
-}</code>
-</pre>
+}</code></pre>
 						<P>
 						模板：
 						</p>
 <pre><code>{{#stooges}}
-<b>{{name}}</b>
-{{/stooges}}
-</code></pre>
+&lt;b&gt;{{name}}&lt;/b&gt;
+{{/stooges}}</code></pre>
 						<p>
 						输出：
 						</p>
-<pre><code><b>Moe</b>
-<b>Larry</b>
-<b>Curly</b></code></pre>
+<pre><code>&lt;b&gt;Moe&lt;/b&gt;
+&lt;b&gt;Larry&lt;/b&gt;
+&lt;b&gt;Curly&lt;/b&gt;</code></pre>
 					<p>
-					
+					当循环一个字符串数组时，<code>.</code> 可以作为列表中当前条目的引用。
 					</p>
+                  <p>
+                  视图：
+                  </p>
+<pre><code>{
+  "musketeers": ["Athos", "Aramis", "Porthos", "D'Artagnan"]
+}</code></pre>
+                  <P>
+					模板：
+					</p>
+<pre><code>{{#musketeers}}
+* {{.}}
+{{/musketeers}}</code></pre>
+					<p>
+					输出：
+					</p>
+<pre><code>* Athos
+* Aramis
+* Porthos
+* D'Artagnan</code></pre>
+                 <p>
+                 如果一个区块变量的值是函数，在每次迭代中，它都会在以当前条目为上下文内运行。
+                 </p>
+                 <p>
+                  视图：
+                  </p>
+<pre><code>{
+  "beatles": [
+    { "firstName": "John", "lastName": "Lennon" },
+    { "firstName": "Paul", "lastName": "McCartney" },
+    { "firstName": "George", "lastName": "Harrison" },
+    { "firstName": "Ringo", "lastName": "Starr" }
+  ],
+  "name": function () {
+    return this.firstName + " " + this.lastName;
+  }
+}</code></pre>
+                  <P>
+					模板：
+					</p>
+<pre><code>{{#beatles}}
+* {{name}}
+{{/beatles}}</code></pre>
+					<p>
+					输出：
+					</p>
+<pre><code>* John Lennon
+* Paul McCartney
+* George Harrison
+* Ringo Starr</code></pre>
 					</div>
 					
 					<div class="span12">
-						<h3 id="function"></h3>
+                    <h3 id="function">函数</h3>
+                    <p>
+                    如果一个区块的键值是函数，在它调用时，会使用区块内未渲染的文本作为第一个参数。
+                    第二个参数是一个特殊渲染函数，它使用当前视图作为视图参数。函数调用时使用当前视图对象作为上下文。
+                    </p>
+                    <p>
+                    视图：
+                    </p>
+<pre><code>{
+  "name": "Tater",
+  "bold": function () {
+    return function (text, render) {
+      return "&lt;b&gt;" + render(text) + "&lt;/b&gt;";
+    }
+  }
+}</code></pre>
+                  <P>
+					模板：
+					</p>
+<pre><code>{{#bold}}Hi {{name}}.{{/bold}}</code></pre>
+					<p>
+					输出：
+					</p>
+<pre><code>&lt;b&gt;Hi Tater.&lt;/b&gt;</code></pre>
 					</div>
 					
 					<div class="span12">
-						<h3 id="invert"></h3>
+						<h3 id="invert">反向区块</h3>
+                     <p>
+                     反向视图使用 <code>{{^section}}</code> 而不是 <code>{{#section}}</code> 作为起始。
+                     反向视图只有在视图标签的值为 <code>null</code>、 <code>undefined</code>、 <code>false</code>， 或是空列表时才会渲染。
+                     </p>
+                     <p>
+                     视图：
+                     </p>
+<pre><code>{
+   "repos": []
+}</code></pre>
+                  <P>
+					模板：
+					</p>
+<pre><code>{{#repos}}&lt;b&gt;{{name}}&lt;/b&gt;{{/repos}}
+{{^repos}}No repos :({{/repos}}</code></pre>
+					<p>
+					输出：
+					</p>
+<pre><code>No repos :(</code></pre>
 					</div>
 					
 					<div class="span12">
-						<h3 id="comment"></h3>
+						<h3 id="comments">注释</h3>
+                     <p>
+                     注释以 <code>!</code> 起始，它会被忽略掉。以下是模板：
+                     </p>
+ <pre><code>&lt;h1&gt;Today{{! ignore me }}.&lt;/h1&gt;</code></pre>
+                    <p>
+                    渲染内容如下：
+                    </p>
+<pre><code>&lt;h1&gt;Today.&lt;/h1&gt;</code></pre>
+                    <p>
+                    注释内可以包含换行。
+                    </p>
 					</div>
 					
 					<div class="span12">
-						<h3></h3>
+						<h3 id="partials">子模板</h3>
+                     <p>
+                     子模板以 <code>></code> 开头，例如 <code>{{>box}}</code> 
+                     </p>
+                     <p>
+                     子模板在运行时渲染(而不是编译时)，因此可以递归调用子模板。注意避免无限循环。 
+                     </p>
+                     <p>
+                     子模板还会继承调用的上下文。在 ERB 中你可能会看到如下代码：
+                     </p>
+<pre><code><%= partial :next_more, :start => start, :size => size %></code></pre>
+                    <p>
+                     而 mustache 只需要这么写：
+                    </p>
+<pre><code>{{> next_more}}</code></pre>
+                    <p>
+                    这是为什么呢？原因在于 <code>next_more.mustache</code> 文件将从调用它的上下文中继承变量 <code>size</code> 与 <code>start</code> 。
+                    在这种情况下，你可以将子模板视为 includes，或是模板扩展，尽管实际上并非如此。
+                    </p>
+                    <p>
+                    举例来说，模板与子模板如下：
+                    </p>
+<pre><code>base.mustache:
+&lt;h2&gt;Names&lt;/h2&gt;
+{{#names}}
+  {{> user}}
+{{/names}}
+
+user.mustache:
+&lt;strong&gt;{{name}}&lt;/strong&gt;</code></pre>
+                    <p>
+                    可以看做是单一的、扩展的模板：
+                    </p>
+<pre><code>&lt;h2&gt;Names&lt;/h2&gt;
+{{#names}}
+  &lt;strong&gt;{{name}}&lt;/strong&gt;
+{{/names}}</code></pre>
+                    <p>
+                    在 mustaches.js 中，子模板对象可以作为 <code>Mustache.render</code> 的第三个参数传入。
+                    该对象的属性名必须是子模板名，值为子模板文本。
+                    </p>
 					</div>
 					
 					<div class="span12">
-						<h3></h3>
+						<h3 id="delimiter">设置分隔符</h3>
+                     <p>
+                     设置分隔符标签以 <code>=</code> 起始，将分隔符由默认的 <code>{{</code> 与 <code>}}</code>  改变成自定义的字符串。
+                     </p>
+                     <p>
+                     考虑如下故意生成的例子：
+                     </p>
+<pre><code>* {{ default_tags }}
+{{=<% %>=}}
+* <% erb_style_tags %>
+<%={{ }}=%>
+* {{ default_tags_again }}</code></pre>
+                    <p>
+                     例子中是一个拥有三个条目的列表。第一个条目使用默认标签风格，第二个使用的是通过设置分隔符标签而定义的 ERB 风格标签，
+                     最后一个通过再次设置分隔符定义而还原回了默认的风格。
+                    </p>
+                    <p>
+                    按照 <a href="http://google-ctemplate.googlecode.com/svn/trunk/doc/reference.html">ctemplates</a> 的说法，这个功能「特别适用于类似 TeX 这样的语言，因为双重花括号可能会出现在文本中，从而不利于标记。」
+                    </p>
+                    <p>
+                     自定义的分隔符不能包含空格或等号。
+                    </p>
 					</div>
 					
 					<div class="span12">
-						<h3></h3>
+						<h3 id="compiler">编译模板</h3>
+                     <p>
+                     Mustache 模板可以使用 <code>Mustache.compile</code> 来将其编译成 JavaScript 函数，从而提高渲染性能。
+                     </p>
+                     <p>
+                     如果你的模板视图会进行多次渲染，那么将模板编译成 JavaScript 函数将会最大限度的减少每次重新渲染的开销。
+                     </p>
+                     <p>
+                     也可以在服务器端对模板进行预编译，直接将 JavaScript 函数传输给浏览器，进一步减少客户端为初始化模板所做的必要处理的数量。
+                     </p>
+                     <p><strong>Mustache.compile</strong></p>
+                     <p>
+                     使用 <code>Mustache.compile</code> 将标准 Mustache 字符串模板编译成可重用的 Mustache 模板函数。
+                     </p>
+<pre><code>var compiledTemplate = Mustache.compile(stringTemplate);</code></pre>
+                     <p>
+                     从 <code>Mustache.compile</code> 返回的函数能够直接调用，将模板数据作为参数(子模板对象可以作为可选的第二个参数传入)传入，生成最终输出结果。
+                     </p>
+<pre><code>var templateOutput = compiledTemplate(templateData);</code></pre>
+                     <p><strong>Mustache.compilePartial</strong></p>
+                     <p>
+                     子模板也可以通过 <code>Mustache.compilePartial</code> 编译成函数。该函数的第一个参数，就是子模板出现在父模板中的名字。
+                     </p>
+<pre><code>Mustache.compilePartial('partial-name', stringTemplate);</code></pre>
+                     <p>
+                     编译后的子模板支持 <code>Mustache.render</code> 与 <code>Mustache.compile</code>。
+                     </p>
 					</div>
 					
 					<div class="span12">
-						<h3></h3>
+						<h3 id="plugins">JavaScript 库的插件</h3>
+                     <p>
+                     mustache.js 可以为不同的客户端类库进行特殊构建，包括如下：
+                     </p>
+                     <ul>
+                         <li><a href="http://jquery.com/">jQuery</a></li>
+                         <li><a href="http://mootools.net/">MooTools</a></li>
+                         <li><a href="http://www.dojotoolkit.org/">Dojo</a></li>
+                         <li><a href="http://developer.yahoo.com/yui/">YUI</a></li>
+                         <li><a href="http://qooxdoo.org/">qooxdoo</a></li>
+                     </ul>
+                     <p>
+                     可以通过 <a href="http://rake.rubyforge.org/">Rake</a> 与如下命令之一进行构建：
+                     </p>
+<pre><code>$ rake jquery
+$ rake mootools
+$ rake dojo
+$ rake yui3
+$ rake qooxdoo</code></pre>
 					</div>
 					
 					<div class="span12">
-						<h3></h3>
+						<h3 id="test">测试</h3>
+                     <p>
+                     mustache.js 的测试套件使用了 <a href="http://visionmedia.github.com/mocha/">mocha</a> 测试框架。
+                     为了能够运行测试，你需要安装 <a href="http://nodejs.org/">node</a>。
+                     安装完毕后，你可以通过 <a href="http://npmjs.org/">npm</a> 来安装 mocha。
+                     </p>
+<pre><code>$ npm install -g mocha</code></pre>
+                     <p>
+                     然后运行测试。
+                     </p>
+<pre><code>$ mocha test</code></pre>     
+                     <p>
+                     测试套件同时包括了单元测试与集成测试。如果模板没有正常渲染，你可以按照如下步骤编写测试：
+                     </p>
+                     <p>
+                     1，新建一个名为 <code>mytest.mustache</code> 的模板文件，放到 <code>test/_files</code> 文件夹下。
+                     将 <code>mytest</code> 替换成你想要测试的名字。
+                     </p>
+                     <p>
+                     2，在该文件夹内新建一个视图文件，名为 <code>mytest.js</code>。
+                     这个文件应该包含一个在闭合括号之内的 JavaScript 对象字面量。可以参考其它视图文件。
+                     </p>
+                     <p>
+                     3，在该文件夹内新建一个名为 <code>mytest.txt</code> 的文件，里面含有期望的输出。
+                     </p>
+                     <p>
+                     接下来，你可以使用如下命令来运行测试：
+                     </p>
+<pre><code>$ TEST=mytest mocha test/render_test.js</code></pre>                     
 					</div>
 					
 					<div class="span12">
-						<h3></h3>
+						<h3 id="thanks">感谢</h3>
+                     <p>
+                        如果没有以下朋友的帮助，mustache.js 不会变得这么了不起：
+                     </p>
+                    <ul>
+                        <li>Chris Wanstrath / defunkt</li>
+                        <li>Alexander Lang / langalex</li>
+                        <li>Sebastian Cohnen / tisba</li>
+                        <li>J Chris Anderson / jchris</li>
+                        <li>Tom Robinson / tlrobinson</li>
+                        <li>Aaron Quint / quirkey</li>
+                        <li>Douglas Crockford</li>
+                        <li>Nikita Vasilyev / NV</li>
+                        <li>Elise Wood / glytch</li>
+                        <li>Damien Mathieu / dmathieu</li>
+                        <li>Jakub Kuźma / qoobaa</li>
+                        <li>Will Leinweber / will</li>
+                        <li>dpree</li>
+                        <li>Jason Smith / jhs</li>
+                        <li>Aaron Gibralter / agibralter</li>
+                        <li>Ross Boucher / boucher</li>
+                        <li>Matt Sanford / mzsanford</li>
+                        <li>Ben Cherry / bcherry</li>
+                        <li>Michael Jackson / mjijackson</li>
+                    </ul>
 					</div>
 				</div>
 			</div>
 		</div>
 	
-		<!--script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-		<script src="../bootstrap/js/bootstrap.min.js"></script -->
+		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+		<script src="../bootstrap/js/bootstrap.min.js"></script>
+		<script src="../../../mustache.js/mustache.js"></script>
 	</body>
 </html>
