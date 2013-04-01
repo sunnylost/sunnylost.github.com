@@ -6,6 +6,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 		<style type="text/css">
+			.container {
+				margin-top: 20px;
+			}
+			
 			#logo {
 				color: #000;
 				height: 180px;
@@ -26,6 +30,7 @@
 			
 			p {
 				letter-spacing: 1px;
+				line-height: 25px;
 			}
 			
 			blockquote p {
@@ -54,17 +59,17 @@
 						<li><a href="#usage">使用</a></li>
 						<li class="nav-header">模板</li>
 						<li><a href="#variable">变量</a></li>
-						<li><a href="#sections">Section</a></li>
-						<li><a href="#">False 值或空列表</a></li>
-						<li><a href="#">非空列表</a></li>
-						<li><a href="#">函数</a></li>
-						<li><a href="#">反向 Section</a></li>
-						<li><a href="#">注释</a></li>
-						<li><a href="#">子模板</a></li>
-						<li><a href="#">设置分隔符</a></li>
+						<li><a href="#sections">片段</a></li>
+						<li><a href="#empty">False 值或空列表</a></li>
+						<li><a href="#non-empty">非空列表</a></li>
+						<li><a href="#function">函数</a></li>
+						<li><a href="#invert">反向片段</a></li>
+						<li><a href="#comment">注释</a></li>
+						<li><a href="#partials">子模板</a></li>
+						<li><a href="#delimiter">设置分隔符</a></li>
 						<li><a href="#compile">编译模板</a></li>
 						<li class="nav-header"></li>
-						<li><a href="#">JavaScript 库的插件</a></li>
+						<li><a href="#plugins">JavaScript 库的插件</a></li>
 						<li class="nav-header"></li>
 						<li><a href="#test">测试</a></li>
 						<li class="nav-header"></li>
@@ -123,17 +128,14 @@
 						<p>
 						下面是一个如何使用 mustache.js 的简单例子：
 						</p>
-						<pre>
-							<code>
-var view = {
+<pre><code>var view = {
   title: "Joe",
   calc: function () {
 	return 2 + 4;
   }
 };
 
-var output = Mustache.render("{{title}} spends {{calc}}", view);</code>
-						</pre>
+var output = Mustache.render("{{title}} spends {{calc}}", view);</code></pre>
 						<p>
 						在这里例子中，<code>Mustache.render</code> 接受两个参数： 1) mustache 模板与 2) 包含数据和代码的视图对象来渲染模板。
 						</p>
@@ -142,27 +144,185 @@ var output = Mustache.render("{{title}} spends {{calc}}", view);</code>
 					<div class="span12">
 						<h2>模板</h2>
 						<P>
-						A mustache template is a string that contains any number of mustache tags. Tags are indicated by the double mustaches that surround them. {{person}} is a tag, as is {{#person}}. In both examples we refer to person as the tag's key.
+						一个 <a href="http://mustache.github.com/">mustache</a> 模板就是包含了许多 mustache 标签的字符串。
+						标签由围绕它们的双重大括号指定。<code>{{person}}</code> 是一个标签，<code>{{#person}}</code> 同样也是。
+						在这两个示例中，我们都引用 <code>person</code> 作为标签的 key。
 						</p>
 						<p>
-						There are several types of tags available in mustache.js.
+						mustache.js 支持多种标签。
 						</p>
 					</div>
 					
 					<div class="span12">
-						<h2 id="variable">变量</h2>
+						<h3 id="variable">变量</h3>
+						<p>
+						最基础的标签类型是一个简单的变量。
+						<code>{{name}}</code> 标签会匹配当前上下文中名为 <code>name</code> 的值，并将其呈现。
+						若找不到这样的名字，则不会呈现任何内容。
+						</p>
+						<p>
+						默认情况下，所有变量都是经过 HTML 转码的。若想输出原文，可以使用三重大括号： <code>{{{name}}}</code>。
+						你也可以使用 <code>&amp;</code> 来防止变量转码。
+						</p>
+						<p>
+						视图：
+						</p>
+<pre><code>{
+  "name": "Chris",
+  "company": "&lt;b&gt;GitHub&lt;/b&gt;"
+}</code>
+</pre>
+					<p>
+					模板：
+					</p>
+<pre><code>* {{name}}
+* {{age}}
+* {{company}}
+* {{{company}}}
+* {{&amp;company}}</code></pre>
+					<p>
+					输出：
+					</p>
+<pre><code>* Chris
+*
+* &amp;lt;b&amp;gt;GitHub&amp;lt;/b&amp;gt;
+* &lt;b&gt;GitHub&lt;/b&gt;
+* &lt;b&gt;GitHub&lt;/b&gt;</code></pre>
+					<p>
+					JavaScript 中的点符号可以用来访问视图中对象的属性。
+					视图：
+					</p>
+<pre><code>{
+  "name": {
+    "first": "Michael",
+    "last": "Jackson"
+  },
+  "age": "RIP"
+}</code></pre>
+					<P>
+					模板：
+					</p>
+<pre><code>* {{name.first}} {{name.last}}
+* {{age}}</code></pre>
+					<p>
+					输出：
+					</p>
+<pre><code>* Michael Jackson
+* RIP</code></pre>
 					</div>
 					
 					<div class="span12">
-						<h2 id="sections">Sections</h2>
+						<h3  id="sections">片段(section)</h3>
+						<p>
+						片段会渲染文本块一次或多次，这要取决于当前上下文内的键值。
+						</p>
+						<p>
+						一个片段以 <code>#</code> 开始，以 <code>/</code> 结束。
+						也就是说，<code>{{#person}}</code> 表示 <code>person</code> 片段的开始，而 <code>{{/person}}</code> 表示该片段的结束。
+						两个标签间的文本就是这个片段的「块(block)」。
+						</p>
+						<p>
+						片段的行为由给定的键值决定。
+						</p>
 					</div>
 					
 					<div class="span12">
-						<h2 id="empty"></h2>
+						<h3 id="empty">False 值或空列表</h3>
+						<p>
+						如果 <code>person</code> 键不存在，或者存在但值为 <code>null</code>、 <code>undefined</code>、 <code>false</code>， 或者是一个空的列表，(片段的)块将不会被渲染。
+						</p>
+						<p>
+						视图：
+						</p>
+<pre><code>{
+  "person": false
+}</code>
+</pre>
+					<P>
+					模板：
+					</p>
+<pre><code>Shown.
+{{#person}}
+Never shown!
+{{/person}}</code></pre>
+					<p>
+					输出：
+					</p>
+<pre><code>Shown.</code></pre>
 					</div>
 					
 					<div class="span12">
-						<h2></h2>
+						<h3 id="non-empty">非空列表</h3>
+						<p>
+						如果 <code>person</code> 键存在，并且值不是 <code>null</code>、 <code>undefined</code>、 <code>false</code>， 并且不是一个空的列表，(片段的)块将会渲染一或多次。
+						</p>
+						<p>
+						当键值是一个列表时，块会为列表的每个条目渲染一次。在每次迭代过程中，块的上下文都会设置成列表中的当前条目。
+						这样的话，我们就可以遍历一个集合。
+						</p>
+						<p>
+						视图：
+						</p>
+<pre><code>{
+  "stooges": [
+    { "name": "Moe" },
+    { "name": "Larry" },
+    { "name": "Curly" }
+  ]
+}</code>
+</pre>
+						<P>
+						模板：
+						</p>
+<pre><code>{{#stooges}}
+<b>{{name}}</b>
+{{/stooges}}
+</code></pre>
+						<p>
+						输出：
+						</p>
+<pre><code><b>Moe</b>
+<b>Larry</b>
+<b>Curly</b></code></pre>
+					<p>
+					
+					</p>
+					</div>
+					
+					<div class="span12">
+						<h3 id="function"></h3>
+					</div>
+					
+					<div class="span12">
+						<h3 id="invert"></h3>
+					</div>
+					
+					<div class="span12">
+						<h3 id="comment"></h3>
+					</div>
+					
+					<div class="span12">
+						<h3></h3>
+					</div>
+					
+					<div class="span12">
+						<h3></h3>
+					</div>
+					
+					<div class="span12">
+						<h3></h3>
+					</div>
+					
+					<div class="span12">
+						<h3></h3>
+					</div>
+					
+					<div class="span12">
+						<h3></h3>
+					</div>
+					
+					<div class="span12">
+						<h3></h3>
 					</div>
 				</div>
 			</div>
