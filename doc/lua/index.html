@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lua 5.2 参考手册——1，简介</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="custom.css" rel="stylesheet" media="screen">
+    </head>
+    <body data-spy="scroll" data-target=".bs-docs-sidebar">
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="container">
+                <a class="brand" href="#">目录</a>
+                <ul class="nav">
+                  <li class="active"><a href="#" title="Introduction">1，简介</a></li>
+                  <li><a href="concept.html" title="Basic Concepts">2，基本概念</a></li>
+                  <li><a href="language.html" title="The Language">3，语言</a></li>
+                  <li><a href="api.html" title="The Application Program Interface">4，应用程序接口(API)</a></li>
+                  <li><a href="auxiliary.html" title="The Auxiliary Library">5，辅助库</a></li>
+                  <li><a href="standard.html" title="Standard Library">6，标准库</a></li>
+                  <li><a href="standalone.html" title="Lua Standalone">7，Lua 独立</a></li>
+                  <li><a href="incompatibility.html" title="Incompatibilities with the Previous Version">8，与之前版本的不兼容性</a></li>
+                  <li><a href="syntax.html" title="The Complete Syntax of Lua">9，Lua 完整语法</a></li>
+                </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="container-fluid container">
+        <div class="span9">
+          <div class="hero-unit">
+            <a class="site" href="http://www.lua.org/">
+                <img src="lua.gif" title="Lua" />
+            </a>
+            <p>
+              by Roberto Ierusalimschy, Luiz Henrique de Figueiredo, Waldemar Celes
+            </p>
+            <p>
+              Copyright © 2011–2013 Lua.org, PUC-Rio. Freely available under the terms of the <a href="http://www.lua.org/license.html">Lua license</a>.
+            </p>
+            <p>
+              中文翻译：<a href="http://weibo.com/sunnylost">sunnylost</a>，翻译过程中参考了<a href="http://www.codingnow.com/2000/download/lua_manual.html">云风的译文</a>，在此表示感谢。
+            </p>
+          </div>
+
+          <div class="span12">
+            <h2>简介</h2>
+            <p title="Lua is an extension programming language designed to support general procedural programming with data description facilities.">
+              Lua 是一门扩展式的编程语言，它被设计成使用数据描述工具来支持普通的过程式语言。
+              它还对面向对象编程、函数式编程、数据驱动编程提供了良好的支持。
+              Lua 能够作为一门强大的、轻量级的、嵌入式的脚本语言来供任何语言使用。
+              Lua 以库的形式实现，由 clean C(标准 C 与 C++ 的通用子集)写成。
+            </p>
+            <p>
+              作为一门扩展式语言，Lua 没有「main」 程序的概念：它只能工作在嵌入的宿主委托(host client)中，宿主委托也叫「embedding program」或干脆简称为「host」。
+              宿主程序能够通过调用函数来执行一段 Lua 代码，能够读写 Lua 变量，还能够注册 C 函数来让 Lua 代码调用。
+              通过使用 C 函数，极大的扩展了 Lua 使其能够处理不同领域。这样就能够定制出共享同一个句法框架的不同语言。
+              Lua 的官方发布版包含了一个名为 lua 的示例宿主程序，它使用 Lua 库来提供一个完整独立的 Lua 解释器，用于交互式或批处理。
+            </p>
+            <p>
+              Lua 是自由软件，它所使用的许可证规定了它不会提供任何担保。本手册描述的实现可以在 Lua 的官方网站 <a href="www.lua.org">www.lua.org</a> 找到。
+            </p>
+            <p>
+              与其他任何参考手册一样，这份文档在有些地方会比较枯燥。关于 Lua 设计背后的决策讨论，请参见 Lua 官网上提供的技术论文。要了解更多 Lua 编程细节，请阅读 Roberto 的「Programming in Lua」。
+            </p>
+            </div>
+         </div>
+        </div>
+	
+        <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+        <script src="../bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>

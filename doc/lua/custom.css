@@ -1,0 +1,17 @@
+.hero-unit {
+    background-color: #fff;
+}
+
+.hero-unit p {
+    font-size: 12px
+}
+
+.site {
+    margin-bottom: 20px;
+    display: block;
+}
+
+.span12 p {
+    font-size: 16px;
+    line-height: 1.6em;
+}
