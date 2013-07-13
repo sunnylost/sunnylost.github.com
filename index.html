@@ -54,13 +54,14 @@
             html = '<div class="section" style="background:$;width:_px;"><a href="$/index.html">$</a></div>',
             sname,
             htmls = '',
+            flag = true,
             len = sections.length,
             perWidth = +(width / len);
         body.style.fontSize = 40 / len + 'px';
         while(len--) {
             sname = sections[len];
             htmls += html.replace(/\$/g, function(a) {
-                return colors.length > len ? colors.splice(+(Math.random() * len), 1) : sname;
+                return colors.length > len ? colors.splice(+(Math.random() * len), 1) : (flag ? (flag = !flag, sname.toLowerCase()) : (flag = !flag, sname));
             }).replace('_', perWidth);
         }
         body.innerHTML = htmls;
