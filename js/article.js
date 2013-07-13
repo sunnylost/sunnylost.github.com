@@ -1,6 +1,6 @@
 (function() {
     var doc = document,
-        body = doc.body,
+        root = navigator.userAgent.indexOf('Chrome') != -1 ? doc.body : doc.documentElement || doc.body,
         win = window,
         height = parseInt(win.innerHeight),
         user = doc.getElementById('user'),
@@ -12,7 +12,7 @@
         win.onscroll = function() {
             clearTimeout(globalID);
             globalID = setTimeout(function() {
-                top = body.scrollTop + offset;
+                top = root.scrollTop + offset;
                 user.style.top = top + 'px';
             }, 500);
         }
