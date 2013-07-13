@@ -1,0 +1,43 @@
+@import url("basic.css");
+
+.content {
+    width: 80%;
+    overflow: auto;
+    margin: 10px 0 0 50px;
+}
+
+header {
+    margin-bottom: 50px;
+}
+
+/* sidebar */
+.user {
+    position: absolute;
+    right: 0;
+    top: 200px;
+    width: 20%;
+    text-align: center;
+    -webkit-transition: all 0.8s;
+    -moz-transition: all 0.8s;
+    -moz-transition: all 0.8s;
+    -o-transition: all 0.8s;
+    transition: all 0.8s;
+}
+
+.avatar {
+    width: 70%;
+    margin: auto;
+}
+
+.avatar img {
+    border-radius: 50%;
+}
+
+.nickname {
+    display: block;
+    margin-top: 10px;
+}
+
+/*@media screen and () {
+
+}*/

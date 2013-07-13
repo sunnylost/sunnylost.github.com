@@ -3,12 +3,18 @@
 <head>
 <title>jQuery 源码阅读 core.js</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="github.css">
+<link href='http://fonts.googleapis.com/css?family=Graduate|Numans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="../style/article.css">
 </head>
 <body>
+    <div class="content">
+        <header>
+            <h1>jQuery 源码阅读 core.js</h1>
+        </header>
+    <article>
+
   <h4>本文由<a href="http://markdownpad.com/">MarkdownPad</a>生成。对文章内容有疑义，欢迎来<a href="http://weibo.com/sunnylost">我的微博</a>吐槽。</h4>
   <hr/>
-<p>title: jQuery 源码阅读 core.js</p>
 <p>create: 2013-05-04 19:44</p>
 <p>update: 2013-05-05 11:46</p>
 <hr />
@@ -412,7 +418,16 @@ jQuery.fn = jQuery.prototype = {
 <p>由于当时是2007年10月9日，浏览器还没有现在这么强悍，Chrome 也要到一年后才会出现，所以这里说使用 $(...) 的速度提高了三倍，不知道是不是因为浏览器性能的缘故。</p>
 <p>猜猜这样做的好处，首先你不需要判断是否使用了 new，因为内部统一会进行 new 操作，然后我们返回了 init 的实例，但这个实例已经与 jQuery 对象没有了任何联系，所以我们再将 init 的 prototype 属性重新指向给 jQuery 的原型对象，于是 init 的实例就变成了 jQuery 的实例。</p>
 <p>大概就是这样吧:)</p>
-
+</article>
+</div>
+<aside id="user" class="user">
+    <div class="avatar">
+        <img src="../imgs/avatar.jpg" width="120" height="120">
+    </div>
+    <span class="nickname">Sunnylost</span>
+</aside>
+<script type="text/javascript" src="../js/article.js"></script>
+<script type="text/javascript" src="../js/lighting.js"></script>
 </body>
 </html>
 <!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

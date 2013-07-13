@@ -1,0 +1,48 @@
+
+::selection {
+    background: #108D2E;
+    color: #fff;
+}
+::-moz-selection {
+   background: #108D2E;
+   color: #fff;
+}
+
+body {
+    background: #f6f6f6;
+    line-height: 1.2;
+}
+
+h2 {
+    font-family: Graduate, Georgia,Cambria,"Times New Roman",Times,serif;
+}
+
+li, p, pre, code {
+    font-family: Numans, Georgia,Cambria,"Times New Roman",Times,serif;
+}
+
+li {
+    margin: 10px;
+}
+
+
+p {
+    font-size: 18px;
+    line-height: 1.45;
+    font-weight: 400;
+}
+
+pre {
+    line-height: 20px;
+    background: #333;
+    font-size: 13px;
+    color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+article, header {
+    background: #fff;
+    box-shadow: 2px 0 4px rgba(100,100,100,0.1);
+    padding: 10px 50px;
+}
