@@ -48,20 +48,21 @@
             root = document.documentElement || body,
             width = root.offsetWidth,
             // sections = [ 'doc|文档', 'problemset|习题集', 'translate|翻译', 'demo|实例', 'algorithms|算法', 'article|文章' ],
-            sections = [ 'Article' ],
+            sections = [ 'Article', 'Demo' ],
             // colors = [ '#F17106', '#FF2919', '#9E2148', '#EE9675', '#C8856A', '#14565B' ],
-            colors = [ '#F17106' ],
-            html = '<div class="section" style="background:$;width:_px;"><a href="$/index.html">$</a></div>',
+            colors = [ '#F17106', '#EE9675' ],
+            html = '<div class="section" style="background:$;width:_%;"><a href="$/index.html">$</a></div>',
             sname,
             htmls = '',
             flag = false,
             len = sections.length,
-            perWidth = +(width / len);
+            i = 0,
+            perWidth = +(100 / len);
         body.style.fontSize = 40 / len + 'px';
-        while(len--) {
-            sname = sections[len];
+        for(; i < len; i++) {
+            sname = sections.shift();
             htmls += html.replace(/\$/g, function(a) {
-                return colors.length > len ? colors.splice(+(Math.random() * len), 1) : (flag = !flag ? sname.toLowerCase() : sname);
+                return colors.length > sections.length ? colors.splice(+(Math.random() * colors.length), 1) : ((flag = !flag) ? sname.toLowerCase() : sname);
             }).replace('_', perWidth);
         }
         body.innerHTML = htmls;

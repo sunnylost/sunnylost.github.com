@@ -1,0 +1,183 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    min-height: 100%;
+}
+
+body {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    min-width: 800px;
+}
+
+/* head */
+header {
+    background: #4A4E52;
+    position: relative;
+    height: 72px;
+}
+
+.title {
+    background: url(sprite.png) no-repeat 0 -41px;
+    height: 36px;
+    width: 216px;
+    display: inline-block;
+    margin: 20px 0 0 50px;
+    text-indent: -9999px;
+}
+
+.subtitle {
+    background: url(sprite.png) -218px -39px;
+    display: inline-block;
+    text-indent: -9999px;
+    height: 20px;
+    width: 86px;
+    vertical-align: bottom;
+}
+
+.subtitle:hover {
+    background-position: -218px -57px;
+}
+
+.refresh {
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    width: 50px;
+    height: 50px;
+    opacity: 0.7;
+    background: url(sprite.png) 0 -77px;
+}
+
+.refresh a {
+    background: url(sprite.png) -50px -77px;
+    display: block;
+    height: 36px;
+    width: 38px;
+    margin: 7px auto 0;
+    -webkit-transition:-webkit-transform 0.8s linear;
+}
+
+.refresh:hover {
+    opacity: 1;
+}
+
+/* content */
+article {
+    position: absolute;
+    width: 100%;
+    top: 72px;
+    bottom: 70px;
+    background: #4A4E52;
+}
+
+.stage {
+    width: 98%;
+    height: 98%;
+    position: relative;
+    background: url(bg_logo.png) no-repeat 50% 50%;
+    overflow: hidden;
+}
+
+.tag, .tmpTag {
+    position: absolute;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+}
+
+.tag {
+    -webkit-transition: all 0.8s ease;
+    -moz-transition: all 0.8s ease;
+    transition: all 0.8s ease;
+}
+
+.tag:hover {
+    box-shadow: 3px 3px 10px #000;
+}
+
+
+/* footer */
+footer {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    background: #4A4E52;
+}
+
+.time {
+    width: 522px;
+    height: 72px;
+    overflow: hidden;
+    position: relative;
+    margin: 0 auto;
+}
+
+.bar {
+    width: 522px;
+    height: 9px;
+    margin: 14px auto 0;
+    background: url(sprite.png);
+}
+
+.time a {
+    position: absolute;
+    color: #fff;
+    top: 3px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.time a i {
+    display: block;
+    width: 35px;
+    height: 32px;
+    background: url(sprite.png) -30px -10px;
+}
+
+.time a:hover i {
+    background-position: -60px -10px;
+}
+
+.time a:hover {
+    color: #70D2FF;
+}
+
+.time .current {
+    color: #70D2FF;
+    cursor: normal;
+}
+
+#today {
+    left: 5px;
+}
+
+#threedays {
+    left: 250px;
+}
+
+#week {
+    right: 5px;
+}
+
+.spot {
+    position: absolute;
+    top: 3px;
+    left: 5px;
+    width: 35px;
+    height: 32px;
+    background: url(sprite.png) 1px -10px;
+    -webkit-transition: left 0.8s ease;
+    -moz-transition: left 0.8s ease;
+    -o-transition: left 0.8s ease;
+    -ms-transition: left 0.8s ease;
+}
