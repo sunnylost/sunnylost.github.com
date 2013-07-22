@@ -203,7 +203,9 @@ var layout = [
         pos,
         top = 0,
         left = 0,
-        tags = [];
+        isRunning = false,
+        tags = [],
+        queue = [];
 
     function build(flag) {
         var isAnotherSide = false;
@@ -321,7 +323,6 @@ var layout = [
 
     function setRealPos() {
         var i = 0,
-            count,
             len = tags.length,
             pos,
             tag;
@@ -384,6 +385,7 @@ var layout = [
 
     function restore() {
         var tag,
+            count = tags.length,
             info;
         for(var i = 0, len = tags.length; i < len; i++) {
             tag = tags[i];
@@ -395,6 +397,11 @@ var layout = [
                     el.className = 'tag';
                     el.style.left = left + 'px';
                     el.innerHTML = 'Haha' + parseInt(Math.random() * 100);
+                    count--;
+                    !count && queue.length && setTimeout(function() {
+                        moveOut(queue.shift());
+                        isRunning = false;
+                    }, 600)
                 }
             }(tag, info[0]), parseInt(500 * Math.random()) + 100);
         }
@@ -416,7 +423,12 @@ var layout = [
             this.curTime.className = '';
             el.className = 'current';
             this.curTime = el;
-            moveOut(this.direction);
+            if(isRunning) {
+                queue.push(this.direction);
+            } else {
+                isRunning = true;
+                moveOut(this.direction);
+            }
             e.preventDefault();
         },
 
