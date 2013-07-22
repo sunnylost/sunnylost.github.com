@@ -1,0 +1,13 @@
+body {
+    margin-top: 50px;
+    font:14px/20px "Helvetica Neue";
+}
+
+#control {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.field {
+    margin: 0 auto;
+}
