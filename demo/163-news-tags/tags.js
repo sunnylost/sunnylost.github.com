@@ -398,10 +398,16 @@ var layout = [
                     el.style.left = left + 'px';
                     el.innerHTML = 'Haha' + parseInt(Math.random() * 100);
                     count--;
-                    !count && queue.length && setTimeout(function() {
-                        moveOut(queue.shift());
-                        isRunning = false;
-                    }, 600)
+                    if(!count) {
+                        if(queue.length) {
+                            setTimeout(function() {
+                                moveOut(queue.shift());
+                                isRunning = false;
+                            }, 600)
+                        } else {
+                            isRunning = false;
+                        }
+                    }
                 }
             }(tag, info[0]), parseInt(500 * Math.random()) + 100);
         }
