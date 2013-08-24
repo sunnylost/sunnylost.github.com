@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href='http://fonts.googleapis.com/css?family=Graduate|Numans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="../style/article.css">
+</head>
+<body>
+     <div class="content">
+        <header>
+            <h1>jQuery 源码阅读 data.js</h1>
+        </header>
+    <article>
+
+    <h4>本文由<a href="http://markdownpad.com/">MarkdownPad</a>生成。对文章内容有疑义，欢迎来<a href="http://weibo.com/sunnylost">我的微博</a>吐槽。</h4>
+      <hr/>
+    <p>title: jQuery 源码阅读 —— data.js</p>
+    <p>create: 2013-08-24 22:09</p>
+    <p>update:</p>
+    <hr />
+    <p>jQuery 中的 data 部分用于将数据与 DOM 节点进行关联。</p>
+    <p>举个简单的例子，假如我们的 HTML 代码中有如下内容：</p>
+    <pre><code>&lt;button id=&quot;btn&quot;&gt;Test&lt;/button&gt;
+    </code></pre>
+
+    <p>接下来，在 JavaScript 代码中：</p>
+    <pre><code>var btn = $('#btn');
+    btn.data('type', 'button');
+    btn.on('click', function() {
+        console.log(btn.data('type'));
+    })
+    </code></pre>
+
+    <p>这样，当你点击按钮时，控制台便会输出 button 字符串。</p>
+    <p>除了用于增加和获取数据的 data() 方法，此外还有用于判断数据是否存在的 jQuery.hasData() 方法，清除数据的 removeData() 方法，整个 data 部分的 API 就这么简单。(data() 与 removeData() 同时为 jQuery 的静态和实例方法)</p>
+    <h2>原理</h2>
+    <p>jQuery 是如何将数据和 DOM 元素关联起来的？说起来可简单了，就是使用了最常见的 JavaScript 对象。</p>
+    <p>关于 Object 我们太熟悉了，可以说 JavaScript 中一切皆为对象，我们只需</p>
+    <pre><code>var o = {};
+    </code></pre>
+
+    <p>就创建了一个对象 o，而对象可以拥有属性，属性名为字符串，属性值则是任意类型：</p>
+    <pre><code>o.button = {};
+    o.button.type = 'button';
+    </code></pre>
+
+    <p>我们假设 o.button 就是上面的 button 元素，那么我们是不是就已经把 DOM 元素和数据 type 关联在一起了？实际上 jQuery 内部的处理就是如此，jQuery 有一个 cache 对象就相当于我们定义的对象 o，它的作用就是保存 DOM 元素和数据之间的关联。</p>
+    <h2>区分 DOM 元素</h2>
+    <p>如果我们有两个 DOM 元素 btn1 和 btn2，二者都是 button 类型，我们进行如下处理：</p>
+    <pre><code>btn1.data('content', 'Hello');
+    btn2.data('content', 'World');
+    </code></pre>
+
+    <p>那么 jQuery 内部是如何区分这两个 button 的，如果是你该如何来做？</p>
+    <p>哈，你肯定会想到，既然是两个不同的元素，那么我给它们分别分配一个独一无二的标识符来区分不就可以了吗？而在 core.js 中，恰好就定义了这么个标识符：jQuery.guid。</p>
+    <p>jQuery.guid 的初始值为 1，而且不断递增。</p>
+    <p>我们来写点代码：</p>
+    <pre><code>btn1.dataId = jQuery.guid++;
+    btn2.dataId = jQuery.guid++;
+    jQuery.cache[btn1.dataId] = { content: 'Hello' };
+    jQuery.cache[btn2.dataId] = { content: 'World' };
+    </code></pre>
+
+    <p>瞧，btn1 和 btn2 的 dataId 不同，通过它就可以找到 cache 上对应的对象。只不过 jQuery 不会用 dataId 这么挫的名字来作为元素的标识符啦~至于是啥，看源码就清楚了！</p>
+    <h2>acceptData()</h2>
+    <p>在知道了原理，了解了如何区分 DOM 对象后，我们便可以阅读源码了。</p>
+    <p>但是我先提个问题，是不是所有的 DOM 对象都可以关联数据呢？</p>
+    <p>答案是否定的！</p>
+    <p>我们先看源码中执行 jQuery.extend 的部分：</p>
+    <pre><code>cache: {},
+
+    expando: &quot;jQuery&quot; + (core_version + Math.random()).replace(/\D/g, &quot;&quot;),
+
+    noData: {
+        &quot;embed&quot;: true,
+        &quot;object&quot;: &quot;clsid:D27CDB6E-AE6D-11cf-96B8-444553540000&quot;,
+        &quot;applet&quot;: true
+    },
+    </code></pre>
+
+    <p>cache 我们已经知道了，是真正存储数据的对象。</p>
+    <p>expando，看名字就明白啦，它便是上面提到的 dataId 的替代者，至于为什么不用固定的名字，那是因为 jQuery 是可以多版本共存的，如果所有版本都用相同的 expando，那么使用某版本 jQuery 设置的数据就有可能被另一个版本 jQuery 的操作给覆盖掉，实在是够乱。</p>
+    <p>而 noData 对象则标明了哪些元素是不能关联数据的，包括了：</p>
+    <ol>
+    <li>embed 元素</li>
+    <li>object 元素</li>
+    <li>applet 元素</li>
+    </ol>
+    <p>object 后面的内容是 Flash 的 classid，即除了 Flash 外，所有通过 embed、object、applet 标签引入的元素都无法关联数据，原因在 jQuery 的注释中解释了：为这些元素设置 expando 属性会引发无法捕获的异常。</p>
+    <p>知道了这些内容，acceptData() 方法中的逻辑便清晰了：</p>
+    <pre><code>// 不要为任何非元素节点设置数据，因为数据将无法被清除 (#8335)。
+    if (elem.nodeType &amp;&amp; elem.nodeType !== 1 &amp;&amp; elem.nodeType !== 9) {
+        return false;
+    }
+
+    var noData = elem.nodeName &amp;&amp; jQuery.noData[elem.nodeName.toLowerCase()];
+
+    return !noData || noData !== true &amp;&amp; elem.getAttribute(&quot;classid&quot;) === noData;
+    </code></pre>
+
+    <p>先排除所有非元素的节点，nodeType 为 1 表示 Element，9 表示 Document。</p>
+    <p>再排除 noData 中列出的元素，当然对 object 要特殊处理。</p>
+    <h2>internalData()</h2>
+    <p>查看 jQuery.extend 中的其他内容你会发现，这些静态方法基本上都依赖于另外两个内部方法：internalData() 和 internalRemoveData()，仅仅是传入的参数不同。</p>
+    <p>internalData() 方法用于存储和读取数据。</p>
+    <pre><code>function internalData(elem, name, data, pvt /* 仅限内部使用 */ )
+    </code></pre>
+
+    <p>看参数列表就能明白，如果传入 data，表示设置数据，如果不传，则是读取数据，但是最后那个仅限内部使用的 pvt 参数是干什么的？</p>
+    <p>要知道 jQuery 内部同样会使用 data() 这样的方法来对元素进行数据操作，例如后面会讲到的关于事件处理部分。那这样就引发了一个问题，jQuery 如何来区分当前操作的数据是 jQuery 自己设置的，还是用户设置的？</p>
+    <p>解决办法就是将 jQuery 自己设置的数据和用户设置的数据分开。</p>
+    <pre><code>jQuery.cache[btn1.dataId] = {}；
+    </code></pre>
+
+    <p>这是前面用过的示例代码，实际上这个代码并不完整，最接近真实情况的代码是：</p>
+    <pre><code>jQuery.cache[btn1.dataId] = { data: {} };
+    </code></pre>
+
+    <p>看，最外层的对象是给 jQuery 自己用的，这个对象的 data 属性则是留给用户的，就是说，当 pvt 为 true，jQuery 就去操作外层对象，如果为 false，就去操作里面的 data 对象，如此一来，就不怕操作数据的时候冲突了。</p>
+    <p>除了这个内部使用的参数外，jQuery 还定义了直供内部使用的 _data() 和 _removeData() 两个方法，只有在这两个方法内才会去传入 pvt 参数。</p>
+    <p>来看 internalData() 的源码：</p>
+    <pre><code>if (!jQuery.acceptData(elem)) {
+        return;
+    }
+    </code></pre>
+
+    <p>这句话过滤掉了无法设置数据的元素。</p>
+    <pre><code>var thisCache, ret,
+        internalKey = jQuery.expando,
+        getByName = typeof name === &quot;string&quot;,
+
+        // 我们需要对 DOM 节点和 JS 对象分别处理，因为 IE6-7 无法正确回收 DOM 和 JS 互相引用的对象
+        isNode = elem.nodeType,
+
+        // 只有 DOM 节点需要全局 jQuery 缓存；
+        // JS 对象的数据直接绑定在对象本身，这样垃圾回收能够自动处理
+        cache = isNode ? jQuery.cache : elem,
+
+        id = isNode ? elem[internalKey] : elem[internalKey] &amp;&amp; internalKey;
+    </code></pre>
+
+    <p>上面这段内容也比较简单，但是揭露了一个我没有提到的问题，那就是 data() 方法并非只能操作 DOM 元素，你可以传入 JavaScript 对象：</p>
+    <pre><code>var o = {};
+    jQuery.data(o, 'type', 'object');
+    </code></pre>
+
+    <p>由于 IE 6-7 的问题，如果你在 DOM 节点上直接绑定 JavaScript 对象的话，垃圾回收器很可能会因为两者的循环引用而无法回收对象，因此造成内存泄露，而 JavaScript 对象则没有这方面的担忧，所以 jQuery 就直接将数据绑定到对象本身，而并非 jQuery.cache 中。</p>
+    <pre><code>if ((!id || !cache[id] || (!pvt &amp;&amp; !cache[id].data)) &amp;&amp; getByName &amp;&amp; data === undefined) {
+        return;
+    }
+    </code></pre>
+
+    <p>如果元素或对象没有关联过数据，那么就不做操作(这里指读取数据操作)。</p>
+    <pre><code>if (!id) {
+        if (isNode) {
+            elem[internalKey] = id = core_deletedIds.pop() || jQuery.guid++;
+        } else {
+            id = internalKey;
+        }
+    }
+    </code></pre>
+
+    <p>如果 id 不存在，表明元素或对象没有关联过数据，而只有元素是需要在全局缓存的，因此要使用 guid，而 core_deletedIds 则是在 core.js 中定义的一个数组，用于放置废弃的 guid，这样就可以很有效率的利用 guid。</p>
+    <pre><code>if (!cache[id]) {
+        cache[id] = {};
+
+        if (!isNode) {
+            cache[id].toJSON = jQuery.noop;
+        }
+    }
+    </code></pre>
+
+    <p>这里要提到的是 toJSON，这是保证对 JavaScript 对象进行序列化操作时不会将关联的数据也序列化出来。</p>
+    <pre><code>if (typeof name === &quot;object&quot; || typeof name === &quot;function&quot;) {
+        if (pvt) {
+            cache[id] = jQuery.extend(cache[id], name);
+        } else {
+            cache[id].data = jQuery.extend(cache[id].data, name);
+        }
+    }
+    </code></pre>
+
+    <p>有时候要关联的数据可能是个对象而并非键值对，这时候需要执行浅拷贝。</p>
+    <pre><code>if (!pvt) {
+        if (!thisCache.data) {
+            thisCache.data = {};
+        }
+
+        thisCache = thisCache.data;
+    }
+    </code></pre>
+
+    <p>理解 pvt 的含义。</p>
+    <pre><code>if (data !== undefined) {
+        thisCache[jQuery.camelCase(name)] = data;
+    }
+    </code></pre>
+
+    <p>设置数据。你可能注意到了 jQuery.camelCase() 方法，它是用于将类似 &quot;a-b&quot; 转换为 &quot;aB&quot; 形式，为什么需要这么做？后面讲到 data 属性时你就明白了。</p>
+    <pre><code>if (getByName) {
+        ret = thisCache[name];
+
+        if (ret == null) {
+
+            ret = thisCache[jQuery.camelCase(name)];
+        }
+    } else {
+        ret = thisCache;
+    }
+
+    return ret;
+    </code></pre>
+
+    <p>这是在获取数据，如果直接通过 name 获取不到的话，会尝试使用驼峰形式的名字再次获取一遍，最终返回结果。</p>
+    <p>internalData() 函数讲解完毕。</p>
+    </article>
+</div>
+<aside id="user" class="user">
+    <div class="avatar">
+        <img src="../imgs/avatar.jpg" width="120" height="120">
+    </div>
+    <span class="nickname">Sunnylost</span>
+</aside>
+<script type="text/javascript" src="../js/article.js"></script>
+</body>
+</html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->
