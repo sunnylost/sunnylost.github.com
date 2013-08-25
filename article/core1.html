@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <title>jQuery 源码阅读 core.js</title>
 <meta charset="utf-8" />
 <link href='http://fonts.googleapis.com/css?family=Graduate|Numans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" type="text/css" href="../style/prism.css">
 <link rel="stylesheet" type="text/css" href="../style/article.css">
 </head>
 <body>
@@ -22,7 +23,8 @@
 <p>好吧，先从核心文件 core.js 读起。</p>
 <p>打开 core.js 文件，你首先就会看到一大堆声明的变量，大部分不用去理会，遇到它们时再说，至于里面的正则表达式，讲起来太麻烦，可能会单独写一篇来说明。</p>
 <h2>构造函数</h2>
-<pre><code>// 定义一个 jQuery 的局部拷贝
+<pre><code class="language-javascript">
+// 定义一个 jQuery 的局部拷贝
 jQuery = function( selector, context ) {
     // 实际上，jQuery 对象只是对 init 构造函数的 '增强'
     return new jQuery.fn.init( selector, context, rootjQuery );
@@ -30,7 +32,8 @@ jQuery = function( selector, context ) {
 </code></pre>
 
 <p>这个函数好理解，就是返回 jQuery.fn.init 的实例，那么这串东西是什么呢？</p>
-<pre><code>jQuery.fn = jQuery.prototype = {
+<pre><code class="language-javascript">
+jQuery.fn = jQuery.prototype = {
     constructor: jQuery,
     init: function( selector, context, rootjQuery ) {
         ...
@@ -39,7 +42,8 @@ jQuery = function( selector, context ) {
 </code></pre>
 
 <p>哦，原来 jQuery.fn 就是 jQuery 原型对象的别名。继续往下看</p>
-<pre><code>jQuery.fn.init.prototype = jQuery.fn;
+<pre><code class="language-javascript">
+jQuery.fn.init.prototype = jQuery.fn;
 </code></pre>
 
 <p>这个 init 方法的 prototype 属性又指向了 jQuery.fn，也就是 jQuery.prototype。</p>
@@ -60,7 +64,8 @@ jQuery = function( selector, context ) {
 </ol>
 <p>看看这些，字符串、对象、函数、数组，什么都能往里塞。那么 jQuery 是如何实现这些功能的？</p>
 <p>jQuery 根据对参数的处理结果来判断出你使用 $ 的意图，换句话说就是 if 和 else 判断。我们来详细解释一下。</p>
-<pre><code>var match, elem;
+<pre><code class="language-javascript">
+var match, elem;
 
 // 处理: $(&quot;&quot;), $(null), $(undefined), $(false)
 if ( !selector ) {
@@ -70,11 +75,13 @@ if ( !selector ) {
 
 <p>这是 init 方法的起始部分，定义了 match 与 elem 两个变量。!selector 能够将 selector 转成布尔值，并且取反。空字符串、null、undefined 转换成布尔值后都是 false，取反之后变成 true，于是 jQuery 不做任何操作，只是返回 this。</p>
 <p>由于接下来的分支较多，所以我决定先从大的、简单的分支看起，然后再逐步细化。</p>
-<pre><code>if ( typeof selector === &quot;string&quot; ) {
+<pre><code class="language-javascript">
+if ( typeof selector === &quot;string&quot; ) {
 </code></pre>
 
 <p>当你传入的第一个参数是字符串时，流程就走到了这个分支里。由于这个分支的内容是最多的，所以我们放到后面再讲。直接看 else：</p>
-<pre><code>// 处理: $(DOMElement)
+<pre><code class="language-javascript">
+// 处理: $(DOMElement)
 } else if ( selector.nodeType ) {
     this.context = this[0] = selector;
     this.length = 1;
@@ -83,7 +90,8 @@ if ( !selector ) {
 </code></pre>
 
 <p>当你传入一个 DOM 对象时，就是表明当前的 jQuery 数组对象拥有一个元素，就是你传入的值。</p>
-<pre><code>// 处理: $(function)
+<pre><code class="language-javascript">
+// 处理: $(function)
 // document ready 的快捷方式
 else if ( jQuery.isFunction( selector ) ) {
     return rootjQuery.ready( selector );
@@ -91,13 +99,15 @@ else if ( jQuery.isFunction( selector ) ) {
 </code></pre>
 
 <p>当你向 $ 中传入一个函数时，例如：</p>
-<pre><code>$(function() {
+<pre><code class="language-javascript">
+$(function() {
     // ...
 })
 </code></pre>
 
 <p>这意味着，当 DOM 加载完毕后会执行这个函数。至于什么是 DOM 加载完毕，ready 方法又是什么，以后细讲。</p>
-<pre><code>if ( selector.selector !== undefined ) {
+<pre><code class="language-javascript">
+if ( selector.selector !== undefined ) {
     this.selector = selector.selector;
     this.context = selector.context;
 }
@@ -106,12 +116,14 @@ return jQuery.makeArray( selector, this );
 </code></pre>
 
 <p>最后一块内容。如果 selector 对象拥有 selector 属性，那么就把它当做一个 jQuery 对象来看待：</p>
-<pre><code>$($('div'))
+<pre><code class="language-javascript">
+$($('div'))
 </code></pre>
 
 <p>这会通过 makeArray 方法将两个 jQuery 对象合并。</p>
 <p>我们快速的浏览完了整个流程，该对 selector 为字符串的情况进行详细分析了。</p>
-<pre><code>if ( selector.charAt(0) === &quot;&lt;&quot; &amp;&amp; selector.charAt( selector.length - 1 ) === &quot;&gt;&quot; &amp;&amp; selector.length &gt;= 3 ) {
+<pre><code class="language-javascript">
+if ( selector.charAt(0) === &quot;&lt;&quot; &amp;&amp; selector.charAt( selector.length - 1 ) === &quot;&gt;&quot; &amp;&amp; selector.length &gt;= 3 ) {
     // 如果字符串的开头和结尾都是 &lt;&gt;，那么就认为它是 HTML，跳过正则检查
     match = [ null, selector, null ];
 
@@ -121,60 +133,71 @@ return jQuery.makeArray( selector, this );
 </code></pre>
 
 <p>第一个分支还好理解，就是为 match 赋值，那么 else 中的 rquickExpr 是什么？</p>
-<pre><code>rquickExpr = /^(?:(&lt;[\w\W]+&gt;)[^&gt;]*|#([\w-]*))$/
+<pre><code class="language-javascript">
+rquickExpr = /^(?:(&lt;[\w\W]+&gt;)[^&gt;]*|#([\w-]*))$/
 </code></pre>
 
 <p>这个正则略有些长，让我们试着分析下。当阅读一个很长的正则表达式时，最好先将它们按照括号分组，这个表达式最外面有一个括号，那么先将它按照一个整体来阅读：</p>
-<pre><code>/^(?: )$/
+<pre><code class="language-javascript">
+/^(?: )$/
 </code></pre>
 
 <p>^ 与 $ 在正则表达式中表示一行的起始与结束。(?:) 为非捕获型括号，通常使用它是为了提高性能。</p>
 <p>剩下的内容我们可以按照 | 来拆分，因为在正则中 (a|b) 为多选分支，可以匹配 a 或者 b：</p>
-<pre><code>(&lt;[\w\W]+&gt;)[^&gt;]*
+<pre><code class="language-javascript">
+(&lt;[\w\W]+&gt;)[^&gt;]*
 #([\w-]*)
 </code></pre>
 
 <p>\w 用于匹配英文字母(包括大小写)和数字，而 \W 则会匹配不在 \w 里的元素。[\w\W] 会匹配其中之一，加上 + 这个量词，表示前面的元素可以出现1到多次，[^&gt;] 用来匹配不是 &gt; 的元素，* 表示前面的元素能够出现任意次数，或者不出现。所以这个正则表达式是用来匹配类似 &lt;span&gt;abc 的内容。相比之下，第二段就简单许多，它用于匹配以 # 开头的内容。</p>
 <p>好了，正则表达式讲解完毕，让我们回到上面的分支判断中。</p>
 <p>我们把这几种情况举例列出来：</p>
-<pre><code>$('&lt;span&gt;');      // match 的值为 [ null, '&lt;span&gt;', null ]
+<pre><code class="language-javascript">
+$('&lt;span&gt;');      // match 的值为 [ null, '&lt;span&gt;', null ]
 $('&lt;span&gt;abc');   // match 的值为 [ '&lt;span&gt;abc', '&lt;span&gt;', undefined]
 $('#abc');        // match 的值为 [ '#abc', undefined, 'abc' ]
 </code></pre>
 
 <p>后面两种情况走的是同一个分支。</p>
-<pre><code>if ( match &amp;&amp; (match[1] || !context) ) {
+<pre><code class="language-javascript">
+if ( match &amp;&amp; (match[1] || !context) ) {
 </code></pre>
 
 <p>这里又出现了一个新的分支，按照惯例，先从简单的分支来看，这个 if 的内容很多，那么我们来看 else：</p>
-<pre><code>else if ( !context || context.jquery ) {
+<pre><code class="language-javascript">
+else if ( !context || context.jquery ) {
     return ( context || rootjQuery ).find( selector );
 }
 </code></pre>
 
 <p>第一个 else 中，判断的是这种情况：</p>
-<pre><code>$('div'); // context 不存在，并且 'div' 能够让 match 不存在。
+<pre><code class="language-javascript">
+$('div'); // context 不存在，并且 'div' 能够让 match 不存在。
 $('div', $(...))  // context 存在，并且它是一个 jQuery 对象
 </code></pre>
 
 <p>对于这种情况，就会调用 find 方法，查找对应的 DOM 元素。与 $('div') 不同的是，它只会查找那些存在于第二个参数 context 中所包含的的元素的子孙节点。</p>
 <p>第二个  else 与前面的类似：</p>
-<pre><code>else {
+<pre><code class="language-javascript">
+else {
     return this.constructor( context ).find( selector );
 }
 </code></pre>
 
 <p>不同的是 context 不是 jQuery 对象。</p>
 <p>大的分支看完了，再来看小的。可惜的是，又来了一个分支……</p>
-<pre><code>if ( match[1] ) {
+<pre><code class="language-javascript">
+if ( match[1] ) {
 </code></pre>
 
 <p>还记得什么情况下 match[1] 的值会不存在吗？不记得的就往上找找：</p>
-<pre><code>$('#abc');        // match 的值为 [ '#abc', undefined, 'abc' ]
+<pre><code class="language-javascript">
+$('#abc');        // match 的值为 [ '#abc', undefined, 'abc' ]
 </code></pre>
 
 <p>看到了吧，就是当你想查找一个 ID 的时候，看看源码：</p>
-<pre><code>// 处理: $(#id)
+<pre><code class="language-javascript">
+// 处理: $(#id)
 else {
     elem = document.getElementById( match[2] );
 
@@ -199,7 +222,8 @@ else {
 <p>既然是查找 ID，那自然就要用到 document.getElementById 这个方法了。这里多判断了一下 elem.parentNode，根据第一个 if 处的注释你可以知道，这是为了处理 Blackberry 4.6 的兼容问题。而第二个 if 是处理 IE 和 Opera 下的 <a href="http://www.quirksmode.org/bugreports/archives/2005/09/documentgetElementById_may_return_element_with_a_n.html">bug</a>，即当你使用 document.getElementById('testID') 时，返回的元素可能并非是 ID 为 'testId'，而是 name 值为 'testId'。</p>
 <p>处理过这些内容，剩下的就是一些正常的初始化了，最终返回了 this。</p>
 <p>这个分支较为简单，让我们来看最后一个分支：</p>
-<pre><code>context = context instanceof jQuery ? context[0] : context;
+<pre><code class="language-javascript">
+context = context instanceof jQuery ? context[0] : context;
 
 // scripts is true for back-compat
 jQuery.merge( this, jQuery.parseHTML(
@@ -226,12 +250,14 @@ return this;
 </code></pre>
 
 <p>当你传入一个以 &lt; 开头的字符串时，你就是在创建对应的标签元素。例如：</p>
-<pre><code>$('&lt;span&gt;');
+<pre><code class="language-javascript">
+$('&lt;span&gt;');
 </code></pre>
 
 <p>你就会创建一个 span 元素，只不过这个时候 span 元素还没有加入到 DOM 文档中，还只是一个孤零零的节点。将字符串解析为 HTML 的过程已经交给了 jQuery.parseHTML 来处理，细节这里不谈，只需要知道该方法最终返回了一个含有新生成的 DOM 元素的数组。</p>
 <p>在这个最终的 if 判断里，它处理的情况就是：</p>
-<pre><code>$('&lt;span&gt;', { id: 'name', class: 'head', ... })
+<pre><code class="language-javascript">
+$('&lt;span&gt;', { id: 'name', class: 'head', ... })
 </code></pre>
 
 <p>这会在创建出 DOM 元素后，为其增加属性。当然，你也可以在后面的对象中增加方法，jQuery 会执行这个方法。</p>
@@ -242,7 +268,8 @@ return this;
 <p>我不知道“数组对象”这个说法是否准确，但姑且理解为“具有数组行为的对象”，是的，它实际上是对象，但是拥有和数组一样的行为。</p>
 <p>在 jQuery.fn = jQuery.prototype 这段定义内容中，除了上面说的 init 方法外，其余绝大部分都与数组对象有关。让我们来逐个击破。</p>
 <p>紧跟着 init 方法定义的属性是：</p>
-<pre><code>selector: &quot;&quot;,
+<pre><code class="language-javascript">
+selector: &quot;&quot;,
 
 length: 0,
 
@@ -252,21 +279,24 @@ size: function() {
 </code></pre>
 
 <p>selector 就是默认的选择器值。至于 length，你肯定明白了，这就是数组对象用于记录元素个数的属性。而 size 方法则返回当前匹配元素的个数，就是 length。</p>
-<pre><code>push: core_push,
+<pre><code class="language-javascript">
+push: core_push,
 sort: [].sort,
 splice: [].splice
 </code></pre>
 
 <p>我调整了源码的属性，上面这段内容是在稍后的位置定义的，但我提前拿出来说一说。</p>
 <p>这三个都是数组常见的方法，其中 core_push 是在 core.js 文件前面定义的：</p>
-<pre><code>core_deletedIds = [],
+<pre><code class="language-javascript">
+core_deletedIds = [],
 
 core_push = core_deletedIds.push
 </code></pre>
 
 <p>core_deletedIds 别有用途，但对于 core_push 变量来说，它就是赋予了自己一个普通数组的 push 方法。但你可能疑惑了，为什么 sort 和 splice 直接定义了一个新的数组，而没有用定义好的变量呢？按我的猜测，凡是带有类似 core_ 这种前缀的变量，都是会在其他文件内使用的，而 sort 和 splice 这两个方法没有需要重用的地方，所以就不需要再单独定义变量了。</p>
 <p>我来写个例子：</p>
-<pre><code>var foo = {};
+<pre><code class="language-javascript">
+var foo = {};
 foo.push = [].push;
 foo.push('first');
 console.log( foo );  //猜猜现在的 foo 是什么样子的？
@@ -279,7 +309,8 @@ console.log( bar );  //再看看 bar 发什么了什么变化。
 <p>如果你运行了上面的例子，你就会明白了，上下两段内容是等价的，将一个数组的方法赋予一个对象，在调用这个数组方法时，就是改变了该方法的 this 值，这也就是 apply 方法的作用。</p>
 <p>更完美的是，执行了这个 push 方法，会自动增加对象属性 length 的值，如果这个属性不存在，那么它会自动创建。这样，我们的对象看起来就和数组一样了。</p>
 <p>明白了这些内容，我们继续来看另外两个方法：</p>
-<pre><code>toArray: function() {
+<pre><code class="language-javascript">
+toArray: function() {
     return core_slice.call( this );
 },
 
@@ -297,7 +328,8 @@ get: function( num ) {
 <p>第一个 toArray 容易理解，就是将当前的 jQuery 对象转成一个真正的数组。</p>
 <p>第二个 get 方法类似于数组的 array[1] 行为，就是通过传入的下标值来获取对应的元素，但 get 方法对这种行为进行了增强，例如，对于一个数组 array 来说， array[] 是违反语法的行为，但使用 get() 则完全合法，并且会返回一个真正的数组。此外，如果传入的下标为负数，真正的数组也不会聪明的将它们转为对应的正值，而 get() 方法恰好做了这方面的处理。</p>
 <p>接下来是一个很重要的方法，pushStack：</p>
-<pre><code>// 将一组元素推入栈中(返回一个新的匹配元素集合)
+<pre><code class="language-javascript">
+// 将一组元素推入栈中(返回一个新的匹配元素集合)
 pushStack: function( elems ) {
 
     // 构建一个新的 jQuery 匹配元素集合
@@ -313,7 +345,8 @@ pushStack: function( elems ) {
 </code></pre>
 
 <p>elems 为一个数组或者是数组对象，jQuery.merge 方法将 jQuery 的构造函数与 elems 合并在一起，组成一个新的数组对象 ret。这个 ret 可以看做是一个新的 jQuery 对象，只不过它是由当前的 jQuery 对象生成的，因此 prevObject 就为新旧 jQuery 对象之间建立了联系。这个方法是作为其他方法的基础而存在的。</p>
-<pre><code>eq: function( i ) {
+<pre><code class="language-javascript">
+eq: function( i ) {
     var len = this.length,
         j = +i + ( i &lt; 0 ? len : 0 );
     return this.pushStack( j &gt;= 0 &amp;&amp; j &lt; len ? [ this[j] ] : [] );
@@ -346,27 +379,32 @@ end: function() {
 <p>看第一个 eq 方法，是不是很像前面介绍的 get 方法？那个变量 j 明显就是在计算数组元素的下标(+i 是将变量 i 转为数字的快捷方式)。最后 return 中，判断了 j 是否在当前数组对象拥有的元素个数范围内，如果在的话，将 this[j] 传递给 pushStack，否则传入一个空数组。</p>
 <p>为什么会有这个 eq 方法？它和 get 方法有什么区别？</p>
 <p>假设我们需要获取页面上所有的 div 元素，我们可以写：</p>
-<pre><code>var divs = $('div')
+<pre><code class="language-javascript">
+var divs = $('div')
 </code></pre>
 
 <p>这个 divs 就是一个拥有全部 div 元素的数组对象。如果我相对第一个 div 元素进行操作，你可能会这么使用：</p>
-<pre><code>divs[0];
+<pre><code class="language-javascript">
+divs[0];
 //或者
 divs.get(0);
 </code></pre>
 
 <p>那么 divs.get(0) 返回的是什么？如果你曾经使用过 jQuery，那你会知道，这里返回的是一个真正的 DOM 元素(如果页面有 div 元素的话)，这可不好了，因为一个真正的 DOM 元素不具有 jQuery 上的方法，你就没有办法写类似 $('div').get(0).html() 或 $('div').get(0).animate() 了。但是现在我们有了 eq 方法，它实际调用的 pushStack 方法返回的是一个真正的 jQuery 对象，那么前面说的例子便可以改成：</p>
-<pre><code>$('div').eq(0).html('test');
+<pre><code class="language-javascript">
+$('div').eq(0).html('test');
 </code></pre>
 
 <p>这样你就明白了 eq 和 get 方法的区别了吧。</p>
 <p>至于 first 和 last，就没什么可说的了。slice 方法也和普通的数组行为一样。map 方法留到讲 jQuery.map 时再提。</p>
 <p>来看看 end。还记得 prevObject 属性吗？就是在 pushStack 方法中定义的。让我们再举下前面的例子。</p>
-<pre><code>$('div').eq(0).html('test');  // 跟在 eq 后面的方法都是对第一个 div 元素进行的操作。
+<pre><code class="language-javascript">
+$('div').eq(0).html('test');  // 跟在 eq 后面的方法都是对第一个 div 元素进行的操作。
 </code></pre>
 
 <p>如果我们对第一个 div 元素操作完毕，想再返回到前面 div 的数组中，怎么办？方法有许多，但是 jQuery 为我们提供了一个更快捷省力的方式：</p>
-<pre><code>$('div').eq(0).html('test').end();
+<pre><code class="language-javascript">
+$('div').eq(0).html('test').end();
 </code></pre>
 
 <p>这时候，我们又回到了 $('div') 对象上。</p>
@@ -376,12 +414,14 @@ divs.get(0);
 <h2>扯淡</h2>
 <p>忍不住再说点，以下内容均为个人臆测，不用在意。</p>
 <p>前面提到了 jQuery 创建实例的方式，还记得这个吗：</p>
-<pre><code>jQuery.fn.init.prototype = jQuery.fn;
+<pre><code class="language-javascript">
+jQuery.fn.init.prototype = jQuery.fn;
 </code></pre>
 
 <p>我很想知道为什么 jQuery 采用这种方式，于是开始在网上搜索。首先我们得确定，jQuery 是从最开始就采用了这种方式吗？为了确认这一点，得找到最早版本的 jQuery 源码，而我知道，在 jQuery 还没有托管到 <a href="https://github.com/jquery/jquery" title="GitHub">GitHub</a> 上时，它其实是在 <a href="https://code.google.com/p/jqueryjs/" title="Google Code">Google Code</a> 托管的。</p>
 <p>在 Google Code 上，我们能下载到最早的 jQuery 版本是 1.1.2，看看它是怎么写的吧：</p>
-<pre><code>var jQuery = function(a,c) {
+<pre><code class="language-javascript">
+var jQuery = function(a,c) {
     // If the context is global, return a new object
     if ( window == this )
         return new jQuery(a,c);
@@ -395,7 +435,8 @@ jQuery.fn = jQuery.prototype = {
 
 <p>看看，在最早的版本中，还没有 init 方法，jQuery 还是用了很普通的方式来判断是否是通过 new 操作符来执行 jQuery。因为大家使用 jQuery 时一直都是 $(...)，很少有人会 new $(...)，这里通过 window 和 this 是否相等来判断。</p>
 <p>既然这个版本没有，那就继续找吧。我们来到了 1.2.1 版本：</p>
-<pre><code>var jQuery = window.jQuery = function(selector, context) {
+<pre><code class="language-javascript">
+var jQuery = window.jQuery = function(selector, context) {
     // If the context is a namespace object, return a new object
     return this instanceof jQuery ?
         this.init(selector, context) :
@@ -405,7 +446,8 @@ jQuery.fn = jQuery.prototype = {
 
 <p>这个时候，init 方法已经出现了。因为在上面的 1.1.2版本中，jQuery 函数里对传入的参数做了判断，但越到后来，需要判断的内容越来越多，于是干脆就把初始化方法提取出来，就有了 init。而这时候，jQuery 使用了 instanceof 来判断是否使用了 new。</p>
 <p>再看 1.2.2：</p>
-<pre><code>var jQuery = window.jQuery = function( selector, context ) {
+<pre><code class="language-javascript">
+var jQuery = window.jQuery = function( selector, context ) {
     // The jQuery object is actually just the init constructor 'enhanced'
     return new jQuery.prototype.init( selector, context );
 };
@@ -427,6 +469,7 @@ jQuery.fn = jQuery.prototype = {
     <span class="nickname">Sunnylost</span>
 </aside>
 <script type="text/javascript" src="../js/article.js"></script>
+<script type="text/javascript" src="../js/prism.js"></script>
 </body>
 </html>
 <!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

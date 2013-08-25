@@ -32,14 +32,14 @@ p {
     font-weight: 400;
 }
 
-pre {
+/*pre {
     line-height: 20px;
     background: #333;
     font-size: 13px;
     color: #fff;
     padding: 20px;
     border-radius: 5px;
-}
+}*/
 
 article, header {
     background: #fff;
