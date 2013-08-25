@@ -46,3 +46,25 @@ article, header {
     box-shadow: 2px 0 4px rgba(100,100,100,0.1);
     padding: 10px 50px;
 }
+
+/*
+ progress bar
+*/
+.progressbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+}
+
+.progress {
+    background: #108D2E;
+    height: 100%;
+    width: 0;
+    -webkit-transition: width 0.8s;
+    -moz-transition: width 0.8s;
+    -moz-transition: width 0.8s;
+    -o-transition: width 0.8s;
+    transition: width 0.8s;
+}
