@@ -10,6 +10,10 @@ header {
     margin-bottom: 50px;
 }
 
+h2 {
+    margin-top: 2em;
+}
+
 /* sidebar */
 .user {
     position: absolute;
