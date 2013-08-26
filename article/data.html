@@ -236,6 +236,216 @@
 
     <p>这是在获取数据，如果直接通过 name 获取不到的话，会尝试使用驼峰形式的名字再次获取一遍，最终返回结果。</p>
     <p>internalData() 函数讲解完毕。</p>
+    <h2>internalRemoveData()</h2>
+<p>其实这两个方法都不复杂，只要你了解 API 的用法，那么对源码中的逻辑也就会很清楚。</p>
+<p>对于 jQuery.removeData()，你需要传入 element，如果传入 name，表示将与该 name 关联的数据删除，如果不传，那么就清除 element 上的所有数据。</p>
+<p>来看下 internalRemoveData() 方法。</p>
+<p>代码的前部分和 internalData() 类似，不赘述。</p>
+<pre><code class="language-javascript">
+// 如果该对象没有缓存条目，那么就没有必要继续了
+if ( !cache[ id ] ) {
+    return;
+}
+
+if ( name ) {
+
+    //获取数据缓存
+    thisCache = pvt ? cache[ id ] : cache[ id ].data;
+
+    if ( thisCache ) {
+
+        // 支持数据键名为数组或空格分隔的字符串
+        if ( !jQuery.isArray( name ) ) {
+
+            // 在操作之前尝试以字符串作为键名
+            if ( name in thisCache ) {
+                name = [ name ];
+            } else {
+
+                // 如果驼峰格式的键名不存在，那么尝试使用空格来拆分字符串、
+                name = jQuery.camelCase( name );
+                if ( name in thisCache ) {
+                    name = [ name ];
+                } else {
+                    name = name.split(&quot; &quot;);
+                }
+            }
+        } else {
+            // #12786 这里提到了之前的一个 bug，那就是使用 'a-a', 'b-b' 作为键名存储数据
+            // 再用 removeData('a-a b-b') 删除，是没有问题的
+            // 但使用 removeData([ 'a-a', 'b-b' ]) 却无法删除
+            // 于是对于数组参数，将同时删除普通格式和驼峰格式的键名。
+            name = name.concat( jQuery.map( name, jQuery.camelCase ) );
+        }
+
+        // 删除键名对应的数据
+        for ( i = 0, l = name.length; i &lt; l; i++ ) {
+            delete thisCache[ name[i] ];
+        }
+
+        // 如果缓存中没有数据存在了，那么继续运行，并将缓存对象销毁
+        if ( !( pvt ? isEmptyDataObject : jQuery.isEmptyObject )( thisCache ) ) {
+            return;
+        }
+    }
+}
+</code></pre>
+
+<p>在最后一段内容中，判断了缓存对象是否为空，这里用到了两个方法，当然先说说它们的调用形式。</p>
+<p>比如说有两个函数：</p>
+<pre><code class="language-javascript">
+function a(c) { alert(c); }
+function b(c) { alert(c); }
+</code></pre>
+
+<p>如果我们还有一个变量 d，如果 d 为 true，就调用 a 方法，如果为 false 就调用 b 方法，那么就可以使用三目运算符 ? : 来替代 if-else 操作：</p>
+<pre><code class="language-javascript">
+// if-else
+if(d) {
+    a(c);
+} else {
+    b(c);
+}
+
+// 三目运算符
+(d ? a : b)(c);
+</code></pre>
+
+<p>好，回到源码，在判断对象是否为空处使用了两个函数，其中一个在之前介绍 core.js 的<a href="http://sunnylost.com/article/core2.html">续篇</a>中有讲到，而另一个 isEmptyDataObject 则为内部方法，用于判断内部数据缓存对象是否为空。</p>
+<pre><code class="language-javascript">
+function isEmptyDataObject( obj ) {
+    var name;
+    for ( name in obj ) {
+
+        // 如果公共数据对象为空，那么私有数据对象亦为空
+        if ( name === &quot;data&quot; &amp;&amp; jQuery.isEmptyObject( obj[name] ) ) {
+            continue;
+        }
+        if ( name !== &quot;toJSON&quot; ) {
+            return false;
+        }
+    }
+
+    return true;
+}
+</code></pre>
+
+<p>这个函数很简单，不说了。继续看 internalRemoveData() 的源码。</p>
+<pre><code class="language-javascript">
+// 前面已经提到了，如果缓存对象为空，那么函数继续运行
+if ( !pvt ) {
+    delete cache[ id ].data;
+
+    // 如果父级缓存对象中只包含内部数据对象，那么将父级缓存对象销毁，否则退出函数
+    if ( !isEmptyDataObject( cache[ id ] ) ) {
+        return;
+    }
+}
+
+// 销毁缓存，这个 cleanData() 方法不在当前讨论范围内
+if ( isNode ) {
+    jQuery.cleanData( [ elem ], true );
+
+// 如果支持 expandos 或 `cache` 不为 window 对象，使用 delete (#10080)
+} else if ( jQuery.support.deleteExpando || cache != cache.window ) {
+    delete cache[ id ];
+} else {
+    cache[ id ] = null;
+}
+</code></pre>
+
+<p>这里面提到了 deleteExpando 和 delete 的问题，这属于 IE 的 bug，详细信息参考这篇精彩博客 <a href="http://hax.iteye.com/blog/349569" title="IE全局变量的Dissociative Identity Disorder（人格分裂症）">http://hax.iteye.com/blog/349569</a>。</p>
+<p>以上我们基本将与 data 有关的静态方法源码看了一遍，接下来开始看和实例方法相关的内容。</p>
+<h2>data() 和 removeData()</h2>
+<pre><code class="language-javascript">
+removeData: function( key ) {
+    return this.each(function() {
+        jQuery.removeData( this, key );
+    });
+}
+</code></pre>
+
+<p>removeData() 内部就是循环调用的 jQuery.removeData()，因此略过。</p>
+<pre><code class="language-javascript">
+data: function( key, value ) {
+    var attrs, name,
+        //因为是读取数据，所以只操作元素集合中的第一个
+        elem = this[0],
+        i = 0,
+        data = null;
+
+    // 获取所有数据
+    if ( key === undefined ) {
+        if ( this.length ) {
+            data = jQuery.data( elem );
+
+            // 对于元素对象特殊处理
+            if ( elem.nodeType === 1 &amp;&amp; !jQuery._data( elem, &quot;parsedAttrs&quot; ) ) {
+                attrs = elem.attributes;
+                for ( ; i &lt; attrs.length; i++ ) {
+                    name = attrs[i].name;
+
+                    if ( !name.indexOf( &quot;data-&quot; ) ) {
+                        name = jQuery.camelCase( name.slice(5) );
+
+                        dataAttr( elem, name, data[ name ] );
+                    }
+                }
+                jQuery._data( elem, &quot;parsedAttrs&quot;, true );
+            }
+        }
+
+        return data;
+    }
+
+    // 设置多个值
+    if ( typeof key === &quot;object&quot; ) {
+        return this.each(function() {
+            jQuery.data( this, key );
+        });
+    }
+
+    return jQuery.access( this, function( value ) {
+
+        if ( value === undefined ) {
+            // 尝试先获取内部存储的数据
+            return elem ? dataAttr( elem, key, jQuery.data( elem, key ) ) : null;
+        }
+
+        this.each(function() {
+            jQuery.data( this, key, value );
+        });
+    }, null, value, arguments.length &gt; 1, null, true );
+}
+</code></pre>
+
+<p>你可能会发现代码中出现的 &quot;parsedAttrs&quot;，&quot;data-&quot;，dataAttr() 这样的内容，这里面涉及到了 HTML5 中的新内容：自定义数据特性(data-*)。</p>
+<p>所谓自定义数据特性，就是允许你在 HTML 标签上使用 data- 作为前缀的特性，来存储数据。可能你之前也在 HTML 标签上使用过自定义的特性，但 HTML5 为以 data- 为前缀的特性增加了更便捷的存取方法。</p>
+<p><a href="http://html5doctor.com/html5-custom-data-attributes/">http://html5doctor.com/html5-custom-data-attributes/</a> HTML5 Doctor 对该特性做了讲解，其中提到了获取自定义数据的方法，除了使用通用的 getAttribute() 外，你还可以访问元素对象的 dataset 属性，例如：</p>
+<pre><code class="language-html">
+&lt;div id='sunflower' data-leaves='47' data-plant-height='2.4m'&gt;&lt;/div&gt;
+</code></pre>
+
+<p>对于上面的 HTML 标签，若想获取数据，你可以这么做：</p>
+<pre><code class="language-javascript">
+var plant = document.getElementById('sunflower');
+var leaves = plant.dataset.leaves; // leaves = 47;
+var tallness = plant.dataset.plantHeight;
+</code></pre>
+
+<p>这比通过特性名来获取值更为方便，不过注意的是，data-plant-height 被转换成了驼峰形式：plantHeight，所以你可能也明白了，为什么上面代码中经常会出现将属性名转为驼峰形式的代码。</p>
+<p>在 data() 方法中：</p>
+<pre><code class="language-javascript">
+if ( elem.nodeType === 1 &amp;&amp; !jQuery._data( elem, &quot;parsedAttrs&quot; ) ) {
+</code></pre>
+
+<p>这段代码开始，就是为了处理元素节点上以 data- 开头的特性，需要将这些数据存储到 jQuery 的缓存对象中。</p>
+<p>而 dataAttr() 函数所做的内容就是将元素以 data- 开头的特性存储到缓存对象中，并返回数据。</p>
+<p>因为 HTML 特性只能为字符串，所以 dataAttr() 中所做的大部分内容就是将字符串转为原始格式，包括：boolean、null、number、object。</p>
+<p>其中判断 number 是先将字符串转为数字，再转为字符串和原始字符串比较，如果相同，则认为是数字。</p>
+<p>如果字符串中包含花括号，可以认为它是 JSON 格式，调用 jQuery.parseJSON() 解析。</p>
+<p>最后要注意的是，dataAttr() 不会覆盖已经设置过的数据，就是说如果缓存对象中存在了某个 key，而 HTML 特性上也拥有同样的 key，那么 HTML 特性值不会覆盖缓存对象中的对应值。</p>
+<p>啰嗦完了(撒花╮(╯_╰)╭)</p>
     </article>
 </div>
 <aside id="user" class="user">
