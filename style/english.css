@@ -1,0 +1,36 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+}
+
+li {
+    list-style: none;
+}
+
+li:before {
+    content: "■";
+    color: #108D2E;
+    margin-right: 5px;
+}
+
+p {
+    font-size: 1.3em;
+    text-indent: 4em;
+}
+
+li p:first-child {
+    text-indent: -4em;
+    height: 3em;
+    line-height: 3;
+    font-size: 1.5em;
+    vertical-align: middle;
+    padding: 5px 20px;
+    border-radius: 5px;
+    display: inline;
+}
+
+strong {
+    background: #108D2E;
+    color: #fff;
+    padding: 0 5px;
+}
