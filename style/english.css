@@ -1,6 +1,8 @@
 body {
     font-family: 'Open Sans', sans-serif;
     font-size: 12px;
+    width: 80%;
+    margin: 0 auto;
 }
 
 li {
