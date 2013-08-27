@@ -405,17 +405,15 @@ data: function( key, value ) {
         });
     }
 
-    return jQuery.access( this, function( value ) {
+    return arguments.length > 1 ?
 
-        if ( value === undefined ) {
-            // 尝试先获取内部存储的数据
-            return elem ? dataAttr( elem, key, jQuery.data( elem, key ) ) : null;
-        }
-
-        this.each(function() {
-            jQuery.data( this, key, value );
-        });
-    }, null, value, arguments.length &gt; 1, null, true );
+     	// 设置一个值
+     	this.each(function() {
+     		jQuery.data( this, key, value );
+     	}) :
+     
+     	// 获取一个值
+     	elem ? dataAttr( elem, key, jQuery.data( elem, key ) ) : null;
 }
 </code></pre>
 
