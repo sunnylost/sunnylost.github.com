@@ -45,7 +45,11 @@
         win.onscroll = function() {
             scrollAvatar();
             progress();
-        }
+        };
+
+        win.onload = function() {
+            body.className = "";
+        };
 
         avatar.onclick = function() {
             nav.className = nav.className == 'on' ? '' : 'on';
