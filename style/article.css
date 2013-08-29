@@ -20,6 +20,8 @@ h2 {
     right: 0;
     top: 200px;
     width: 20%;
+    height: 50%;
+    overflow: hidden;
     text-align: center;
     -webkit-transition: all 0.8s;
     -moz-transition: all 0.8s;
@@ -29,19 +31,14 @@ h2 {
 }
 
 .avatar {
-    width: 70%;
-    margin: auto;
+    width: 120px;
+    position: absolute;
+    left: 25%;
+    top: 20%;
+    z-index: 100;
 }
 
 .avatar img {
     border-radius: 50%;
+    cursor: pointer;
 }
-
-.nickname {
-    display: block;
-    margin-top: 10px;
-}
-
-/*@media screen and () {
-
-}*/
