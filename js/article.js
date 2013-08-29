@@ -48,7 +48,9 @@
         };
 
         win.onload = function() {
-            body.className = "";
+            setTimeout(function() {
+                body.className = "";    
+            }, 1000);
         };
 
         avatar.onclick = function() {
