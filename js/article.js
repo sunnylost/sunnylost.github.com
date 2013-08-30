@@ -11,7 +11,8 @@
         avatar,
         progressBar,
         nav,
-        progressTimeout;
+        progressTimeout,
+        resizeTimeout;
 
     var template = {
         avatar: '<div class="avatar" id="avatar"><img src="../imgs/avatar.jpg" width="120" height="120"></div>',
@@ -45,6 +46,13 @@
         win.onscroll = function() {
             scrollAvatar();
             progress();
+        };
+        
+        win.onresize = function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                progress();
+            }, 200);
         };
 
         win.onload = function() {
