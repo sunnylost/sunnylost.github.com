@@ -14,6 +14,20 @@ h2 {
     margin-top: 2em;
 }
 
+ul li {
+    list-style:none;
+    text-indent: 2em;
+    position:relative;
+}
+
+ul li:before {
+    content: "■";
+    color:#108D2E;
+    position:absolute;
+    left: -15px;
+    top: -2px;
+}
+
 /* sidebar */
 .user {
     position: absolute;
