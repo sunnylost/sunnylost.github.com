@@ -1,0 +1,1 @@
+window.addEventListener("message",function(s){s.source.postMessage(JSON.stringify({msg:"Ho!"}),s.origin)});

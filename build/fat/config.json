@@ -1,0 +1,10 @@
+{
+    "js" : "../../js/",
+    "style" : "../../style/",
+    "source" : "../article",
+    "md5": {
+        "articles": {},
+        "js": {},
+        "style": {}
+    }
+}

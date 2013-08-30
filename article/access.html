@@ -107,7 +107,7 @@ if ( fn ) {
 <pre><code class="language-javascript">
 return chainable ?
         elems :
-        bulk ?
+        bulk ?`
             fn.call( elems ) :
             length ? fn( elems[0], key ) : emptyGet;
 </code></pre>
