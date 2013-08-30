@@ -5,7 +5,7 @@
         win = window,
         height = parseInt(win.innerHeight),
         top,
-        offset = height / 2 - 60, //avatar's height is 120
+        offset = height / 2 - 120, //avatar's height is 120
         avatarTimeout = 0,
         user,
         avatar,
