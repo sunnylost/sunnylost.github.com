@@ -7,11 +7,22 @@
 }
 
 header {
-    margin-bottom: 50px;
+    background: #333;
+    color: #fff;
+}
+
+header h1 {
+    padding: 0;
+    margin: 0;
+    font-size: 30px;
+    height: 4em;
+    line-height: 4em;
 }
 
 h2 {
+    font-size: 25px;
     margin-top: 2em;
+    margin-bottom: 1em;
 }
 
 ul li {
