@@ -1,9 +1,9 @@
 ::selection {
-    background: #108D2E;
+    background: #1798e9;
     color: #fff;
 }
 ::-moz-selection {
-   background: #108D2E;
+   background: #1798e9;
    color: #fff;
 }
 
@@ -56,7 +56,7 @@ article, header {
     right: 0;
     height: 3px;
     z-index: 800;
-    background: #60d778;
+    background: #1798e9;
     -webkit-transform: translateX(100%);
     -moz-transform: translateX(100%);
     -o-transform: translateX(100%);
@@ -208,7 +208,7 @@ article, header {
 }
 
 .progress {
-    background: #108D2E;
+    background: #1798e9;
     height: 100%;
     width: 0;
     -webkit-transition: width 0.8s;
