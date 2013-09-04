@@ -91,3 +91,22 @@ how 为四个值之一：START_TO_START,START_TO_END,END_TO_END,END_TO_START。�
 将一个节点插入 Range 中。
 
 如果将节点插入一个文本节点，那么文本节点会被拆分，如果要插入的节点也是一个文本节点，那么这些文本节点不会自动合并。
+
+可以插入一个文档碎片，碎片内容会被插入到 Range 中。
+
+## 环绕内容 ##
+	surroundContents(Node newParent);
+
+将 Range 内容放入到新节点中。
+
+如果 newParent 含有任何子节点，那么在插入前会被删除。
+
+## 混杂成员 ##
+	cloneRange();
+
+复制 Range。
+
+	toString();
+
+## 文档变动时修改 Range ##
+
