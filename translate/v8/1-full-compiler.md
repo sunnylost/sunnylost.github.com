@@ -82,9 +82,11 @@ Inline caches(ICs) 为该问题提供了一个优雅的解决方案。从根本�
 
 The implementation of an IC is called a stub. Stubs behave like functions in the sense that you call them, and they return, but they don't necessarily set up a stack frame and follow the full calling convention. Stubs are usually generated on the fly, but for common cases, they can be cached and reused by multiple ICs. The stub which implements an IC typically contains optimized code which handles the types of operands that particular IC has encountered in the past (which is why it's called a cache). If the stub encounters a case it's not prepared to handle, it "misses" and calls the C++ runtime code. The runtime handles the case, then generates a new stub which can handle the missed case (as well as previous cases). The call to the old stub in the full compiled code is rewritten to call the new stub, and execution resumes as if the stub had been called normally.
 
-IC 的实现称为 stub。
+一个 IC 的实现称为 stub。当你调用 stub 时它表现的像个函数，并且它们有返回值，但是它们不需要生成一个堆栈结构和遵循完整的调用约定。stub 一般动态生成， 但通常情况下可以将其缓存并由多个 ICs 重复使用。 实现了一个 IC 的 stub 通常包含优化后的代码，它用于处理前面提到过的特定 IC 遇到的操作数的类型(这就是为什么它被称为一条缓存)。如果 stub 遇到了一个它还没有做好准备的情况，它就会 'miss' 并调用 C++ 运行时代码。运行时会处理该情况，生成一个能够处理该错过情况的新 stub(就像前一个 stub)。调用旧 stub 的完整编译后的代码会被重写为调用新 stub，当 stub 再次调用时执行过程便会恢复正常。
 
 Let's take a simple example: a property load.
+
+让我们看一个简单的例子：属性载入。
 	
 	function f(o) {
 	  return o.x;
@@ -92,44 +94,59 @@ Let's take a simple example: a property load.
 
 When the full compiler first generates code for this function, it will use an IC for the load. The IC starts in the uninitialized state, using a trivial stub which doesn't handle any cases. Here's how the full compiled code calls the stub.
 
+当完整编译器第一次为该函数生成代码时，它会使用一个 IC 用于载入操作。IC 从未初始化的状态开始，使用一个最简单的 stub(它不能处理任何情况)。接下来是完整编译后的代码是如何调用 stub 的。
+
 	 ;; full compiled call site
-	  ldr   r0, [fp, #+8]     ; load parameter "o" from stack
-	  ldr   r2, [pc, #+84]    ; load string "x" from constant pool
-	  ldr   ip, [pc, #+84]    ; load uninitialized stub from constant pool
-	  blx   ip                ; call the stub
+	  ldr   r0, [fp, #+8]     ; 从栈中载入参数 "o"。load parameter "o" from stack
+	  ldr   r2, [pc, #+84]    ; 从常量池中载入字符串 "x"。load string "x" from constant pool
+	  ldr   ip, [pc, #+84]    ; 从常量池中载入未初始化的 stub。load uninitialized stub from constant pool
+	  blx   ip                ; 调用 stub。call the stub
 	  ...
-	  dd    0xabcdef01        ; address of stub loaded above
-	                          ; this gets replaced when the stub misses
+	  dd    0xabcdef01        ; 前面加载的 stub 的地址。address of stub loaded above
+	                          ; 当 stub miss 的时候地址会被替换。this gets replaced when the stub misses
 
 (Sorry if you are not familiar with ARM assembly. Hopefully the comments make it clear what's happening.)
 
+(如果你不熟悉 ARM 汇编，那么很抱歉。希望注释能够解释清楚它们的作用。)
+
 Here's the code for the uninitialized stub:
 
+接下来是未初始化的 stub 代码：
+
 	;; uninitialized stub
-	  ldr   ip,  [pc, #8]   ; load address of C++ runtime "miss" function
-	  bx    ip              ; tail call it
+	  ldr   ip,  [pc, #8]   ; 加载 C++ 运行时 "miss" 函数的地址。load address of C++ runtime "miss" function
+	  bx    ip              ; 尾调用。tail call it
 	  ...
 
 The first time this stub is called, it will "miss", and the runtime will generate code to handle whatever case actually caused the miss. In V8, the most common way to store a property is at a fixed offset within an object, so let's see an example of that. Every object has a pointer to a map, which is a mostly immutable structure which describes the structure of the object. The in-object load stub will check the object's map against a known map (the one seen when the uninitialized stub missed) to quickly verify the object has the desired property in the right position. This map check lets us avoid an expensive hash table lookup.
 
+stub 第一次调用时，它将 "miss"，接下来运行时将会生成代码来处理实际引发 miss 的情况。在 V8 中，保存属性最常用的方式是在对象中使用固定的偏移，所以让我们看看相关的例子。任何对象都有一个指针指向一个 map，它通常是一个用于描述对象结构的不变结构。对象内载入 stub 会检查对象的 map 和一个已知的 map(当未初始化的 stub miss 时见到的那个) 来快速检查对象是否在正确的位置存在所需的属性。该 map 检查能够为我们避免一次很昂贵的哈希表查找。
+
 	;; monomorphic in-object load stub
-	  tst   r0,   #1          ; test if receiver is an object
-	  beq   miss              ; miss if not
-	  ldr   r1,   [r0, #-1]   ; load object's map
-	  ldr   ip,   [pc, #+24]  ; load expected map
-	  cmp   r1,   ip          ; are they the same?
-	  bne   miss              ; miss if not
-	  ldr   r0,   [r0, #+11]  ; load the property
-	  bx    lr                ; return
+	  tst   r0,   #1          ; 测试接收者是否为一个对象。test if receiver is an object
+	  beq   miss              ; 如果不是则 miss。miss if not
+	  ldr   r1,   [r0, #-1]   ; 载入对象的 map。load object's map
+	  ldr   ip,   [pc, #+24]  ; 载入预期的 map。load expected map
+	  cmp   r1,   ip          ; 它们是否相同？are they the same?
+	  bne   miss              ; 如果不同则 miss。miss if not
+	  ldr   r0,   [r0, #+11]  ; 载入属性。load the property
+	  bx    lr                ; 返回。return
 	miss:
-	  ldr   ip,   [pc, #+8]   ; load code to call the C++ runtime
-	  bx    ip                ; tail call it
+	  ldr   ip,   [pc, #+8]   ; 加载代码调用 C++ 运行时。load code to call the C++ runtime
+	  bx    ip                ; 尾调用。tail call it
 	  ...
 
 As long as this expression only has to deal with in-object property loads, the load can be performed quickly with no additional code generation. Since the IC can only handle one case, it is in a monomorphic state. If another case comes up, and the IC misses again, a megamorphic stub will be generated which is more general.
+
+上面的描述只处理了对象中的属性加载，加载操作能够在不生成额外代码的情况下迅速执行。因为一个 IC 只能够处理一种情况，因此它是单态的。如果出现了另一种情况，而 IC 再次 miss，将会生成一个多态的 stub 来处理更普遍的情况。
+
 
 ##未完待续…… To be continued...##
 
 As you can see, the full compiler fulfills its goal of quickly generating reasonably well-performing baseline code. Since ICs are used extensively, full compiled code is very generic, which makes the full compiler very simple. The ICs make the code very flexible, able to handle any case.
 
+如你所见，完整编译器很好的达到了自己的目标，即快速生成合理的，性能良好的基线代码。由于 ICs 的广泛使用，完整编译后的代码变得十分通用，完整编译器也因此变得简单。ICs 增强了代码的灵活性，能够应对任何状况。
+
 In the next article, we will look at how V8 represents objects in memory, allowing O(1) access in most cases without any structural specification from the programmer (such as a class declaration).
+
+在下篇文章中，我们将探索 V8 是如何在内存中表现对象的，在程序员没有提供任何结构规范的前提下(例如一个类声明)，使得大多数情况下的访问对象时间复杂度达到 O(1)。
