@@ -77,6 +77,8 @@ activeElement：返回当前获得焦点的元素。只读。
 
 async：完全没见过……看介绍应该和载入 XML 文档有关。与之相关的规范：[LS](http://www.w3.org/TR/DOM-Level-3-LS/load-save.html#LS-DocumentLS)
 
+baseURI：返回页面的基本 URI，这个会受到 <base> 标签影响。
+
 body：返回 body 元素。该属性可以设置。
 
 characterSet：返回当前页面的编码格式。该值用于页面渲染，有可能会和页面设置的不一致。
@@ -157,7 +159,7 @@ readyState：返回文档状态。"loading" 表示文档加载中；"interactive
 
 referrer：从哪个 URI 跳转到当前页面。
 
-scripts：<script> 元素集合。
+scripts： &lt;script&gt; 元素集合。
 
 selectedStyleSheetSet：返回当前使用的样式表名称。
 
@@ -168,3 +170,94 @@ textContent：节点和其子节点的文本。document 返回 null。
 title：文档标题。
 
 ## 方法 Method
+addEventListener：监听事件
+
+adoptNode：用于处理来自其他文档中的节点，经过该方法操作后，节点便可以插入到当前文档中。节点的 ownerDocument 属性被修改。
+
+appendChild：附加子节点。如果操作一个已经存在于文档中的节点，那么该节点会移动到新位置。
+
+cloneNode：复制节点。当然对 document 无效。参数为 true，表示深拷贝。默认值是 true。去 [MDN](https://developer.mozilla.org/en-US/docs/Web/API/Node.cloneNode) 查看细节问题。
+
+close：完成写入。
+
+compareDocumentPosition：比较节点位置。
+
+以下为 create 系列：
+
+1. createAttribute
+2. createAttributeNS
+3. createCDATASection
+4. createComment
+5. createDocumentFragment
+6. createElement
+7. createElementNS
+8. createEvent
+9. createExpression
+10. createNSResolver
+11. createNodeIterator
+12. createProcessingInstruction
+13. createRange
+14. createTextNode
+15. createTreeWalker
+
+elementFromPoint：参数为 x，y 坐标，返回页面中处于该坐标的最顶端的元素。
+
+evaluate：解析 [XPath](https://developer.mozilla.org/en-US/docs/XPath) 表达式返回 XPathResult 对象。
+
+execCommand：富文本操作。支持许多[命令](https://developer.mozilla.org/en-US/docs/Rich-Text_Editing_in_Mozilla#Executing_Commands)。
+
+获取节点系列：
+
+1. getElementById
+2. getElementsByClassName
+3. getElementsByName
+4. getElementsByTagName
+5. getElementsByTagNameNS
+
+getSelection：同 [window.getSelection()](https://developer.mozilla.org/en-US/docs/Web/API/window.getSelection)
+
+hasAttribute：sea.js 源码中有提到它在 IE 下的兼容性。
+
+hasChildNodes：判断节点下是否包含子节点。
+
+hasFocus：判断文档或文档内部的节点是否获得焦点。Chrome 下有[问题](https://code.google.com/p/chromium/issues/detail?id=64846)。
+
+importNode：和 adoptNode 方法类似，但该方法是复制一个其他文档中的节点。
+
+insertBefore：参数：新节点，老节点。将新节点插入到老节点的前面。
+
+isDefaultNamespace：判断传入的名空间是否是当前节点默认的名空间。
+
+isEqualNode：判断两个节点是否[相同](http://www.w3.org/TR/DOM-Level-3-Core/core.html#Node3-isEqualNode)。
+
+lookupNamespaceURI：返回节点的名空间 URI。
+
+lookupPrefix：和上面一样没用过。
+
+normalize：标准化节点和它的子树。这意味着没有一个空的文本节点，或是两个毗邻的文本节点。
+
+open：打开文档准备写入。
+
+query 系列：
+
+1. queryCommandEnabled
+2. queryCommandIndeterm
+3. queryCommandState
+4. queryCommandSupported
+5. queryCommandValue
+6. querySelector
+7. querySelectorAll
+
+除了后两个常见，其余都没用过……
+
+其中 IE 8 开始支持后面两个选择节点的方法，但是它只支持 CSS2 的选择器。
+
+releaseEvents：废弃。
+
+removeChild：移除节点。
+
+removeEventListener：移除事件绑定。
+
+replaceChild：替换节点。参数：新节点，准备替换的老节点。返回被替换的节点。
+
+write 和 writeln：文档 open 时写入内容。
