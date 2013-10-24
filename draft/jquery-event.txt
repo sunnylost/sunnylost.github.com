@@ -1,0 +1,283 @@
+on：
+    jQuery 1.7 之后， on 方法为注册事件的主要方法。
+
+once：
+    事件处理函数执行一遍之后会被移除。
+
+off：
+    移除通过 on 绑定的事件。
+    不传参数，会移除元素上绑定的所有事件。
+    如果只提供事件名，则该事件名下的所有处理函数都会被移除。
+    若 selector 值为 "**"，则移除所有代理事件，非代理事件不会受到影响。
+
+trigger：
+    触发事件。
+    可以传入 jQuery 事件对象。
+
+triggerHandler：
+    顾名思义，只触发事件处理函数，不触发事件的默认行为，例如提交表单。
+    只针对匹配元素中的第一个来触发。 trigger 是在所有匹配的元素上触发。
+    事件触发后不冒泡，如果该事件是代理的，则不作任何操作。
+
+
+名空间：
+    例如 on('click.myPlugin.simple')，click myPlugin 和 simple 为名空间，表示该 click 事件属于 myPlugin 和 simple 下。
+    在移除的时候使用 off('click.myPlugin') 或 off('click.simple') 就不会影响到 click 事件下的其他处理函数。
+
+
+源码阅读：
+
+源码中出现的 hooks 表示钩子，用于处理兼容性问题。
+http://stackoverflow.com/questions/6735250/what-are-jquery-hooks-and-callbacks
+在源码中预先定义好的函数称为钩子。主要用于自定义。
+
+fn 上的 api：
+    on 和 off 为主要方法。
+    bind 和 unbind 实际调用 on 和 off，但是 selector 参数为 null。
+    delegate 和 undelegate 同上，参数列表和 of 与 off 相同。
+        undelegate 允许传入一个参数，表示名空间，这时候需要移除该名空间下绑定的所有事件，因此 selector 参数值为 "**"。
+
+    trigger 和 triggerHandler 调用 jQuery.event.trigger
+
+    on ：
+        首先检测 types 是否为对象，如果是，则表示调用的是 .on( events [, selector ] [, data ] )，循环 object 调用 on
+
+        设置参数。
+
+        fn 可以为 false，表示绑定 returnFalse 函数。
+
+        one 是内部使用，用于 once 接口。
+
+        如果 one 为 1，则修改 fn，在函数内部移除事件，这里使用的是 jQuery().off(event)，有待进一步查看。
+        将新旧 fn 的 guid 一致。
+
+        循环调用 jQuery.event.add 方法。
+
+    off：
+
+
+jQuery.event 上的 api：
+    global： 对象
+
+    add( elem, types, handler, data, selector )：
+        var tmp, events, t, handleObjIn,
+            special, eventHandle, handleObj,
+            handlers, type, namespaces, origType,
+            elemData = jQuery._data( elem );
+
+        elemData 为 elem 上绑定的所有 data。
+
+        如果 elemData 为空，表示该 elem 无法绑定数据，那么它可能是文本节点或无法绑定数据的元素(applet 等)，直接返回。
+
+        handler.handler 那块不懂
+
+        如果 handler 没有 guid，使用 jQuery.guid 设置。
+
+        初始化 elemData.events 对象，看来该元素上的所有事件都保存在这里。
+
+        设置 elemData.handle 方法， 这个方法是真正用于绑定的函数。
+        看注释的解释应该是防止在页面卸载后触发事件，trigger 那个是干啥的不知道。
+            // Discard the second event of a jQuery.event.trigger() and
+            // when an event is called after a page has unloaded
+            return typeof jQuery !== core_strundefined && (!e || jQuery.event.triggered !== e.type) ?
+                jQuery.event.dispatch.apply( eventHandle.elem, arguments ) :
+                undefined;
+
+        设置 elemData.handle.elem 为 elem。 注释中说是为了防止 IE 下的内存泄露。
+
+        使用正则来处理多事件的情况，例如 jQuery(...).bind("mouseover mouseout", fn);
+
+        循环多事件：
+            rtypenamespace 匹配名空间
+            设置 type 和 origType。
+            设置 namespaces，按照 . 来拆分名空间
+            special，判断是否为特殊事件，click 为特殊事件。为啥判断？
+            根据是否提供 selector 来确定最终 type。特殊事件里会有区别。
+            更新 special。
+            扩充 handleObjIn，赋值给 handleObj，扩充内容包括：
+                type
+                origType
+                data
+                handler
+                guid， handler 的 guid
+                selector
+                needsContext， jQuery.expr.match.needsContext 这个倒是没见过
+                namespace，字符串形式，点号分隔。
+
+            如果元素的 events 中还没有包含当前 type，表明这是该 type 的第一次绑定
+            handlers = events[ type ] = [] 初始化
+            handlers.delegateCount = 0;  这个数字是干啥的？
+            判断 special.setup，不知道为啥
+                返回 false，则使用 addEventListener 或 attachEvent 来绑定事件。
+
+            如果 special.add 存在，则
+                special.add.call( elem, handleObj );
+
+                若 handleObj.handler.guid 不存在，则
+                    handleObj.handler.guid = handler.guid
+
+            向 handlers 中添加 handleObj，代理事件向前添加。
+            if ( selector ) {
+                handlers.splice( handlers.delegateCount++, 0, handleObj );
+            } else {
+                handlers.push( handleObj );
+            }
+
+            注释中说是为了事件优化，因此需要记录哪些事件曾经使用过。
+            jQuery.event.global[ type ] = true;
+
+        循环结束！
+        elem = null， 防止 IE 下的内存泄露
+
+
+    remove( elem, types, handler, selector, mappedTypes )
+
+    trigger( event, data, elem, onlyHandlers )
+
+    dispatch( event )：
+        事件触发。
+
+        首先使用 jQuery.event.fix 来修复事件对象 event
+
+        event.delegateTarget = this;
+
+        调用 special 的 preDispatch 方法。
+
+        使用 this 调用 jQuery.event.handlers 获得 handlerQueue。
+
+        循环 handlerQueue 并且 isImmediatePropagationStopped() 为 false：
+            循环 handlers 并且 isImmediatePropagationStopped() 为 false：
+                执行事件处理函数，返回值为 ret。
+                event.result = ret;
+                若 ret 为 false，
+                    调用 preventDefault()
+                    调用 stopPropagation()
+
+        若 special.postDispatch 存在
+            使用 this 调用 special.postDispatch
+
+        返回 event.result
+
+
+    handlers( event, handlers )：
+        设置 handlerQueue
+
+        判断 delegateCount
+
+        返回 handlerQueue。
+
+    fix( event )：
+        判断 event 的 jQuery.expando，如果为 true，表示已经修复过，直接返回 event。
+
+        检测 fixHooks 上是否有当前 type 事件的 fix。
+            如果没有，使用正则来选择使用哪个 fixHook。
+
+        将 fixHook 中的 props(如果存在的话)和 this.props 合并，赋值给 copy，这样 copy 就包含了一个完整的事件对象所需要的所有属性(后面的 filter 方法可能会额外增加一些)。
+
+        使用 jQuery.Event 生成新的 event 对象。
+        使用 copy 扩展 event。
+
+        修复 event.target。
+            根据 bug 1925 可知，Safari 2.0 中 window 的 load 事件没有 target 属性。
+
+        修复 chrome 和 safari 下 event 的 target 可能是文本节点的 bug。
+            #504, #13143
+
+        修复 target 的 metaKey bug。
+            #3368, #11328
+
+        如果 fixHook 还有 filter，那么返回执行它的结果，否则直接返回 event。
+
+
+    props：
+        数组，包含事件对象通用的属性。
+
+    fixHooks：
+        缓存那些需要 fix 的事件。
+        主要包括鼠标事件、键盘事件。
+
+    keyHooks：
+        键盘事件的 fix
+        DOM 3 定义了 char、 key 属性。
+        增加事件对象的 which 属性，判断按键。
+
+
+    mouseHooks：
+        鼠标事件的 fix
+
+        如果 relatedTarget 不存在， 并且 fromElement 存在
+            设置 relatedTarget
+
+        设置 event 的 which，表示鼠标按键
+
+
+    special
+
+    simulate
+
+jQuery.Event：
+    http://api.jquery.com/category/events/event-object/
+
+    参数： src, props
+
+    构造函数，用于传递给事件处理函数或 trigger。
+    浏览器兼容：
+        target
+        relatedTarget
+        pageX
+        pageY
+        which
+        metaKey
+
+    如果 this 不是 Event 的实例，使用 new 构造。
+    如果 src 是对象，
+        originalEvent 为 src
+        type 为 src.type
+        isDefaultPrevented 看名字是表示默认动作是否被阻止，看注释则是关于冒泡的
+    否则 src 是事件 type。
+
+    如果 props 存在，使用 props 扩展 this。
+    设置 timeStamp。
+    设置 jQuery.expando， 表明当前的事件对象已经修复过。
+
+jQuery.Event.prototype：
+
+    isDefaultPrevented：             默认返回 false
+    isPropagationStopped：           默认返回 false
+    isImmediatePropagationStopped：  默认返回 false
+
+    preventDefault：
+        获取 originalEvent
+        调用了该方法，会将事件对象的 isDefaultPrevented 设置为返回 true
+        如果 preventDefault 存在，
+            调用 preventDefault()
+        或
+            returnValue = false;
+
+    stopPropagation：
+        isPropagationStopped 设置为返回 true
+        如果 stopPropagation 存在
+            调用 stopPropagation()
+
+        cancelBubble = true
+
+    stopImmediatePropagation：
+        设置为 isImmediatePropagationStopped 返回 true
+        调用 this.stopPropagation();
+
+
+其余内容：
+
+    returnTrue 返回 true 的函数
+
+    returnFalse 返回 false 的函数
+
+    rtypenamespace = /^([^.]*)(?:\.(.+)|)$/  不以点号开头的内容，点号之后的内容
+
+    rformElems = /^(?:input|select|textarea)$/i     表单元素
+
+    rkeyEvent = /^key/                              按键事件
+
+    rmouseEvent = /^(?:mouse|contextmenu)|click/    鼠标事件
+
+    rfocusMorph = /^(?:focusinfocus|focusoutblur)$/ focus 的变体
