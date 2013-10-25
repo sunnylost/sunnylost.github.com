@@ -27,6 +27,13 @@ triggerHandler：
 
 源码阅读：
 
+    由于名空间、delegate 的存在，导致源码很多。
+
+    关注：
+        hook 的使用。
+        关于特殊事件的处理，其实也是 hook。
+        和 data 的结合。
+
 源码中出现的 hooks 表示钩子，用于处理兼容性问题。
 http://stackoverflow.com/questions/6735250/what-are-jquery-hooks-and-callbacks
 在源码中预先定义好的函数称为钩子。主要用于自定义。
@@ -110,11 +117,13 @@ jQuery.event 上的 api：
             判断 special.setup，不知道为啥
                 返回 false，则使用 addEventListener 或 attachEvent 来绑定事件。
 
+            --------------------不知道啥意思----------------------------------
             如果 special.add 存在，则
                 special.add.call( elem, handleObj );
 
                 若 handleObj.handler.guid 不存在，则
                     handleObj.handler.guid = handler.guid
+            -----------------------------------------------------------------
 
             向 handlers 中添加 handleObj，代理事件向前添加。
             if ( selector ) {
@@ -130,7 +139,15 @@ jQuery.event 上的 api：
         elem = null， 防止 IE 下的内存泄露
 
 
-    remove( elem, types, handler, selector, mappedTypes )
+    remove( elem, types, handler, selector, mappedTypes )：
+        首先判断 elem 是否绑定了事件
+
+        解析 type 为数组，循环
+            解析名空间，重新设置 type
+            如果 type 不存在，表明移除全部事件
+                循环 events，还要把可能存在的名空间增加上。
+
+        如果 events 为空，移除 elem 上的 events 数据
 
     trigger( event, data, elem, onlyHandlers )
 
@@ -160,9 +177,20 @@ jQuery.event 上的 api：
 
 
     handlers( event, handlers )：
+        将 delegate 和直接绑定的处理对象放进数组中，先处理代理事件，再处理直接绑定的事件。
+
         设置 handlerQueue
 
-        判断 delegateCount
+        判断 delegateCount，大于 0 表示有代理事件；排除非元素节点；检测 firefox 上鼠标右键、中键点击触发 click 事件的 bug：
+            从触发事件的当前节点 cur 开始逐层向上循环父节点：
+                检测 cur 是否为节点；如果事件是 click 并且 cur 被 disabled，则不触发事件
+                    定义 matches 数组
+                    根据 delegateCount 循环当前 handlers 里的代理事件
+                        根据给定的选择器 sel 来检测 cur 是否符合
+                        如果符合选择器，将当前处理对象加入到 matches 中
+                    如果 matches 中有值，将其加入到 handlerQueue 中。
+
+        如果 handlers 中还有剩余的事件处理对象，它们就是直接绑定在当前对象上的事件，将它们也加入到 handlerQueue 中。
 
         返回 handlerQueue。
 
@@ -211,9 +239,25 @@ jQuery.event 上的 api：
         设置 event 的 which，表示鼠标按键
 
 
-    special
+    special：
+        对于某些特殊事件的处理
+        delegateType： 有些事件不冒泡，如果代理这些事件，需要用另外可以冒泡的事件代替它
+        trigger： 暂时不知道
 
-    simulate
+        load：
+            防止 image.load 事件冒泡到 window.load 上
+
+        click：
+
+        focus：
+            delegateType 为 focusin
+
+        blur：
+            delegateType 为 focusout
+
+    simulate：
+        用于模拟事件。
+
 
 jQuery.Event：
     http://api.jquery.com/category/events/event-object/
