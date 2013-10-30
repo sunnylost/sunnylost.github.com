@@ -1,0 +1,96 @@
+变量：
+    ajaxLocParts
+    ajax_nonce         当前时间
+    ajax_rquery = /\?/ 地址中的搜索起始处
+    rhash = /#.*$/
+    rts = /([?&])_=[^&]*/   看来下划线在链接中有特殊用途
+    rheaders = /^(.*?):[ \t]*([^\r\n]*)\r?$/mg   IE leaves an \r character at EOL
+    // #7653, #8125, #8152: local protocol detection
+    rlocalProtocol = /^(?:about|app|app-storage|.+-extension|file|res|widget):$/
+    rnoContent = /^(?:GET|HEAD)$/     没有响应体
+    rprotocol = /^\/\//     协议名
+    rurl = /^([\w.+-]+:)(?:\/\/([^\/?#:]*)(?::(\d+)|)|)/  匹配 url 的协议、域名、端口号
+    _load = jQuery.fn.load  保留旧方法的引用？？
+
+    prefilters
+
+    transports
+
+    allTypes = "*/".concat("*")
+
+
+    ajaxLocation  设置为当前页面的地址，根据 #8138，某些机器上的 IE 6-8 在设置了 document.domain 后，访问 location.protocal 会抛出异常。
+    一个 hack 方法是创建一个 a 标签，手动设置它的 href 为空，IE 会自动使用当前地址为其设置 href
+    测试结果发现在 chrome 和 IE 下均有效。
+
+
+ajaxExtend：
+    #9887
+    ajax 的 extend 使用了深拷贝，但是有些属性使用深拷贝浪费内存，例如 context，所以该方法会跳过 ajaxSettings.flatOptions 中的属性
+
+addToPrefiltersOrTransports
+
+
+
+扩展 jQuery：
+    active
+    lastModified
+    etag
+
+    ajaxSettings            默认 ajax 参数
+        url: ajaxLocation,
+        type: "GET",
+        isLocal: rlocalProtocol.test( ajaxLocParts[ 1 ] ),
+        global: true,
+        processData: true,
+        async: true,
+        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+        accepts: {
+            "*": allTypes,
+            text: "text/plain",
+            html: "text/html",
+            xml: "application/xml, text/xml",
+            json: "application/json, text/javascript"
+        },
+        contents: {
+            xml: /xml/,
+            html: /html/,
+            json: /json/
+        },
+        responseFields: {
+            xml: "responseXML",
+            text: "responseText",
+            json: "responseJSON"
+        },
+        // Data converters
+        // Keys separate source (or catchall "*") and destination types with a single space
+        converters: {
+
+            // Convert anything to text
+            "* text": String,
+
+            // Text to html (true = no transformation)
+            "text html": true,
+
+            // Evaluate text as a json expression
+            "text json": jQuery.parseJSON,
+
+            // Parse text as xml
+            "text xml": jQuery.parseXML
+        },
+        // For options that shouldn't be deep extended:
+        // you can add your own custom options here if
+        // and when you create one that shouldn't be
+        // deep extended (see ajaxExtend)
+        flatOptions: {
+            url: true,
+            context: true
+        }
+
+    ajaxSetup
+        使用 ajaxExtend 扩展 jQuery.ajaxSettings，因为该方法会影响所有 ajax 请求，可能会对插件造成无法预期的后果，所以已经不推荐使用该方法了
+
+    ajaxPrefilter
+        发送 ajax 前处理 ajax 选项
+
+    ajaxTransport
