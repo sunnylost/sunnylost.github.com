@@ -1,3 +1,8 @@
+ajax 在 1.5 由 Julian Aubourg 重写
+细节： http://oksoclap.com/p/6Y26bm1ZsB
+
+======================================= ajax.js =======================================
+
 变量：
     ajaxLocParts
     ajax_nonce         当前时间
@@ -18,7 +23,6 @@
 
     allTypes = "*/".concat("*")
 
-
     ajaxLocation  设置为当前页面的地址，根据 #8138，某些机器上的 IE 6-8 在设置了 document.domain 后，访问 location.protocal 会抛出异常。
     一个 hack 方法是创建一个 a 标签，手动设置它的 href 为空，IE 会自动使用当前地址为其设置 href
     测试结果发现在 chrome 和 IE 下均有效。
@@ -28,8 +32,16 @@ ajaxExtend：
     #9887
     ajax 的 extend 使用了深拷贝，但是有些属性使用深拷贝浪费内存，例如 context，所以该方法会跳过 ajaxSettings.flatOptions 中的属性
 
-addToPrefiltersOrTransports
+addToPrefiltersOrTransports：
+    向 prefilters 和 transports 两个对象中添加属性，属性名是 ajax 的 dataType，值是处理函数
 
+    如果第一个参数不是字符串，则 dataTypeExpression 为 "*"
+
+    dataType 前有 + 号表示该过滤条件要提前执行，使用 unshift 插入数组中。
+
+inspectPrefiltersOrTransports( structure, options, originalOptions, jqXHR )：
+    不知道在检查神马。
+    在函数调用中，例如 each，如果不需要使用排在前面的参数，但是这些参数又必须声明，那么可以使用 _ 作为占位符。
 
 
 扩展 jQuery：
@@ -92,5 +104,279 @@ addToPrefiltersOrTransports
 
     ajaxPrefilter
         发送 ajax 前处理 ajax 选项
+        使用 addToPrefiltersOrTransports
 
     ajaxTransport
+        使用 addToPrefiltersOrTransports
+
+    ajax( url, options )：
+        主要方法！
+        流程：
+            处理参数列表，兼容 1.5 之前的版本
+            定义变量
+            获得最终的 option
+            处理 url
+            处理 type
+            设置 dataTypes
+            设置 crossDomain
+
+            inspectPrefiltersOrTransports( prefilters, s, options, jqXHR )
+
+            在上一步过程中， state 被修改为 2，表示 abort， 返回 jqXHR
+
+            (如果可能)触发 ajaxStart
+            通过 type 判断请求是否含有 content，如果没有，则
+                如果有 data，拼接到 url 后。
+                如果 cache 为 false，在 url 后增加 _ 参数。
+
+            检查 ifModified
+
+            设置 contentType
+
+            设置 accepts
+
+            循环 headers，设置对应的请求头
+
+            如果设置了 beforeSend，执行，判断返回值是否为 false 或 state 是否为 2，如果是，则调用 abort()
+
+            为 jqXHR 添加 success、 error、 complete 函数
+
+            transport = inspectPrefiltersOrTransports( transports, s, options, jqXHR );
+
+            若 transport 不存在，则
+                done( -1, "No Transport" );
+            否则，
+                jqXHR.readyState = 1;
+                触发 ajaxSend
+                如果此次请求为异步，并设置了 timeout，则
+                    设置定时器，超时后执行 jqXHR.abort("timeout");
+
+                调用 transport.send( requestHeaders, done )，如果抛出异常
+                    检测 state，
+                        若 state < 2，表明请求未完成，调用 done( -1, e )
+                        否则抛出异常
+
+
+            done( status, nativeStatusText, responses, headers )：
+                ajax 请求的回调函数。
+
+                如果 state 为 2， 返回
+
+                state = 2
+
+                清除 timeout 的定时(如果存在的话)
+
+                transport = undefined 垃圾回收
+
+                设置 jqXHR.readyState
+
+                判断请求是否成功
+                    isSuccess = status >= 200 && status < 300 || status === 304
+
+                如果有响应值，则
+                    调用 ajaxHandleResponses( s, jqXHR, responses )
+
+                使用 ajaxConvert 转换响应值
+
+                如果 isSuccess 为 true，则
+                    如果设置了 ifModified，那么
+                        修改 jQuery.lastModified 和 jQuery.etag
+
+                    status 204 为 nocontent
+                           304 为 notmodified
+
+                否则
+                    设置 error
+
+                设置 jqXHR 的 status 和 statusText
+
+                如果 isSuccess 为 true，则
+                    deferred.resolveWith( callbackContext, [ success, statusText, jqXHR ] )
+                否则
+                    deferred.rejectWith( callbackContext, [ jqXHR, statusText, error ] )
+
+                根据 status 调用 statusCode
+
+                触发 ajaxSuccess 或 ajaxError 事件。
+
+                调用 completeDeferred
+
+                触发 ajaxComplete 事件
+                    若所有请求都已结束，触发 ajaxStop 事件
+
+                返回 jqXHR
+
+
+    getScript：
+        jQuery.get( url, undefined, callback, "script" );
+
+    getJSON：
+        jQuery.get( url, data, callback, "json" );
+
+
+
+jQuery.fn.load：
+
+"ajaxStart", "ajaxStop", "ajaxComplete", "ajaxError", "ajaxSuccess", "ajaxSend"：
+    添加对应的事件处理函数
+
+jQuery.get
+jQuery.post ( url, data, callback, type )，内部调用 jQuery.ajax
+
+
+ajaxHandleResponses：
+    设置 jqXHR 的 responseXXX 属性
+
+    检测 content-type
+
+    检测 dataType
+
+ajaxConvert
+
+
+transport 被单独提取了出来，该对象提供了 send 和 abort 两个 api。
+应该是为了解耦和。
+
+======================================= ajax/xhr.js =======================================
+
+#5280, IE 7 关闭窗口后还会保留 ajax 连接，只能重启浏览器。
+    解决办法是在 window 的 unload 事件中 abort 这些请求
+
+xhrCallbacks 用于保存激活的 xhr 回调，便于在 unload 事件中调用 abort
+
+createStandardXHR()：
+    创建 XMLHttpRequest
+
+createActiveXHR()：
+    创建 ActiveXObject("Microsoft.XMLHTTP")
+
+设置 ajaxSettings.xhr
+    IE 7 的 XMLHttpRequest 实现不完整，无法请求本地文件
+
+检测是否支持 cros： xhr 对象是否有 withCredentials 属性
+
+send :
+    创建 xhr
+
+    xhr.open()
+
+    xhrFields 用于为 xhr 增加自定义属性
+
+    如果 xhr 的 overrideMimeType 存在，覆盖 mime-type
+
+    设置 headers，这里要 try catch 的原因是 firefox 3 下的跨域访问
+
+    xhr.send() 会判断下是否有 content
+
+    定义 callback( _, isAbort )：
+        http://helpful.knobs-dials.com/index.php/Component_returned_failure_code:_0x80040111_(NS_ERROR_NOT_AVAILABLE)
+        firefox 中，出现网络错误后，访问 xhr 的属性会抛异常
+
+            callback 只会调用一次
+                if( callback && ... ) {
+                    callback = undefined;
+                    ...
+                }
+
+            从 xhrCallbacks 中清除掉已经不活动的 xhr
+
+            如果是 abort 的，那么
+                调用 xhr.abort();
+            否则
+                设置 responses
+
+                IE 6-9 下，如果相应内容是二进制，那么访问 xhr.responseText 会报错
+
+                firefox 下，如果在错误的跨域请求下，访问 xhr.statusText 报错
+
+                IE 下，有时 status 会返回 1223 而不是 204
+
+            如果 responses 存在，调用 complete(  status, statusText, responses, responseHeaders )
+
+
+    如果是同步请求，直接执行 callback
+    或，
+        IE 6 或 7 中，如果存在缓存并直接读取的话，xhr.readyState 为 4，那么运行 callback
+    或
+        如果 xhrOnUnloadAbort 存在，那么绑定 unload 事件
+        xhr.onreadystatechange = callback
+
+abort：
+    callback 的第二个参数表示是否为 abort
+
+    if ( callback ) {
+        callback( undefined, true );
+    }
+
+
+======================================= ajax/script.js =======================================
+
+前面是个使用 ajaxSetup 和 ajaxPrefilter 的例子
+
+在 filter 中
+    如果 cache 不存在
+        cache 为 false
+
+    如果 crossDomain 为 true
+        type 为 GET
+        global 为 false
+
+ajaxTransport 中增加 script：
+    该 transport 只处理跨域访问
+
+    send( _, callback )：
+        创建 script 元素
+
+        script.async = true;
+
+        设置 script 的 charset ( 如果设置了 scriptCharset 的 option )
+
+        script.src = s.url;
+
+        设置 script.onload = script.onreadystatechange：
+            script.onload = script.onreadystatechange = null; 防止 IE 下内存泄露
+
+            移除 script 元素
+
+            script = null;
+
+            如果不是 abort， callback( 200, "success" );
+
+        #2709 和 #4378
+        绕过了 IE 6 下 base 元素的 bug
+        head.insertBefore( script, head.firstChild );
+
+    abort：
+
+======================================= ajax/jsonp.js =======================================
+
+jsonp 的 callback 由 jQuery.expando + "_" + ( ajax_nonce++ ) 组成
+也可以从 oldCallbacks 里获得。
+
+对于 jsonp 的处理是在 prefilter 中完成的，它拦截了 type 为 json 或 jsonp 的情况：
+
+    jsonProp： 首先检测 url 中是否有名为 ? 的属性名，如果没有再检查 data 中是否有
+
+    jsonp 的回调名可以通过 jsonpCallback 的 option 设置，它可以是字符串，也可以是函数，默认使用前面定义的 jsonpCallback 函数来确定
+
+    向 url 中插入回调函数名
+
+    设置 data-type 为 json
+
+    使用 overwritten 保存 window[ callbackName ], 将 callbackName 定义为新的全局函数，
+
+    使用 jqXHR 的 always 设置清除方法：
+
+        还原 window[ callbackName ]
+
+        如果 s[ callbackName ] 存在，表明该 callbackName 需要重复使用：
+            还原 s.jsonpCallback
+            将 callbackName 传入 oldCallbacks 中
+
+        jsop 请求成功后， window[ callbackName ] 执行， responseContainer 被设置
+        如果 responseContainer 存在，并且 overwritten 存在
+            执行 overwritten( responseContainer[0] )
+
+            这里 overwritten 存在应该是指用户自定义的函数
+
+        responseContainer = overwritten = undefined;
