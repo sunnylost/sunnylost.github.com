@@ -1,0 +1,88 @@
+queue 是针对 DOM 元素的方法
+每个元素可以有一到多个 queue，大多数应用中，通常只有一个名为 "fx" 的 queue。
+queue 通过 dequeue() 来驱动运行。
+
+
+jQuery：
+    queue( elem, type, data )：
+        判断 elem 是否存在，如果存在，则
+            type = ( type || "fx" ) + "queue";
+            queue = jQuery._data( elem, type );  // 又见 data，data 不仅存储事件，还存储队列
+
+            如果 data 是个数组，表明它是 elem 的新的 queue，
+            否则 data 是一个回调函数，直接存入 queue 中。
+
+            返回 queue 或是一个数组
+
+    dequeue( elem, type )：
+        将匹配 type 的 queue 中的下一个函数移除并执行。这个函数里也应该执行 dequeue 来保证整个 queue 中的函数都能执行
+
+        'inprogress' 为哨兵(sentinel)。
+
+        fn = queue.shift();
+
+        这个 next 应该是给 delay() 方法用的
+        next = function() {
+            jQuery.dequeue( elem, type );
+        };
+
+        type 默认是 fx。
+
+        如果 fn 是哨兵，获得队列中的下一个函数并赋值给 fn。
+
+        hooks.cur = fn; // queue.js 中没有用到这个属性。
+
+        if ( fn ) {
+
+            // Add a progress sentinel to prevent the fx queue from being
+            // automatically dequeued
+            // 防止自动 dequeue 是什么意思？哦~应该和下面的 queue 一起看。
+            if ( type === "fx" ) {
+                queue.unshift( "inprogress" );
+            }
+
+            // clear up the last queue stop function
+            delete hooks.stop;
+            fn.call( elem, next, hooks );
+        }
+
+        如果 queue 为空，并且 hooks 存在，
+            调用 hooks.empty.fire()
+
+
+    _queueHooks( elem, type )：
+        创建或获取钩子。
+        用途：
+            含有 empty 方法，当队列为空时将其从 data 中移除。
+
+jQuery.fn：
+    queue( type, data ):
+        如果不传入 data，那么返回当前元素关联的 queue。
+        data 存在，
+            将 data 存入 queue 中。
+            确保该 queue 拥有 queueHooks。
+
+            inprogress 表示 fx 队列自动运行，下面是防止自动 dequeue。
+            if ( type === "fx" && queue[0] !== "inprogress" ) {
+                jQuery.dequeue( this, type );
+            }
+
+    dequeue( type )：
+        循环调用 jQuery.dequeue( this, type );
+
+    delay( time, type )：
+        http://blindsignals.com/index.php/2009/07/jquery-delay/ 打不开啦。
+        需要配合 jQuery.fx
+        延迟的做法就是向队列里添加一个回调函数，在 time 时间后执行 next 方法。
+
+        并且这里为 hooks 增加了 stop 方法。
+
+
+    clearQueue( type )：
+        清除队列
+        实际上就是用空数组代替原来的队列。
+
+    promise( type, obj )：
+        type 队列结束后执行 obj。
+        该方法和 data 关联，因此当元素被移除后，data 也会消失，约定的回调并不会执行
+        因此需要使用 detach 移除元素，但是保留 data，这样可以使用 removeData() 移除 data。
