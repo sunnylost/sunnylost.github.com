@@ -1,0 +1,194 @@
+http://coding.smashingmagazine.com/2013/08/09/backbone-js-tips-patterns/
+    通过 get 获取的属性都是 model 属性的直接引用。
+    为任何对象属性增加 getter 和 setter。
+    拆分渲染方法，尽量避免渲染整个视图。
+
+Backbone
+    option 的使用。
+    extend 方法的使用。
+
+    _           underscore
+    Backbone.$  jQuery, Zepto, Ender...
+
+    Event
+        on, off, once, trigger (bind, unbind)
+        标准的 PubSub 模式。
+
+        Backbone 也有上述接口
+
+        eventsApi 用于处理事件名为对象或空格分隔的多事件的情况。
+
+        triggerEvents 经过优化，看起来是很奇怪
+
+        listenTo、 listenToOnce
+            object.listenTo(other, event, callback)
+            使 object 监听 other 上的事件，实际上还是 other 监听了事件，但 object 拥有 other 的引用。
+
+    Model(attributes, options)
+        cid
+        initialize
+            自动运行
+
+        changed
+            包含值有变化的属性
+
+        toJSON
+            返回 attributes 的拷贝
+
+        get(attr)
+            从 attributes 中获取 attr
+
+        set(key, val, options)
+            调用 _validate 验证
+
+            设置前先检测 _changing
+
+            如果属性值有变动，触发 change:attrname 事件
+
+            while 循环没理解
+
+        destroy
+            向服务器端发送 delete 请求删除当前 model
+            触发 destroy 事件
+            如果 model 已经存储过，触发 sync 事件
+
+        unset
+            从 model 中删除属性
+
+        _validate(attrs, options)
+            调用用户自定义的 validate 方法
+            会触发 invalid 事件
+
+    Collection
+        model 的集合。
+        实现了 underscore 90% 的功能。
+        集合中 model 触发的事件，会同样导致 collection 触发。
+
+        构造函数：
+            设置 model、 comparator
+            this._reset();
+            this.initialize.apply(this, arguments);
+            if (models) this.reset(models, _.extend({silent: true}, options));
+
+        _reset()
+            this.length = 0;
+            this.models = [];
+            this._byId  = {};  使用 model 的 cid 作为 key 来保存 model。 如果 model 有 id，也将其保存
+
+        add(models, options)
+            调用 this.set()， 但 option 包括 { add: true, remove: false, merge: false }
+            忽略已经存在的 model
+
+        set(models, options)
+            核心方法：
+            setOptions = {add: true, remove: true, merge: true};
+
+            循环 models
+                调用 get(id) 判断 model 是否存在，如果存在
+                    如果 merge 为 true，更新 model
+                如果不存在
+                    _prepareModel()
+                    加入到 toAdd 数组中
+                    调用 _addReference()
+                如果 order 为 true，将 model 加入到 order 中
+
+            ……
+
+        _prepareModel(attrs, options)
+            将普通对象转为 Model
+            if (attrs instanceof Model) return attrs;
+            为什么不用 this.model？不同的 model 不需要过滤吗？
+
+        _addReference(model, options)
+            将 model 与 collection 关联
+            绑定 all 事件给 _onModelEvent
+
+        _onModelEvent
+            在 collection 上触发 model 的事件
+
+    View
+        el 表示视图的容器
+        $el 表示 el 的 jQuery 或 Zepto 对象
+
+        构造函数
+            设置 cid
+            _ensureElement()
+            initialize()
+            delegateEvents()
+
+        $(selector)
+            $el.find(selector)
+
+        setElement(element, delegate)
+            this.$el 存在， 调用 undelegateEvents()
+            $el = $(element);
+            el = $el[0];
+            delegate 为 true， delegateEvents()
+
+        render()
+            用于覆盖
+
+        remove()
+            $el.remove();
+            stopListening();
+
+        _ensureElement()
+            el 不存在
+                根据 tagName 属性创建一个新的元素作为容器。
+            存在调用 setElement()
+
+        delegateEvents()
+            利用名空间来注册事件
+
+        undelegateEvents()
+            清除所有代理事件
+            $el.off('.delegateEvents' + this.cid)
+
+    Sync
+        发送 CRUD 请求
+        Backbone.sync 函数
+
+        触发 request 事件
+
+
+    Router
+        构造函数
+            设置 this.routes
+            _bindRoutes()
+
+        _bindRoutes()
+            循环调用 route()
+
+        _routeToRegExp()
+            将 route 字符串转成 RegExp 对象
+
+        route(route, name, callback)
+            Backbone.history.route(route, fn) 方法
+            fn
+                处理 url 参数
+                调用 callback
+                触发 route:name 对应的事件
+                触发 route 事件
+                触发 history 的 route 事件
+
+    History
+        处理全局 hashchange 或 pushState 事件
+
+        对于低版本 ie 想使用 hashchange， 使用 iframe。
+
+        interval 默认间隔时间，检测 url
+
+        start
+            History.started 为 true 会抛异常，确保该方法只执行一次
+
+            如果支持 pushState，监听该事件
+            如果向用 hashchange 并且浏览器支持，监听 hashchange
+            否则定时调用 checkUrl()，默认间隔时间 50 毫秒。
+
+        route
+            向 this.handlers 插入 { route: route, callback: callback }
+
+    Helpers
+        extend
+            Model, Collection, Router, View, History
+            子类 ——> Surrogate ——> 父类
