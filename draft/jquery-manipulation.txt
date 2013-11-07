@@ -1,0 +1,198 @@
+createSafeFragment( document )
+    现代浏览器中(包括 IE 9) documentFragment 没有 createElement()。
+    nodeNames 中包含 html 5 中新定义的标签， 在旧的浏览器中创建这些标签后就可以正常的渲染了。
+    http://net.tutsplus.com/tutorials/html-css-techniques/how-to-make-all-browsers-render-html5-mark-up-correctly-even-ie6/
+    http://ejohn.org/blog/html5-shiv/
+    IE 会忽略那些它不认识的标签， CSS 也不会生效。
+
+rchecked = /checked\s*(?:[^=]|=\s*.checked.)/i
+rhtml = /<|&#?\w+;/         包含 HTML， &# 表示转义字符
+rtagName = /<([\w:]+)/      获得标签名
+rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/gi
+                            这些标签在 HTML 下是不需要闭合的。
+
+
+    #13200 是说 html() 方法在 XHTML 下失效， 因为元素没有结束标签。
+    HTML 可以自动补全， XHTML 很严格， 很讨厌。
+
+    // We have to close these tags to support XHTML (#13200)
+    wrapMap = {
+        option: [ 1, "<select multiple='multiple'>", "</select>" ],
+        legend: [ 1, "<fieldset>", "</fieldset>" ],
+        area: [ 1, "<map>", "</map>" ],
+        param: [ 1, "<object>", "</object>" ],
+        thead: [ 1, "<table>", "</table>" ],
+        tr: [ 2, "<table><tbody>", "</tbody></table>" ],
+        col: [ 2, "<table><tbody></tbody><colgroup>", "</colgroup></table>" ],
+        td: [ 3, "<table><tbody><tr>", "</tr></tbody></table>" ],
+
+        // IE6-8 can't serialize link, script, style, or any html5 (NoScope) tags,
+        // unless wrapped in a div with non-breaking characters in front of it.
+        _default: jQuery.support.htmlSerialize ? [ 0, "", "" ] : [ 1, "X<div>", "</div>"  ]
+    },
+    safeFragment = createSafeFragment( document ),
+    fragmentDiv = safeFragment.appendChild( document.createElement("div") );
+
+wrapMap.optgroup = wrapMap.option;
+wrapMap.tbody = wrapMap.tfoot = wrapMap.colgroup = wrapMap.caption = wrapMap.thead;
+wrapMap.th = wrapMap.td;
+
+jQuery.fn
+    text(value)
+        获取或设置元素的文本。
+        获取文本的操作是调用了 jQuery.text()，这个方法定义在 Sizzle 中，目前还看不到那块。
+        设置文本调用了 empty()，清除完子节点后， 使用 createTextNode(value) 生成文本节点。
+        jQuery 中的操作都会尽量使用元素的 ownerDocument 来获取文档对象。
+
+    empty()
+        移除元素的所有子节点，包括文本。
+        http://api.jquery.com/empty/
+        为了防止内存泄露， jQuery 还会移除跟子节点相关的事件处理和 data。
+        如果想保留 data 或 event handler，使用 detach()
+
+        jQuery.cleanData() 移除绑定内容。
+
+        清除子节点：
+            while ( elem.firstChild ) {
+                elem.removeChild( elem.firstChild );
+            }
+
+        #12336 显示， IE < 9 中， 处理 select 元素的异常
+            if ( elem.options && jQuery.nodeName( elem, "select" ) ) {
+                elem.options.length = 0;
+            }
+
+    wrapAll(html)
+        使用 html 来包裹集合中的所有元素。 元素集合中的所有元素会作为 wrap 元素的子节点。
+
+        如果 wrap 元素里还有子元素，那么查找到 wrap 元素最深的一层，将其作为集合中所有元素的父元素。
+
+        使用 $(html).eq(0).clone(true) 创建 wrap 元素。
+        将 wrap 元素插入到元素集合中第一个元素的前面。
+
+        wrap 调用 map() 方法来查找它包含的层级最深的后代元素
+        调用该后代元素的 append( this )。
+
+        wrap.map(function() {
+            var elem = this;
+
+            while ( elem.firstChild && elem.firstChild.nodeType === 1 ) {
+                elem = elem.firstChild;
+            }
+
+            return elem;
+        }).append( this );
+
+    wrap(html)
+        wrapAll() 是将匹配元素作为一个集合来看待，而 wrap() 则是分别对匹配的元素进行操作。
+        循环 this 调用 wrapAll() 即可。
+
+    wrapInner(html)
+        对元素的子元素调用 wrapAll()
+        处理了无子元素的情况，直接调用 append()
+        获取子元素的部分使用了 contents() 方法。
+
+    unwrap()
+        wrap() 的逆操作，移除元素的父元素。
+        使用 parent() 获得父元素，循环，调用 replaceWith() 替换。
+        最后调用了 end()。
+
+    append, prepend, before, after
+        使用了 domManip()。 该方法需要三个参数，
+            第一个， 传入的参数， 就是需要插入到页面里的元素
+            第二个， table， append, prepend 传入了 true， 后两个传入了 false， 还不知道是干啥的
+            第三个， 回调函数， 原生 DOM 的 appendChild， insertBefore 两个 API 的运用
+
+    domManip(args, table, callback)
+        if(isFunction || !( l <= 1 || typeof value !== "string" || jQuery.support.checkClone || !rchecked.test( value ) ))
+            isFunction 能够理解，因为需要运行函数。
+            但后面那些呢？
+            啊~这应该和 || 的特性有关。
+                对于 l， 如果元素集合为 1 个或 0 个，那么就没有必要循环， 如果个数的确小于等于 1 个，那么 || 得到结果 true 返回， ! 将其过滤。
+
+                如果个数多于 1 个， value 不为字符串的话， 又会被过滤掉。
+
+                为什么要判断 value 是否为字符串？ 因为注释中提到 webkit 中的 fragment 包含的 checked 特性无法被复制，因此需要 value 为字符串来使用 rchecked 对其检测。
+
+                如果 jQuery.support.checkClone 为 true， 无需为 checked 担心，因此也被过滤掉。
+
+                最后是正则检测。
+
+                对元素结果的循环造成了 this.length 也就是 l 的改变。
+
+        经过上面的过滤， 调用 domManip() 的应该是一个单独的元素。
+            调用 jQuery.buildFragment(args, this[ 0 ].ownerDocument, false, this)
+
+
+
+jQuery
+    以下三个方法均为内部使用。
+
+    clone(elem, dataAndEvents, deepDataAndEvents)
+
+    buildFragment(elems, context, scripts, selection)
+        safe = createSafeFragment( context )
+
+        循环 elems
+            if ( elem || elem === 0 )
+            elem === 0 是什么意思？
+
+                如果 elem 是 object
+                    将 elem 合并到 nodes 数组中
+                如果 elem 是不包含 HTML 的字符串
+                    使用 context 创建一个字符节点，存入 nodes 中
+                否则， 将字符串转为 DOM 节点
+                    生成 tmp， 它是 safe 中的一个 div
+                    通过 rtagName 获得 tag 名
+                    获得 wrap
+                    tmp.innerHTML = wrap[1] + elem.replace( rxhtmlTag, "<$1></$2>" ) + wrap[2];  // 处理下 XHTML 中有些标签闭合的问题
+                    wrap 可能会有很多层， 循环找到真正的内容
+                    如果前后的空白字符被去掉了， 那么再加回来
+
+                    IE 7 会向空 table 中自动添加 tbody， 需要清除
+
+                    将 nodes 与 tmp 的子节点合并
+
+                    修复了一个 bug： #12392
+
+                    将 tmp 还原回原来的节点以便复用
+
+        呼~循环结束了
+        如果 tmp 存在， 那么将其从 safe 里移除
+
+        如果不支持 jQuery.support.appendChecked， 还得把这些 input 的状态还原
+            使用 getAll( nodes, 'input') 获得所有 input， 使用 fixDefaultChecked() 还原
+
+        循环 nodes
+            如果元素已经在 selection 中，不做操作
+            contains 表示元素是否已经在文档内
+            将元素添加到 safe 中， 并获得元素包含的 script 节点 tmp
+            if ( contains ) {
+                setGlobalEval( tmp );
+            }
+
+            如果 script 不为 false， 那么将 tmp 中的脚本元素保存到 script 中
+
+        清理 tmp
+        返回 safe
+
+    cleanData(elems, /* internal */ acceptData)
+
+getAll( context, tag )
+    在 context 中查找所有 tagName 符合 tag 的元素
+    context 可能是数组，也可能是元素
+
+fixDefaultChecked( elem )
+    如果 elem 是 radio 或 checkbox
+        elem.defaultChecked = elem.checked
+
+    defaultChecked 表示原始 checked 状态。
+
+setGlobalEval(elems, refElements)
+    var elem,
+        i = 0;
+    for ( ; (elem = elems[i]) != null; i++ ) {
+        jQuery._data( elem, "globalEval", !refElements || jQuery._data( refElements[i], "globalEval" ) );
+    }
+
+    标记 script 元素
