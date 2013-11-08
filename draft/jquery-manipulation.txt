@@ -1,3 +1,5 @@
+domManip 方法的抽象
+
 createSafeFragment( document )
     现代浏览器中(包括 IE 9) documentFragment 没有 createElement()。
     nodeNames 中包含 html 5 中新定义的标签， 在旧的浏览器中创建这些标签后就可以正常的渲染了。
@@ -5,11 +7,15 @@ createSafeFragment( document )
     http://ejohn.org/blog/html5-shiv/
     IE 会忽略那些它不认识的标签， CSS 也不会生效。
 
+nodeNames = "abbr|article|aside|audio|bdi|canvas|data|datalist|details|figcaption|figure|footer|header|hgroup|mark|meter|nav|output|progress|section|summary|time|video"
+
 rchecked = /checked\s*(?:[^=]|=\s*.checked.)/i
 rhtml = /<|&#?\w+;/         包含 HTML， &# 表示转义字符
 rtagName = /<([\w:]+)/      获得标签名
 rxhtmlTag = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/gi
                             这些标签在 HTML 下是不需要闭合的。
+
+rnoshimcache = new RegExp("<(?:" + nodeNames + ")[\\s/>]", "i")
 
 
     #13200 是说 html() 方法在 XHTML 下失效， 因为元素没有结束标签。
@@ -122,6 +128,14 @@ jQuery.fn
 
         经过上面的过滤， 调用 domManip() 的应该是一个单独的元素。
             调用 jQuery.buildFragment(args, this[ 0 ].ownerDocument, false, this)
+            设置 first 为 fragment 中的第一个子元素。
+
+            如果 first 存在
+                检测 table， 判断 first 的 tagName 是不是 tr
+                提取 first 中的 script 元素， 调用 disableScript() 将脚本禁用
+
+                判断是否需要 clone， 应该是说只有一个元素或只剩下一个元素的情况下不需要 clone， 直接用该元素。
+                    node = jQuery.clone( node, true, true );
 
 
 
@@ -129,6 +143,16 @@ jQuery
     以下三个方法均为内部使用。
 
     clone(elem, dataAndEvents, deepDataAndEvents)
+        if ( jQuery.support.html5Clone || jQuery.isXMLDoc(elem) || !rnoshimcache.test( "<" + elem.nodeName + ">" ) )
+            直接用 elem.cloneNode(true)
+            为什么要判断 xml 呢？
+            rnoshimcache 是考虑了 html5 shim 的情况
+        else
+            使用前面定义的 fragmentDiv 保存 elem 的 outerHTML， 再将 fragmentDiv 的 firstChild 赋给 clone
+
+        由于 clone 在 IE 下有众多问题，单独用 fixCloneNodeIssues() 解决
+
+
 
     buildFragment(elems, context, scripts, selection)
         safe = createSafeFragment( context )
@@ -196,3 +220,9 @@ setGlobalEval(elems, refElements)
     }
 
     标记 script 元素
+
+disableScript(elem)
+    修改 elem 的 type 使其避免执行
+    AttributeNode 的 specified 表示用户是否手动设置了值
+
+fixCloneNodeIssues(src, dest)
