@@ -1,5 +1,9 @@
 domManip 方法的抽象
 
+许多方法里都考虑了包含 script 节点的情况，因为要防止脚本多次执行。
+
+
+
 createSafeFragment( document )
     现代浏览器中(包括 IE 9) documentFragment 没有 createElement()。
     nodeNames 中包含 html 5 中新定义的标签， 在旧的浏览器中创建这些标签后就可以正常的渲染了。
@@ -103,6 +107,28 @@ jQuery.fn
         使用 parent() 获得父元素，循环，调用 replaceWith() 替换。
         最后调用了 end()。
 
+    clone(dataAndEvents, deepDataAndEvents)
+        jQuery.clone()
+
+    remove(selector, keepData)
+        keepData 是内部使用， detach() 方法会用到
+        keepData 为 false，调用 jQuery.cleanData()
+
+    detach(selector)
+        this.remove(selector, true);
+
+    replaceWith(value)
+        value　不存在即　remove() 操作
+        value 代表的节点应该先从 DOM 树中移除再添加进 DOM 中。
+
+    html(value)
+        如果 value 不存在，直接返回 innerHTML， 不过要过滤掉 / jQuery\d+="(?:null|\d+)"/g， 应该是 guid
+
+        elem = this[0]
+
+        在 try catch 最后设置 elem 为 0， 随后判断 elem 的值来确定是否抛出异常
+        为什么不在 catch 中处理？ 是因为性能考虑吗？
+
     append, prepend, before, after
         使用了 domManip()。 该方法需要三个参数，
             第一个， 传入的参数， 就是需要插入到页面里的元素
@@ -137,7 +163,15 @@ jQuery.fn
                 判断是否需要 clone， 应该是说只有一个元素或只剩下一个元素的情况下不需要 clone， 直接用该元素。
                     node = jQuery.clone( node, true, true );
 
+                    调用 callback()， 对于 table 元素特殊处理，操作它的 tbody 节点
 
+                如果存在脚本节点
+                    判断脚本是否曾经执行过，就是检测是否有 globalEval 标记。
+                    执行脚本( 如果节点有 src， 还会使用 ajax…… )
+
+                fragment = first = null;  //不要忘记防止内存泄露
+
+    appendTo， prependTo， insertBefore， insertAfter， replaceAll 这些方法是相应方法的倒转
 
 jQuery
     以下三个方法均为内部使用。
@@ -152,7 +186,9 @@ jQuery
 
         由于 clone 在 IE 下有众多问题，单独用 fixCloneNodeIssues() 解决
 
+        dataAndEvents 表示是否复制节点上的 data 和事件， 使用 cloneCopyEvent()
 
+        也要处理节点中包含 script 的情况
 
     buildFragment(elems, context, scripts, selection)
         safe = createSafeFragment( context )
@@ -201,6 +237,7 @@ jQuery
         返回 safe
 
     cleanData(elems, /* internal */ acceptData)
+        清除事件的时候，对于普通事件，直接使用 jQuery.removeEvent()， 而不用 jQuery.event.remove()。 效率问题
 
 getAll( context, tag )
     在 context 中查找所有 tagName 符合 tag 的元素
@@ -226,3 +263,36 @@ disableScript(elem)
     AttributeNode 的 specified 表示用户是否手动设置了值
 
 fixCloneNodeIssues(src, dest)
+    IE 6-8 使用 clone 会将 attachEvent() 的事件拷贝
+
+    IE <= 8 复制脚本节点时会将新节点的内容清空， 并且为其设置新内容的话会执行
+
+    IE6-10 improperly clones children of object elements using classid.
+    IE10 throws NoModificationAllowedError if parent is null, #12132.
+    解决办法：
+        if ( dest.parentNode ) {
+            dest.outerHTML = src.outerHTML;
+        }
+
+        // This path appears unavoidable for IE9. When cloning an object
+        // element in IE9, the outerHTML strategy above is not sufficient.
+        // If the src has innerHTML and the destination does not,
+        // copy the src.innerHTML into the dest.innerHTML. #10324
+        if ( jQuery.support.html5Clone && ( src.innerHTML && !jQuery.trim(dest.innerHTML) ) ) {
+            dest.innerHTML = src.innerHTML;
+        }
+
+    IE 6-8 中拷贝的 checkbox 和 radio 无法保存之前的 checked 状态
+    IE 6-7 中，若元素的 defaultChecked 没有被设置，那么它将无法设置 checked
+    解决：
+        dest.defaultChecked = dest.checked = src.checked;
+
+    IE 6-7 拷贝 checkbox/radio 后 value 为空字符串而不是 "on" (没测试出来)
+
+    IE 6-8 拷贝 option 时无法返回被选中的 option
+        dest.defaultSelected = dest.selected = src.defaultSelected;
+
+    IE 6-8 拷贝其他类型的 input 时无法正确的设置 defaultValue
+
+cloneCopyEvent(src, dest)
+    复制事件就是为 dest 绑定 src 上的事件
