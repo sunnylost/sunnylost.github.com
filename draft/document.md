@@ -77,7 +77,7 @@ activeElement：返回当前获得焦点的元素。只读。
 
 async：完全没见过……看介绍应该和载入 XML 文档有关。与之相关的规范：[LS](http://www.w3.org/TR/DOM-Level-3-LS/load-save.html#LS-DocumentLS)
 
-baseURI：返回页面的基本 URI，这个会受到 <base> 标签影响。
+baseURI：返回页面的基本 URI，这个会受到 &lt;base&gt; 标签影响。
 
 body：返回 body 元素。该属性可以设置。
 
@@ -103,7 +103,7 @@ dir：文档方向。'ltr'，从左向右。firefox 正确返回，chrome 下是
 
 doctype：返回文档的文档声明。只读。
 
-documentElement：返回文档的根元素，就是 <html>。只读。
+documentElement：返回文档的根元素，就是 &lt;html&gt;。只读。
 
 documentURI：返回和 document.URL 同样的内容。
 
@@ -113,11 +113,11 @@ embeds：返回页面中嵌入的对象的集合。
 
 firstChild：第一个子元素，对于 document 来说是文档类型节点(如果有的话)。
 
-firstElementChild：第一个子元素，必须是元素节点，因此 document 的 firstElementChild 为 <html>。IE 6，7，8 也支持，只不过没有过滤注释节点。
+firstElementChild：第一个子元素，必须是元素节点，因此 document 的 firstElementChild 为 &lt;html&gt;。IE 6，7，8 也支持，只不过没有过滤注释节点。
 
 forms：文档中的表单集合。
 
-head：<head> 元素。IE 9 开始支持。
+head：&lt;head&gt; 元素。IE 9 开始支持。
 
 images：文档中图片的集合。
 
