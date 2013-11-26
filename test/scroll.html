@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"  />
+        <title>scroll</title>
+        <style type="text/css">
+            #wrap {
+            }
+
+   /*         #result {
+                position: fixed;
+                right: 0;
+                top: 5px;
+                width: 100px;
+                height: 50px;
+                border: 2px solid blue;
+            }*/
+
+            button {
+                display: block;
+                width: 100px;
+                height: 100px;
+                background-color: #fff;
+                color: #000;
+                margin-bottom: 10px;
+                border: 2px solid green;
+                border-radius: 10px;
+            }
+
+            button:focus {
+                outline: none;
+            }
+
+            #b2 {
+                -webkit-tap-highlight-color: rgba(0,0,0,0);
+            }
+
+            i {
+                display: block;
+                width: 12px;
+                height: 15px;
+                border: 1px solid blue;
+                background-image: url(etaoh5/imgs/images/icons.png);
+                background-repeat: no-repeat;
+            }
+
+            #sprites {
+                background-size: 100px 44px;
+                background-position: 1px 0;
+            }
+
+            @media only screen and (-webkit-min-device-pixel-ratio: 2),
+only screen and (min-device-pixel-ratio: 2) {
+                #sprites {
+                    width: 24px;
+                    height: 30px;
+                    background-size: 200px 88px;
+                    background-position: 2px 0;
+                }
+            }
+
+            body {
+                height: 10000px;
+            }
+
+            .top {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 50px;
+                line-height: 50px;
+                font-size: 30px;
+                text-align: center;
+                background: #100;
+                color: #dedcb9;
+            }
+
+            .content {
+                margin-top: 50px;
+                background: #ccc;
+                color: blue;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="top">
+            Test
+        </div>
+        <div class="content">
+            BEGINNING!<br>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </div>
+        <i id="sprites"></i>
+        <div id="result"></div>
+        <div id="wrap">
+            <div id="content">Test</div>
+        </div>
+        <button id="b1">Click Me1!!</button>
+        <button id="b2">Click Me2!!</button>
+        <script>
+            var $ = function(s) {
+                return document.querySelectorAll(s);
+            };
+
+            var c = $('#content')[0],
+                d;
+
+            function change(e) {
+                c.innerHTML = new Date - d;
+            }
+
+            document.body.addEventListener('touchstart', function() {
+                d = new Date;
+            }, true);
+
+            $('#b1')[0].addEventListener('touchstart', change)
+            $('#b2')[0].addEventListener('click', change)
+        </script>
+    </body>
+</html>
