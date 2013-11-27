@@ -65,7 +65,7 @@ only screen and (min-device-pixel-ratio: 2) {
             }
 
             body {
-                height: 1000px;
+                height: 5000px;
             }
 
             .top {
@@ -84,13 +84,13 @@ only screen and (min-device-pixel-ratio: 2) {
             #content {
                 position: absolute;
                 width: 200px;
-                height: 300px;
+                height: 200px;
                 left: 10px;
-                top: 10px;
+                top: 0;
                 background: #ccc;
                 color: blue;
                 border: 1px solid #000;
-                overflow-y: auto;
+                overflow-y: scroll;
             }
 
             #btn {
@@ -101,7 +101,7 @@ only screen and (min-device-pixel-ratio: 2) {
                 width: 100px;
                 height: 100px;
                 background-color: #7f7f7f;
-                -webkit-transition: opacity 1s;
+                -webkit-transition: opacity .5s;
             }
         </style>
     </head>
@@ -117,29 +117,78 @@ only screen and (min-device-pixel-ratio: 2) {
             };
 
             var c = $('content'),
-                b = $('btn');
+                b = $('btn'),
+                isAtEdge = false,
+                timeOutId;
+
+            function hide(el) {
+                //el.style.visibility = 'hidden';
+                el.style.display = 'none';
+            }
+
+            function show(el) {
+                //el.style.visibility = 'visible';
+                el.style.display = 'block';
+            }
 
             function start() {
+                var y = window.scrollY;
                 c.innerHTML = '<p>touch start';
+                if(y != 0 && (y + window.innerHeight) != document.documentElement.scrollHeight) {
+                    hide(b);
+                    b.style.opacity = 0;
+                    isAtEdge = false;
+                } else {
+                    isAtEdge = true;
+                }
+                //showButton();
             }
 
             function move(e) {
-                b.style.opacity = 0;
-                b.style.display = 'none';
+                console.log(e)
+                if(isAtEdge && window.scrollY == 0) {
+                    hide(b);
+                    b.style.opacity = 0;
+                    clearTimeout(timeOutId)
+                    return;
+                }
                 c.innerHTML += '<p>touch move';
+                b.style.top = window.scrollY + window.innerHeight / 2 + 'px';
+                showButton();
             }
 
             function end(e) {
                 c.innerHTML += '<p>touch end';
+                if(isAtEdge && window.scrollY == 0) {
+                    hide(b);
+                    b.style.opacity = 0;
+                    clearTimeout(timeOutId)
+                    return;
+                }
+                showButton();
             }
 
             function scroll() {
+                if(isAtEdge && window.scrollY == 0) {
+                    hide(b);
+                    b.style.opacity = 0;
+                    clearTimeout(timeOutId)
+                    return;
+                }
                 c.innerHTML += '<p>scroll';
-                b.style.display = 'block';
-                c.style.top = b.style.top = window.scrollY + window.innerHeight / 2 + 'px';
-                setTimeout(function() {
-                    b.style.opacity = 1;
-                }, 0)
+                c.style.top = window.scrollY + 'px';
+                b.style.top = window.scrollY + window.innerHeight / 2 + 'px';
+                showButton();
+            }
+
+            function showButton() {
+                clearTimeout(timeOutId);
+                timeOutId = setTimeout(function() {
+                    show(b);
+                    setTimeout(function() {
+                        b.style.opacity = 1;
+                    }, 0)
+                }, 50)
             }
 
             window.addEventListener('touchstart', start)
