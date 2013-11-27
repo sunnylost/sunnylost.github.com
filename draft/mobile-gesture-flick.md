@@ -3,7 +3,7 @@
 [http://www.sitepen.com/blog/2011/12/07/touching-and-gesturing-on-iphone-android-and-more/](http://www.sitepen.com/blog/2011/12/07/touching-and-gesturing-on-iphone-android-and-more/)
 
 
-###scroll 事件：
+####scroll 事件：
      只有当滚动停止后才会触发，延迟十分严重
 
 
