@@ -16,19 +16,21 @@ iPhone 4s IOS 7.04：
 - chrome：AppleWebkit/537.51.1  Safari/8536.25
 - safari：AppleWebkit/537.51.1  Safari/9537.53
 
+Android:
 
-小米 2S 默认和 safari，
-HTC 8060 默认：
+- 小米 2S 默认和 safari，HTC 8060 默认：
 
-- AppleWebkit/534.30 Safari/534.30
+ - AppleWebkit/534.30 Safari/534.30
 
-UC 9.2.0.308 - 9.3...：
+- UC 9.2.0.308 - 9.3...：
 
-- AppleWebkit/534.31  Safari/534.31
+ - AppleWebkit/534.31  Safari/534.31
 
-chrome for Android(不知道版本): 
+- chrome for Android(不知道版本): 
 
-- AppleWebKit/537.36 Safari/537.36
+ - AppleWebKit/537.36 Safari/537.36
+
+- Firefox 25
 
 以下内容缩写
 
@@ -46,48 +48,39 @@ chrome for Android(不知道版本):
           safari:
                start——>move(多次触发)——>end——>scroll
 
-     HTC:
-          默认:
-               start——>(scroll——>move 这两个事件交替多次触发)——>end——>scroll(多次)  应该是 move 触发 scroll，因此 move 应该先于 scroll 触发
-
-     小米:
-          UC:
-               start——>move(即使手指还在屏幕上也只触发一次事件)——>scroll(多次)
+	 Android:
+	     HTC 默认, firefox:
+	           start——>(scroll——>move 这两个事件交替多次触发)——>end——>scroll(多次)  应该是 move 触发 scroll，因此 move 应该先于 scroll 触发
+	
+	     UC:
+	           start——>move(即使手指还在屏幕上也只触发一次事件)——>scroll(多次)
 
 ###滑动(在页面顶部向上滑动)：
      iPhone:
           safari:
                start——>end
-               
-     HTC:
-          默认:
-               start——>end
-     
-     小米:
-          safari：
-               start——>end
-          
-          chrome:
-               start
-          
-          UC 9.2:
-               start
 
-          UC 9.3:
-               start——>move
+	 Android:
+	     HTC 默认, firefox, safari:
+	           start——>end
+	          
+	     chrome:
+	           start
+	      
+	     UC 9.2:
+	           start
+	
+	     UC 9.3:
+	           start——>move
 
 ###滑动(在页面底部向下滑动)：
      iPhone:
           safari:
                start——>move(多次)——>end——>scroll
-               
-     HTC:
-          默认:
-               start——>move(多次)——>end
-     
-     小米:
-          safari：
-               start——>move(多次)——>end
-
-          chrome, UC 9.2, 9.3:
-               start——>move
+              
+	 Android:
+	     HTC 默认, safari, firefox：
+	           start——>move(多次)——>end
+	
+	     chrome, UC 9.2, 9.3:
+	           start——>move
