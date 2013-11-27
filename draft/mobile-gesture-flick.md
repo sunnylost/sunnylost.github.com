@@ -30,6 +30,9 @@ Android:
 
  - AppleWebKit/537.36 Safari/537.36
 
+- Maxthon
+ - AppleWebKit/534.30 Safari/534.30
+
 - Firefox 25
 
 以下内容缩写
@@ -42,6 +45,7 @@ Android:
 - 小米 2S, 3S
 - HTC 8060
 - iPhone 4s
+- 魅族 MX3
 
 ###滑动(页面发生滚动):
      iPhone:
@@ -49,7 +53,7 @@ Android:
                start——>move(多次触发)——>end——>scroll
 
 	 Android:
-	     HTC 默认, firefox:
+	     HTC 默认, firefox, Mathon:
 	           start——>(scroll——>move 这两个事件交替多次触发)——>end——>scroll(多次)  应该是 move 触发 scroll，因此 move 应该先于 scroll 触发
 	
 	     UC:
@@ -61,7 +65,7 @@ Android:
                start——>end
 
 	 Android:
-	     HTC 默认, firefox, safari:
+	     HTC 默认, firefox, safari, Maxthon:
 	           start——>end
 	          
 	     chrome:
@@ -79,7 +83,7 @@ Android:
                start——>move(多次)——>end——>scroll
               
 	 Android:
-	     HTC 默认, safari, firefox：
+	     HTC 默认, safari, firefox, Maxthon：
 	           start——>move(多次)——>end
 	
 	     chrome, UC 9.2, 9.3:
