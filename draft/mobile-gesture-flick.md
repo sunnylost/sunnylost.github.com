@@ -59,7 +59,7 @@ Android:
 	     UC:
 	           start——>move(即使手指还在屏幕上也只触发一次事件)——>scroll(多次)
 
-###滑动(在页面顶部向上滑动)：
+###滑动(在页面顶部向下滑动)：
      iPhone:
           safari:
                start——>end
@@ -77,7 +77,7 @@ Android:
 	     UC 9.3:
 	           start——>move
 
-###滑动(在页面底部向下滑动)：
+###滑动(在页面底部向上滑动)：
      iPhone:
           safari:
                start——>move(多次)——>end——>scroll
