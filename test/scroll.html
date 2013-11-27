@@ -112,6 +112,8 @@ only screen and (min-device-pixel-ratio: 2) {
         <div id="btn"></div>
 
         <script>
+            //alert(navigator.userAgent);
+            //alert('orientation' in window);
             var $ = function(s) {
                 return document.getElementById(s);
             };
@@ -122,19 +124,17 @@ only screen and (min-device-pixel-ratio: 2) {
                 timeOutId;
 
             function hide(el) {
-                //el.style.visibility = 'hidden';
                 el.style.display = 'none';
             }
 
             function show(el) {
-                //el.style.visibility = 'visible';
                 el.style.display = 'block';
             }
 
             function start() {
                 var y = window.scrollY;
                 c.innerHTML = '<p>touch start';
-                if(y != 0 && (y + window.innerHeight) != document.documentElement.scrollHeight) {
+                if(y != 0) {
                     hide(b);
                     b.style.opacity = 0;
                     isAtEdge = false;
@@ -165,6 +165,7 @@ only screen and (min-device-pixel-ratio: 2) {
                     clearTimeout(timeOutId)
                     return;
                 }
+                b.style.top = window.scrollY + window.innerHeight / 2 + 'px';
                 showButton();
             }
 
@@ -181,9 +182,23 @@ only screen and (min-device-pixel-ratio: 2) {
                 showButton();
             }
 
+            function handler() {
+                if(isAtEdge && window.scrollY == 0) {
+                    hide(b);
+                    b.style.opacity = 0;
+                    clearTimeout(timeOutId)
+                    return;
+                }
+                c.innerHTML += '<p>scroll';
+                c.style.top = window.scrollY + 'px';
+                b.style.top = window.scrollY + window.innerHeight / 2 + 'px';
+                showButton();
+            }
+
             function showButton() {
                 clearTimeout(timeOutId);
                 timeOutId = setTimeout(function() {
+                    if(window.scrollY == 0) return;
                     show(b);
                     setTimeout(function() {
                         b.style.opacity = 1;
@@ -191,10 +206,33 @@ only screen and (min-device-pixel-ratio: 2) {
                 }, 50)
             }
 
-            window.addEventListener('touchstart', start)
-            window.addEventListener('touchmove', move)
-            window.addEventListener('touchend', end)
-            window.addEventListener('scroll', scroll)
+            function orientationFn(e) {
+                checkWindowSize(window.innerWidth, window.innerHeight);
+            }
+
+            function checkWindowSize(w, h) {
+                if(!checkWindowSize.begin) {
+                    checkWindowSize.begin = new Date;
+                }
+
+                var nw = window.innerWidth,
+                    nh = window.innerHeight;
+                if(nw === w && nh === h) {
+                    checkWindowSize.tryTime += 1;
+                    setTimeout(function() {
+                        checkWindowSize(w, h);
+                    }, 0)
+                } else {
+                    alert('window needs "' + (new Date - checkWindowSize.begin) + '"ms to resize.');
+                    checkWindowSize.begin = null;
+                }
+            }
+
+            window.addEventListener('touchstart', start);
+            window.addEventListener('touchmove', handler);
+            window.addEventListener('touchend', handler);
+            window.addEventListener('scroll', handler);
+            window.addEventListener('orientationchange', orientationFn);
 
             c.addEventListener('touchstart', function(e) {
                 e.stopPropagation();
