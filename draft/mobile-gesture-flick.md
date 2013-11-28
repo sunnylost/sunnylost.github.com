@@ -3,15 +3,6 @@
 [http://www.sitepen.com/blog/2011/12/07/touching-and-gesturing-on-iphone-android-and-more/](http://www.sitepen.com/blog/2011/12/07/touching-and-gesturing-on-iphone-android-and-more/)
 
 
-####scroll 事件：
-     只有当滚动停止后才会触发，延迟十分严重
-
-####orientationchange 事件：
-     window.orientation 属性表示当前设备角度。
-     
-     事件触发后，需要一定的时间来重新设置 window 的大小，如果立即获取，则还是原来的宽高。
-
-
 **浏览器内核相同，行为一致**。(我就这么随口一说……感觉上是对的……)
 
 小米 2S 的默认浏览器和 HTC 8060 的浏览器内核一致，行为也相同。
