@@ -1,6 +1,6 @@
 #onpropertychange
 
-[MSDN](http://msdn.microsoft.com/en-us/library/ie/ms536956(v=vs.85).aspx)
+[MSDN](http://msdn.microsoft.com/en-us/library/ie/ms536956(v=vs.85.aspx)
 
 IE 私有的事件，当元素的属性发生变化时触发。
 
