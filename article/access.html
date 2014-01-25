@@ -4,11 +4,15 @@
 <title>jQuery 源码阅读 access() 方法</title>
 <meta charset="utf-8" />
 <link href='http://fonts.googleapis.com/css?family=Graduate|Numans' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" type="text/css" href="../style/prism.css">
-<link rel="stylesheet" type="text/css" href="../style/article.css">
+<link rel="stylesheet" type="text/css" href="../assets/style/prism.css">
+<link rel="stylesheet" type="text/css" href="../assets/style/article.css">
+<script src="../assets/lib/platform/platform.js"></script>
+<link rel="import" href="../assets/lib/polymer/polymer.html">
+<link rel="import" href="../assets/elements/x-header.html">
 </head>
 <body class="page-loading">
     <div class="loading-bar"></div>
+    <x-header></x-header>
     <div class="content">
         <header>
             <h1>jQuery 源码阅读 access() 方法</h1>
@@ -118,8 +122,7 @@ return chainable ?
 <p>接下来判断 length，即元素集合中元素的个数，如果集合为空，则返回默认值 emptyGet，否则返回集合中第一个元素与 key 传入 fn。</p>
 </article>
 </div>
-<script type="text/javascript" src="../js/article.js"></script>
-<script type="text/javascript" src="../js/prism.js"></script>
+<script type="text/javascript" src="../assets/js/prism.js"></script>
 </body>
 </html>
 <!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

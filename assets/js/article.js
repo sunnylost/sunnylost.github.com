@@ -15,7 +15,7 @@
         resizeTimeout;
 
     var template = {
-        avatar: '<div class="avatar" id="avatar"><img src="../imgs/avatar.jpg" width="120" height="120"></div>',
+        avatar: '<div class="avatar" id="avatar"><img src="../assets/imgs/avatar.jpg" width="120" height="120"></div>',
 
         progressbar: '<div class="progress"></div>',
 
