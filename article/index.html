@@ -20,83 +20,27 @@
 
             .container h1 {
                 text-align: center;
-                margin: 1em;
+                margin: 10em;
                 font-size: 3em;
             }
 
-            .container h2 {
-                font-size: 3em;
-                line-height: 2;
-                color: #09c;
-                background: #fff;
-                padding: 5px;
-                margin: 0;
-            }
-
-            .container ul {
-                list-style: none;
-                font-size: 1.8em;
-            }
-
-            .container li {
-                height: 3em;
-                line-height: 3em;
-                padding-left: 3em;
-                position: relative;
-                background: #09c;
-            }
-
-            .container li a {
-                padding-left: 0.5em;
-                color: #fff;
-                display: block;
-                text-decoration: none;
-                -webkit-transition: all 0.8s;
-                -moz-transition: all 0.8s;
-                -ms-transition: all 0.8s;
-                -o-transition: all 0.8s;
-                transition: all 0.8s;
-            }
-
-            .container li a:before {
-                content: attr(index);
-                position: absolute;
-                left: 0;
-                height: 3em;
-                width: 3em;
-                text-align: center;
-                line-height: 3em;
-                color: #fff;
-            }
-
-
-            .container li a:hover {
-                background-color: #fff;
-                color: #09c;
-                cursor: pointer;
+            #dots {
+                display: inline-block;
+                width: 1em;
+                text-align: left;
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <h1>Articles List</h1>
-	        <section>
-                <h2>jQuery 源码阅读系列</h2>
-                <ul>
-                    <li><a href="core1.html" index="1">jQuery 源码阅读 core.js</a></li>
-                    <li><a href="core2.html" index="2">jQuery 源码阅读 core.js 续</a></li>
-                    <li>jQuery 源码阅读 Deferred</li>
-                    <li><a href="ready.html" index="4">jQuery 源码阅读 ready</a></li>
-                    <li><a href="data.html" index="5">jQuery 源码阅读 data</a></li>
-                    <li><a href="access.html" index="6">jQuery 源码阅读 access()</a></li>
-                </ul>
-            </section>
-            <section>
-                <h2>Qatrix 源码阅读系列</h2>
-                <ul>
-                    <li><a href="qatrix1.html" index="1">Qatrix 源码阅读 1</a></li>
-                </ul>
-            </section>
-	</div>
+            <h1>Refactoring<i id="dots"></i></h1>
+	    </div>
+        <script type="text/javascript">
+            var c = /\.{5}/;
+            setInterval(function() {
+                var h = dots.innerHTML;
+                dots.innerHTML = c.test(h) ? '' : (h + '.');
+            }, 500)
+        </script>
     </body>
 </html>

@@ -1,0 +1,54 @@
+<link rel="import" href="../lib/polymer/polymer.html">
+
+<polymer-element name="x-menu" noscript>
+    <template>
+        <nav class="site-nav">
+            <button class="site-nav-logo" title="menu" on-click="{{menuClick}}"></button>
+            <div class="site-nav-container">
+                <ul>
+                    <li>Home</li>
+                    <li>Index</li>
+                    <li>About</li>
+                </ul>
+            </div>
+        </nav>
+    </template>
+    <script>
+        var NAV_OPEN_CLASS = 'site-nav-open',
+            NAV_TRANSITION_CLASS = 'site-nav-transition',
+            classList = document.body.classList;
+
+        var eventNames = ['transitionend', 'webkitTransitionEnd'];
+
+        function addTransitionEndEvent(el, fn) {
+            eventNames.forEach(function(v) {
+                el.addEventListener(v, fn);
+            })
+        }
+
+        function removeTransitionEndEvent(el, fn) {
+            eventNames.forEach(function(v) {
+                el.removeEventListener(v, fn);
+            })
+        }
+
+        function afterTransition() {
+            classList.remove(NAV_TRANSITION_CLASS);
+            removeTransitionEndEvent(this, afterTransition);
+        }
+
+        Polymer('x-menu', {
+            ready: function() {
+                var content = document.querySelector('.content');
+                content.addEventListener('click', function() {
+                    classList.remove(NAV_OPEN_CLASS);
+                    addTransitionEndEvent(content, afterTransition);
+                });
+            },
+
+            menuClick: function(e, d, sender) {
+                classList.add(NAV_OPEN_CLASS, NAV_TRANSITION_CLASS);
+            }
+        });
+    </script>
+</polymer-element>
