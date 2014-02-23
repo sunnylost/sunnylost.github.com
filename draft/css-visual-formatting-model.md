@@ -92,7 +92,7 @@ display 值为 "block"，"list-item"，"table"。
 ##Normal flow 常规流
 常规流中的盒子属于某个格式化上下文，块级盒属于一个块格式化上下文，行级盒属于一个行格式化上下文。
 ###Block formatting contexts 块格式化上下文
-浮动，绝对定位元素，块容器(例如 inline-block，table-cells)不是块盒，'overflow'值不为'visible'的块盒会为它们的内容创建新的 BFC。
+浮动，绝对定位元素，不是块盒的块容器(例如 inline-block，table-cells)，'overflow'值不为'visible'的块盒会为它们的内容创建新的 BFC。
 
 *注：一直对 BFC 有疑问，但是参考了 winter 的几篇文章，我有了更进一步的了解。例如，当 overflow 为 visible 时，box 不会为自己的内容创建 BFC，它的内容是参与到 box 所在的 BFC 中。假如存在两个相邻 DIV，名为 A 和 B，默认情况下，二者会发生 margin collapse。如果 A 中包含了一个 DIV AA，而 AA 拥有 margin-bottom，并且 A 没有 padding 和 border，那么 AA 与 B 也会发生 margin collapse，原因就是 overflow 的默认值是 visible，A 没有为 AA 创建 BFC，所以 AA 就参与了外层的 BFC，即此时，AA 与 B 在同一个 BFC 内。但如果设置 A 的 visible 为其他值，那么 AA 和 B 就不会发生 margin collapse。发生 margin collapse 的前提是处于相同的 BFC 内。*
 
@@ -133,14 +133,16 @@ display 值为 "block"，"list-item"，"table"。
 
 发生浮动后，盒子原来在的行盒和后面的行盒会缩小尺寸来为浮动盒的 margin box 腾出空间。
 
+**注意：**table 的 border box，block-level 替换元素，或一个在正常流中创建了 BFC 的元素，不能与在同一个 BFC 中的浮动元素重叠。
+
 ##绝对定位
 包括 `fixed` 定位。完全从正常流中移除，为它的正常流子元素和绝对定位元素创建一个包含块。
 
 ## `display`、`position` 和 `float` 之间的关系
 - 若 `display` 为 `none`，不生成盒子，其余两个值无效
-- 否则，若 `position` 为 `absolute` 或 `fixed`，`float` 的计算值为 `none`，`display` 值参加下方
-- 否则，若 `float` 值不为 `none`，则 `display` 的值参加下方
-- 否则，如果元素是根元素，`display` 的值参加下方
+- 否则，若 `position` 为 `absolute` 或 `fixed`，`float` 的计算值为 `none`，`display` 值参见下方
+- 否则，若 `float` 值不为 `none`，则 `display` 的值参见下方
+- 否则，如果元素是根元素，`display` 的值参见下方
 - 否则，`display` 使用指定值
 
 <table border="1" cellspacing="0" cellpadding="5">
@@ -164,3 +166,16 @@ display 值为 "block"，"list-item"，"table"。
 </td>
 <td> 与指定值相同
 </td></tr></tbody></table>
+
+## `z-index`
+若定位元素的 `z-index` 的计算值不为 `auto`，那么会生成新的堆叠上下文(stacking context)。
+
+在每个堆叠上下文中，以下层次从后向前绘制的顺序为：
+
+1. 背景和元素的边框
+2. z-index 为负值的子元素
+3. 在正常流内，非行内级别，非定位的后代元素
+4. 非定位的浮动元素
+5. 在正常流内，行内级别，非定位的后代元素，包括 inline table 和 inline block
+6. z-index 为 0 的元素
+7. z-index 为正值的元素 
