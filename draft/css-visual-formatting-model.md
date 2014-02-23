@@ -36,6 +36,8 @@ display 值为 "block"，"list-item"，"table"。
 
 块级盒、块容器盒、块盒有时都称之为盒。
 
+*注：看着这些英文单词的时候，自己产生了一些想法，仅供自己解释。containing 是包含的意思，当提到 containing block 时，我们关注的是它和它的后代之间的关系。同理，container 也可以同样理解，而 level 则是级别的意思，可以认为是在和同辈元素进行比较。如此说来，block-level box 注重的是和兄弟 box 之间的关系，而 block container box 则说的是 box 对于它后代 box 之间的关系。因此，inline-box 对同级 box 表现为 inline 元素，因此它不是 block-level box，但它对后代表现为 block-level box，因此它是 block container box。*
+
 ####Anonymous block boxes 匿名块盒
 	<DIV>
 	  Some text
@@ -46,9 +48,11 @@ display 值为 "block"，"list-item"，"table"。
 
 换句话说：如果一个块容器盒包含一个块级盒，那么该容器盒便只能包含块级盒。
 
-当一个行内盒包含一个处于文档流中的块级盒时，该行内盒会拆分为两个匿名块级盒放置于块级盒的两端。
+当一个行内盒包含一个处于普通流中的块级盒时，该行内盒会拆分为两个匿名块级盒放置于块级盒的两端。
 
 涉及到百分比计算时不会考虑匿名盒，而是选择最近的非匿名祖先盒。
+
+*注：block container box 要么生成 BFC，要么生成 IFC。只要包含一个 block-level box，那么就会生成 BFC，如果还有 inline-level box 存在，那么把它们放进一个 anonymous block box 中，很显然，这个匿名盒会生成 IFC。*
 
 ###Inline-level elements and inline boxes 行内元素和行内盒
 行内元素 display 值为 "inline"，"inline-table"，"inline-block"。
@@ -90,6 +94,8 @@ display 值为 "block"，"list-item"，"table"。
 ###Block formatting contexts 块格式化上下文
 浮动，绝对定位元素，块容器(例如 inline-block，table-cells)不是块盒，'overflow'值不为'visible'的块盒会为它们的内容创建新的 BFC。
 
+*注：一直对 BFC 有疑问，但是参考了 winter 的几篇文章，我有了更进一步的了解。例如，当 overflow 为 visible 时，box 不会为自己的内容创建 BFC，它的内容是参与到 box 所在的 BFC 中。假如存在两个相邻 DIV，名为 A 和 B，默认情况下，二者会发生 margin collapse。如果 A 中包含了一个 DIV AA，而 AA 拥有 margin-bottom，并且 A 没有 padding 和 border，那么 AA 与 B 也会发生 margin collapse，原因就是 overflow 的默认值是 visible，A 没有为 AA 创建 BFC，所以 AA 就参与了外层的 BFC，即此时，AA 与 B 在同一个 BFC 内。但如果设置 A 的 visible 为其他值，那么 AA 和 B 就不会发生 margin collapse。发生 margin collapse 的前提是处于相同的 BFC 内。*
+
 在 BFC 内，盒子们从上向下垂直排列。两个相邻盒子之间的距离由 margin 决定。
 
 在 BFC 内，每个盒子的左外边缘紧贴包含块的左边缘。
@@ -97,9 +103,14 @@ display 值为 "block"，"list-item"，"table"。
 ###Inline formatting contexts 行格式化上下文
 在 IFC 内，盒子们水平排列。
 
-包含所有盒子的矩形区域成为**行盒(line box)**。
+包含盒子并形成一行的矩形区域称为**行盒(line box)**。
+
+行盒的宽度由包含块和是否存在浮动来决定。
 
 行盒总是足够高以便容纳所有内部的盒子。然而，它有可能比内部最高的盒子还要高。
 
 如果单独的一个行盒无法容纳所有行级盒，那么这些盒子会被放置于两个或多个垂直叠加的行盒中。因此，一个段落是众多行盒的垂直堆叠，行盒之间没有间隙，并且它们永不重叠。
 
+通常，行盒的两边会接触包含块，但浮动盒可能会出现在两者之间。
+
+同一个 IFC 内的行盒高度可能不同(一个包含图片，一个只包含文字，两者的高度就可能不同)。
