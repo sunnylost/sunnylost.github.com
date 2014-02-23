@@ -30,7 +30,7 @@ display 值为 "block"，"list-item"，"table"。
 
 有些块元素会生成额外的块级盒，例如 'list-item' 元素。这些额外的块级盒会相对于主块级盒来放置。
 
-除了 table 盒与替换元素外，一个块级盒同时还是一个**块容器盒(block container box)**。块容器盒要么只包含块级盒，要么创建一个**行内格式化上下文(inline formatting context)**从而只包含行级盒。并不是所有的块容器盒都是块级盒：非替换行内块和非替换表格单元都是块容器，但它们不是块级盒。
+除了 table 盒与替换元素外，一个块级盒同时还是一个块容器盒(block container box)。块容器盒要么只包含块级盒，要么创建一个行内格式化上下文(inline formatting context)从而只包含行级盒。并不是所有的块容器盒都是块级盒：非替换行内块和非替换表格单元都是块容器，但它们不是块级盒。
 
 既是块级盒又是块容器的元素称之为**块盒(block box)**。
 
@@ -114,3 +114,53 @@ display 值为 "block"，"list-item"，"table"。
 通常，行盒的两边会接触包含块，但浮动盒可能会出现在两者之间。
 
 同一个 IFC 内的行盒高度可能不同(一个包含图片，一个只包含文字，两者的高度就可能不同)。
+
+###相对定位
+适用于正常流与浮动的盒子。
+
+如果 `left` 与 `right` 值均为 `auto`，那么使用 0，即元素保持不动。
+
+如果其中一个为 `auto`，那么它的使用值为减去另一个值。
+
+如果两个都有值，那么按照 `direction` 来忽略一个值，如果是 `ltr`，那么忽略 `right`，反之亦然。
+
+##浮动
+脱离正常流，向左或向右移动，直到它的外边缘碰到包含块的边或另一个浮动盒。
+
+适用于没有**绝对定位**的元素。
+
+如果有行盒存在，那么浮动盒的顶部与行盒顶部对齐。
+
+发生浮动后，盒子原来在的行盒和后面的行盒会缩小尺寸来为浮动盒的 margin box 腾出空间。
+
+##绝对定位
+包括 `fixed` 定位。完全从正常流中移除，为它的正常流子元素和绝对定位元素创建一个包含块。
+
+## `display`、`position` 和 `float` 之间的关系
+- 若 `display` 为 `none`，不生成盒子，其余两个值无效
+- 否则，若 `position` 为 `absolute` 或 `fixed`，`float` 的计算值为 `none`，`display` 值参加下方
+- 否则，若 `float` 值不为 `none`，则 `display` 的值参加下方
+- 否则，如果元素是根元素，`display` 的值参加下方
+- 否则，`display` 使用指定值
+
+<table border="1" cellspacing="0" cellpadding="5">
+<tbody><tr>
+<th> 指定值
+</th>
+<th> 计算值
+</th></tr>
+<tr>
+<td> inline-table
+</td>
+<td> table
+</td></tr>
+<tr>
+<td> inline, table-row-group, table-column, table-column-group, table-header-group, table-footer-group, table-row, table-cell, table-caption, inline-block
+</td>
+<td> block
+</td></tr>
+<tr>
+<td> 其他
+</td>
+<td> 与指定值相同
+</td></tr></tbody></table>
