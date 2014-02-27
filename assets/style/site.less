@@ -61,7 +61,7 @@ li, p, pre, code {
     width: 60px;
     height: 60px;
     margin: 10px;
-    background: url('../imgs/avatar.jpg');
+    background: url('../imgs/avatar1.jpg');
     background-size: 60px;
     border: 0;
     outline: none;
@@ -83,11 +83,6 @@ li, p, pre, code {
 .site-nav-open {
     .content {
         .transform(translate3d(@nav-width, 0, 0));
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 100%;
-        z-index: 1000;
     }
 }
 
@@ -99,16 +94,29 @@ li, p, pre, code {
     .site-nav-container {
         display: block;
     }
+
+    .content {
+        z-index: 3000;
+    }
 }
 
 .content {
+    position: absolute;
+    width: 100%;
     height: 100%;
     overflow: auto;
     background-color: #fff;
+    z-index: 1000;
     .transform-transition(0.5s);
 
     .single-column {
         max-width: 800px;
         margin: auto;
     }
+}
+
+x-menu {
+    position: absolute;
+    z-index: 2000;
+    height: 100%;
 }
