@@ -33,8 +33,10 @@
         }
 
         function afterTransition() {
-            classList.remove(NAV_TRANSITION_CLASS);
-            removeTransitionEndEvent(this, afterTransition);
+            if(!classList.contains(NAV_OPEN_CLASS)) {
+                classList.remove(NAV_TRANSITION_CLASS);
+                removeTransitionEndEvent(this, afterTransition);
+            }
         }
 
         Polymer('x-menu', {

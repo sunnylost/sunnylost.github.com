@@ -30,6 +30,14 @@
     margin: 0;
 }
 
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
 html {
     font: 10px/1.4 Numans, Georgia,Cambria,"Times New Roman",Times,serif;
     height: 100%;
@@ -48,6 +56,7 @@ h1, h2, h3, h4, h5, h6 {
 
 li, p, pre, code {
     font-size: 1.6rem;
+    line-height: 1.5em;
 }
 
 .site-nav {
@@ -111,8 +120,29 @@ li, p, pre, code {
 
     .single-column {
         max-width: 800px;
-        margin: auto;
     }
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    padding: 1em 0;
+    background: #eee;
+    font-size: 3em;
+    border-bottom: 1px solid #ccc;
+}
+
+.article {
+    margin: 12em auto 0;
+}
+
+.info {
+    background: #f5f2f0;
+    padding: 1em;
+    margin-bottom: 1em;
 }
 
 x-menu {
