@@ -24,6 +24,7 @@
 }
 
 @nav-width: 200px;
+@nav-color: #03a678;
 
 * {
     padding: 0;
@@ -86,7 +87,27 @@ li, p, pre, code {
     left: 0;
     height: 100%;
     width: @nav-width;
-    background: #03A678;
+    background: @nav-color;
+}
+
+.site-nav-list {
+    margin-top: 100px;
+
+    a {
+        display: block;
+        width: 70%;
+        margin: auto;
+        padding: 0.5em;
+        color: #fff;
+        text-align: center;
+        font-size: 1.5em;
+        .transition(all 0.8s);
+    }
+
+    a:hover {
+        color: @nav-color;
+        background: #fff;
+    }
 }
 
 .site-nav-open {
