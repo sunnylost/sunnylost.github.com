@@ -1,53 +1,18 @@
-(function() {
+!function() {
     var doc = document,
         body = doc.body,
-        root = navigator.userAgent.indexOf('Chrome') != -1 ? doc.body : doc.documentElement || doc.body,
-        win = window,
-        height = parseInt(win.innerHeight),
-        top,
-        offset = height / 2 - 120, //avatar's height is 120
-        avatarTimeout = 0,
-        user,
-        avatar,
-        progressBar,
-        nav,
-        progressTimeout,
-        resizeTimeout;
+        root = doc.getElementsByClassName('content')[0],
+        win = window;
 
-    var template = {
-        avatar: '<div class="avatar" id="avatar"><img src="../assets/imgs/avatar.jpg" width="120" height="120"></div>',
+    !function() {
+        var progressTimeout,
+            resizeTimeout,
+            progressBar = doc.getElementsByClassName('progress')[0];
 
-        progressbar: '<div class="progress"></div>',
+        progress();
 
-        nav: '<div id="nav">\
-                <ul>\
-                    <li><a href="#" id="prev"><span>Prev</span></a></li>\
-                    <li><a href="#" id="backToMenu"><span>Index</span></a></li>\
-                    <li><a href="#" id="next"><span>Next</span></a></li>\
-                </ul>\
-            </div>'
-    }
+        root.onscroll = progress;
 
-    function init() {
-        user = doc.createElement('aside');
-        user.id = user.className = 'user';
-        user.innerHTML = template.avatar + template.nav;
-        body.appendChild(user);
-        avatar = doc.getElementById('avatar');
-        nav = doc.getElementById('nav');
-
-        progressBar = doc.createElement('div');
-        progressBar.className = 'progressbar';
-        progressBar.innerHTML = template.progressbar;
-        body.appendChild(progressBar);
-        progressBar = progressBar.getElementsByTagName('div')[0];
-
-        top = parseInt(win.getComputedStyle(user, null)['top']);
-        win.onscroll = function() {
-            scrollAvatar();
-            progress();
-        };
-        
         win.onresize = function() {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(function() {
@@ -61,29 +26,14 @@
             }, 1000);
         };
 
-        avatar.onclick = function() {
-            nav.className = nav.className == 'on' ? '' : 'on';
+        /*
+            Progress Bar
+        */
+        function progress() {
+            clearTimeout(progressTimeout);
+            progressTimeout = setTimeout(function() {
+                progressBar.style.width = ((root.scrollTop + win.innerHeight) / root.scrollHeight) * 100 + '%';
+            }, 500);
         }
-    }
-
-    function scrollAvatar() {
-        clearTimeout(avatarTimeout);
-        avatarTimeout = setTimeout(function() {
-            top = root.scrollTop + offset;
-            user.style.top = top + 'px';
-        }, 500);
-    }
-
-    /*
-        Progress Bar
-    */
-    function progress() {
-        clearTimeout(progressTimeout);
-        progressTimeout = setTimeout(function() {
-            progressBar.style.width = ((root.scrollTop + win.innerHeight) / root.scrollHeight) * 100 + '%';
-        }, 500);
-    }
-    progress();
-
-    init();
-})()
+    }();
+}()

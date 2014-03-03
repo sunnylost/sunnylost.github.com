@@ -24,9 +24,18 @@
 }
 
 @nav-width: 200px;
-@nav-color: #03a678;
+@green-theme: #03a678;
 
-* {
+::selection {
+    background: #1798e9;
+    color: #fff;
+}
+::-moz-selection {
+   background: #1798e9;
+   color: #fff;
+}
+
+body, h1, h2, ul, li, p {
     padding: 0;
     margin: 0;
 }
@@ -72,7 +81,7 @@ li, p, pre, code {
     width: 60px;
     height: 60px;
     margin: 10px;
-    background: url('../imgs/avatar1.jpg');
+    background: url('../imgs/avatar1.png');
     background-size: 60px;
     border: 0;
     outline: none;
@@ -88,7 +97,7 @@ li, p, pre, code {
     left: 0;
     height: 100%;
     width: @nav-width;
-    background: @nav-color;
+    background: @green-theme;
 }
 
 .site-nav-list {
@@ -106,7 +115,7 @@ li, p, pre, code {
     }
 
     a:hover {
-        color: @nav-color;
+        color: @green-theme;
         background: #fff;
     }
 }
@@ -172,4 +181,122 @@ x-menu {
     position: absolute;
     z-index: 2000;
     height: 100%;
+}
+
+
+/* these codes are from https://medium.com */
+.loading-bar {
+    position: fixed;
+    display: none;
+    top: 102px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    z-index: 2000;
+    background: #1798e9;
+    .transform(translateX(100%));
+}
+
+.page-loading .loading-bar{
+    display:block;
+    -webkit-animation: shift-rightwards 1s ease-in-out infinite;
+    -moz-animation: shift-rightwards 1s ease-in-out infinite;
+    -ms-animation: shift-rightwards 1s ease-in-out infinite;
+    -o-animation: shift-rightwards 1s ease-in-out infinite;
+    animation: shift-rightwards 1s ease-in-out infinite;
+    -webkit-animation-delay: .4s;
+    -moz-animation-delay: .4s;
+    -o-animation-delay: .4s;
+    animation-delay: .4s
+}
+
+@-webkit-keyframes shift-rightwards {
+    0% {
+        .transform(translateX(-100%));
+    }
+
+    40% {
+        .transform(translateX(0%));
+    }
+
+    60% {
+        .transform(translateX(0%));
+    }
+
+    100% {
+        .transform(translateX(100%));
+    }
+}
+
+@-moz-keyframes shift-rightwards {
+    0% {
+        .transform(translateX(-100%));
+    }
+
+    40% {
+        .transform(translateX(0%));
+    }
+
+    60% {
+        .transform(translateX(0%));
+    }
+
+    100% {
+        .transform(translateX(100%));
+    }
+}
+
+@-o-keyframes shift-rightwards {
+    0% {
+        .transform(translateX(-100%));
+    }
+
+    40% {
+        .transform(translateX(0%));
+    }
+
+    60% {
+        .transform(translateX(0%));
+    }
+
+    100% {
+        .transform(translateX(100%));
+    }
+}
+
+@keyframes shift-rightwards {
+    0% {
+        .transform(translateX(-100%));
+    }
+
+    40% {
+        .transform(translateX(0%));
+    }
+
+    60% {
+        .transform(translateX(0%));
+    }
+
+    100% {
+        .transform(translateX(100%));
+    }
+}
+
+/*
+ progress bar
+*/
+.progressbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    z-index: 1000;
+}
+
+.progress {
+    background: @green-theme;
+    height: 100%;
+    width: 0;
+    .transition(width 0.8s);
 }

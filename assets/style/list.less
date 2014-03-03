@@ -1,3 +1,10 @@
+.transition(@args) {
+    -webkit-transition: @args;
+    -moz-transition: @args;
+    -o-transition: @args;
+    transition: @args;
+}
+
 article {
     margin: auto;
     max-width: 800px;
@@ -12,6 +19,31 @@ section {
     }
 
     li {
-        padding: 1em;
+        padding: 0;
+        .transition(all 0.5s);
+
+        &:hover {
+            background: #03a678;
+
+            a {
+                color: #fff;
+            }
+        }
+    }
+}
+
+h2 {
+    font-size: 3rem;
+}
+
+a {
+    display: block;
+    padding: 1em;
+    font-size: 1.2em;
+    color: #046824;
+    .transition(all 0.5s);
+
+    &:visited {
+        color: #999;
     }
 }
