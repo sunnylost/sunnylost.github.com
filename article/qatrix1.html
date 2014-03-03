@@ -1,83 +1,82 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Qatrix 源码阅读 1</title>
-<meta charset="utf-8" />
-<link href='http://fonts.googleapis.com/css?family=Graduate|Numans' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" type="text/css" href="../style/prism.css">
-<link rel="stylesheet" type="text/css" href="../style/article.css">
-</head>
-<body class="page-loading">
+  <head>
+    <meta charset="utf-8">
+    <title>Qatrix 源码阅读 1</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
+    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
+    <link href="/assets/lib/polymer/polymer.html" rel="import">
+    <link href="/assets/elements/x-menu.html" rel="import">
+  </head>
+  <body class="page-loading">
     <div class="loading-bar"></div>
-     <div class="content">
-        <header>
-            <h1>Qatrix 源码阅读 1</h1>
-        </header>
-    <article>
+    <x-menu></x-menu>
+    <div class="content">
+      <h1 class="header">Qatrix 源码阅读 1</h1>
+      <article class="article single-column">
+        <p>create: 2013-08-30 17:26</p>
 
-    <h4>本文由<a href="http://markdownpad.com/">MarkdownPad</a>生成。对文章内容有疑义，欢迎来<a href="http://weibo.com/sunnylost">我的微博</a>吐槽。</h4>
-      <hr/>
-    <p>title: Qatrix 源码阅读 1</p>
-    <p>create: 2013-08-30 17:26</p>
-    <hr />
+<hr/>
+
 <p>Qatrix 是一个非常轻量级的库，官方的宣传口号是“用更少的代码来构建高性能的应用”，那么有多高效呢，还是去源码里一探究竟吧。</p>
-<p>官网地址：<a href="http://qatrix.com/">http://qatrix.com/</a></p>
-<p>Github：<a href="https://github.com/qatrix/Qatrix">https://github.com/qatrix/Qatrix</a></p>
-<h3>目录</h3>
-<p>根据文档描述，整个库可以分为如下几个部分：</p>
-<ul>
-<li>Selectors</li>
-<li>Utilities</li>
-<li>Animation</li>
-<li>AJAX</li>
-<li>CSS</li>
-<li>Event</li>
-<li>Manipulation</li>
-<li>Cookie</li>
-<li>String</li>
-<li>Attributes</li>
-<li>Data</li>
-<li>Storage</li>
-<li>Miscellaneous</li>
-</ul>
-<p>我可能会根据实际的阅读调整顺序。</p>
-<h3>概览</h3>
-<p>先从整体上观察一下 Qatrix。</p>
-<pre><code class="language-javascript">(function(window, document, undefined) {
-    var ...
-        Qatrix = {
-            ...
-        };
 
-    for (var fn in Qatrix) {
+<p>官网地址：<a href="http://qatrix.com/">http://qatrix.com/</a></p>
+
+<p>Github：<a href="https://github.com/qatrix/Qatrix">https://github.com/qatrix/Qatrix</a></p>
+
+<h3>目录</h3>
+
+<p>根据文档描述，整个库可以分为如下几个部分：</p>
+
+<ul><li>Selectors</li><li>Utilities</li><li>Animation</li><li>AJAX</li><li>CSS</li><li>Event</li><li>Manipulation</li><li>Cookie</li><li>String</li><li>Attributes</li><li>Data</li><li>Storage</li><li>Miscellaneous</li></ul>
+
+<p>我可能会根据实际的阅读调整顺序。</p>
+
+<h3>概览</h3>
+
+<p>先从整体上观察一下 Qatrix。</p>
+
+<p>(function(window, document, undefined) {
+        var ...
+            Qatrix = {
+                ...
+            };</p>
+
+<pre><code class="language-javascript">    for (var fn in Qatrix) {
         window[fn] = Qatrix[fn];
     }
 
     Qatrix.version = version;
     window.Qatrix = Qatrix;
     ...
-    if (typeof define === 'function' &amp;&amp; define.amd) {
-        define('qatrix', [], Qatrix);
+    if (typeof define === &#39;function&#39; &amp;amp;&amp;amp; define.amd) {
+        define(&#39;qatrix&#39;, [], Qatrix);
     }
 
-})(window, document);
-</code></pre>
+})(window, document);</code></pre>
 
 <p>这里采用了很经典的立即执行函数(immediately invoked function expression)方式来封装代码，和 jQuery 一样，不多说。</p>
-<p>在函数内部声明了一个变量 Qatrix 作为命名空间，随后将 Qatrix 上的所有方法暴露赋值给了 window 对象，然后又将 Qatrix 赋值给 window 上的同名变量，这样，Qatrix 的所有 API 均可以通过两种方式调用：fn() 或 Qatrix.fn()。</p>
-<p>最后一句提供了简单的 AMD 支持，对于 AMD 的知识就不在这里提了。</p>
-<h3>基础方法</h3>
-<h4>$each</h4>
-<p>有些方法例如 $each 会被其他方法依赖，属于很底层，因此提前说说。</p>
-<pre><code class="language-javascript">$each: function (haystack, callback) {
-    var i = 0,
-        length = haystack.length,
-        type = typeof haystack,
-        is_object = type === 'object',
-        name;
 
-    if (is_object &amp;&amp; (length - 1) in haystack) {
-        for (; i &lt; length;) {
+<p>在函数内部声明了一个变量 Qatrix 作为命名空间，随后将 Qatrix 上的所有方法暴露赋值给了 window 对象，然后又将 Qatrix 赋值给 window 上的同名变量，这样，Qatrix 的所有 API 均可以通过两种方式调用：fn() 或 Qatrix.fn()。</p>
+
+<p>最后一句提供了简单的 AMD 支持，对于 AMD 的知识就不在这里提了。</p>
+
+<h3>基础方法</h3>
+
+<h4>$each</h4>
+
+<p>有些方法例如 $each 会被其他方法依赖，属于很底层，因此提前说说。</p>
+
+<p>$each: function (haystack, callback) {
+        var i = 0,
+            length = haystack.length,
+            type = typeof haystack,
+            is_object = type === &#39;object&#39;,
+            name;</p>
+
+<pre><code class="language-javascript">    if (is_object &amp;amp;&amp;amp; (length - 1) in haystack) {
+        for (; i &amp;lt; length;) {
             if (callback.call(haystack[i], i, haystack[i++]) === false) {
                 break;
             }
@@ -93,27 +92,33 @@
     }
 
     return haystack;
-}
-</code></pre>
+}</code></pre>
 
 <p>整个 $each 就是很常见的 forEach 方法，主要用于遍历对象、数组的元素，但这个方法内部并没有明确的区分数组，它采用了一种取巧的方式，即如果一个元素是对象(数组也是对象)，并且对象的 length 属性减去 1 存在于对象上，那么就可以认为该对象为数组(或类数组，即对象的属性名均为数字)。</p>
+
 <h4>mapcall</h4>
+
 <p>和 $each 类似，只不过 mapcall 是内部方法，只用来循环数组，功能比较单一。</p>
+
 <h3>Selectors</h3>
+
 <p>先来看选择器。Qatrix 共提供了 6 个方法来选择元素。</p>
+
 <h4>$</h4>
+
 <p>这个 $ 太简单了，就是一句话：</p>
-<pre><code class="language-javascript">$: function (id) {
-    return document.getElementById(id);
-}
-</code></pre>
+
+<p>$: function (id) {
+        return document.getElementById(id);
+    }</p>
 
 <h4>$id</h4>
-<pre><code class="language-javascript">$id: function (id, callback) {
-    var match = [],
-        elem;
 
-    $each(id instanceof Array ? id : id.split(' '), function (i, item) {
+<p>$id: function (id, callback) {
+        var match = [],
+            elem;</p>
+
+<pre><code class="language-javascript">    $each(id instanceof Array ? id : id.split(&#39; &#39;), function (i, item) {
         elem = $(item);
         if (elem !== null) {
             match.push(elem);
@@ -121,229 +126,255 @@
     });
 
     return callback ? mapcall(match, callback) : match;
-}
-</code></pre>
+}</code></pre>
 
 <p>前面提到的 $ 只能选择一个元素，而这个 $id 的功能比 $ 强大些，你可以传入一个数组来选择多个元素。整个方法内部使用了前面提到过的 $each 和 mapcall 两个方法，逻辑不复杂，不多说了。</p>
+
 <h4>$tag</h4>
+
 <p>调用了 Element.getElementsByTagName() 方法。</p>
+
 <h4>$class</h4>
+
 <p>当我们要处理浏览器兼容问题时，常常会去判断某个方法是否存在，如果该方法不存在，则使用替代方法，例如浏览器 A 支持方法 f1，浏览器 B 支持替代方法 f2，我们可以提供一个通用的 API 来处理兼容问题，</p>
-<pre><code class="language-javascript">var f = f1 ?
-        function() {
-            return f1();
-        } :
-        function() {
-            return f2();
-        };
-</code></pre>
+
+<p>var f = f1 ?
+            function() {
+                return f1();
+            } :
+            function() {
+                return f2();
+            };</p>
 
 <p>$class 在这里就是采用的该技巧，首先判断 getElementsByClassName 方法是否存在，如果不存在，则使用替代方法，而这个替代方法就是先获取所有元素，然后通过正则表达式来进行匹配。</p>
+
 <h4>$dom</h4>
+
 <p>略过。</p>
+
 <h4>$select</h4>
+
 <p>因为 Qatrix 要保证文件的小巧，因此它不可能往代码里塞进去一个像 Sizzle 那样的 CSS 选择器引擎，对于高级浏览器，可以使用 querySelectorAll() 方法，那么对于不支持该方法的 IE 6/7 呢？ Qatrix 使用了一个非常聪明的办法。</p>
+
 <p>一般的 CSS 选择器引擎会去分析你传入的 CSS 选择器，然后在 DOM 树中查找匹配的元素，Qatrix 也才用了同样的思路，只不过呢，它选择了让浏览器去解析 CSS 选择器。</p>
+
 <p>例如，我们现在有这么一个 HTML 结构：</p>
-<pre><code class="language-javascript">&lt;div class=&quot;wrapper&quot;&gt;
-    &lt;div class=&quot;content1&quot;&gt;
-        &lt;div class=&quot;nav&quot;&gt;
-            &lt;div class=&quot;first&quot;&gt;
-                Hi, I'm the one!
-            &lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;content2&quot;&gt;
-        &lt;div class=&quot;nav&quot;&gt;
-            &lt;div class=&quot;first&quot;&gt;
-                Hi, I'm another one!
-            &lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
+
+<p>&amp;lt;div class=&amp;quot;wrapper&amp;quot;&amp;gt;
+        &amp;lt;div class=&amp;quot;content1&amp;quot;&amp;gt;
+            &amp;lt;div class=&amp;quot;nav&amp;quot;&amp;gt;
+                &amp;lt;div class=&amp;quot;first&amp;quot;&amp;gt;
+                    Hi, I&#39;m the one!
+                &amp;lt;/div&amp;gt;
+            &amp;lt;/div&amp;gt;
+        &amp;lt;/div&amp;gt;
+        &amp;lt;div class=&amp;quot;content2&amp;quot;&amp;gt;
+            &amp;lt;div class=&amp;quot;nav&amp;quot;&amp;gt;
+                &amp;lt;div class=&amp;quot;first&amp;quot;&amp;gt;
+                    Hi, I&#39;m another one!
+                &amp;lt;/div&amp;gt;
+            &amp;lt;/div&amp;gt;
+        &amp;lt;/div&amp;gt;
+    &amp;lt;/div&amp;gt;</p>
 
 <p>我想选择其中两个 class 为 first 的 div，当然我可以直接使用 $class，但我决定折腾一下：</p>
-<pre><code class="language-javascript">var el = $select(&quot;.nav &gt; div.first&quot;);
-</code></pre>
+
+<p>var el = $select(&amp;quot;.nav &amp;gt; div.first&amp;quot;);</p>
 
 <p>让我们来写实现一下 $select：</p>
-<pre><code class="language-javascript">function $select(selector) {
-    var match = [];
-    var style = document.createElement('style');
-    document.body.appendChild(style);
 
-    var s = style.styleSheet;
-    s.addRule(selector, 'q:a');
-    var els = document.getElementsByTagName('*');
-    for(var i = 0, len = els.length; i &lt; len; i++) {
-        if(els[i].currentStyle.q == 'a') {
+<p>function $select(selector) {
+        var match = [];
+        var style = document.createElement(&#39;style&#39;);
+        document.body.appendChild(style);</p>
+
+<pre><code class="language-javascript">    var s = style.styleSheet;
+    s.addRule(selector, &#39;q:a&#39;);
+    var els = document.getElementsByTagName(&#39;*&#39;);
+    for(var i = 0, len = els.length; i &amp;lt; len; i++) {
+        if(els[i].currentStyle.q == &#39;a&#39;) {
             match.push(els[i]);
         }
     }
     return match;
-}
-</code></pre>
+}</code></pre>
 
 <p>首先，我们创建了一个 style 元素，接着将它附加到 body 上，随后获取了 style 元素的 styleSheet 属性。</p>
+
 <p><a href="http://msdn.microsoft.com/library/ie/ms535871.aspx">http://msdn.microsoft.com/library/ie/ms535871.aspx</a> 为 styleSheet 对象的官方文档。</p>
-<p>简单来说，styleSheet 对象对应了页面中以 style、link 或 @import 引入的样式表，对象提供了一些方法来操作样式规则，而我们上面的代码中使用了 addRule，这个方法就是创建一条 CSS 规则，我们传入 CSS 选择器和一个 &quot;q:a&quot;，&quot;q:a&quot; 其实可以为任意值，只要符合 CSS 值的规范即可，这样，当这条规则插入后，浏览器自然就会对其进行解析，然后应用到对应的元素上，也就是说，现在页面中符合 &quot;.nav &gt; div.first&quot; 这条选择器的元素已经获得了一个样式规则 &quot;q:a&quot;。</p>
+
+<p>简单来说，styleSheet 对象对应了页面中以 style、link 或 @import 引入的样式表，对象提供了一些方法来操作样式规则，而我们上面的代码中使用了 addRule，这个方法就是创建一条 CSS 规则，我们传入 CSS 选择器和一个 &amp;quot;q:a&amp;quot;，&amp;quot;q:a&amp;quot; 其实可以为任意值，只要符合 CSS 值的规范即可，这样，当这条规则插入后，浏览器自然就会对其进行解析，然后应用到对应的元素上，也就是说，现在页面中符合 &amp;quot;.nav &amp;gt; div.first&amp;quot; 这条选择器的元素已经获得了一个样式规则 &amp;quot;q:a&amp;quot;。</p>
+
 <p>接下来，我们循环页面中的所有元素，一一检查它们是否拥有设定的样式，在这里使用了 IE 独有的对象 currentStyle，通过比对该对象上的 q 属性值是否为 a，来确定当前的元素是否符合我们的要求。</p>
+
 <p>使用浏览器来解析选择器，速度必然没有问题，但是弊端很明显，IE 6、7 对于 CSS 选择器的支持很有限，所以使得这个方法的作用大打折扣，不过就像作者在文档中说的，还是使用 id 与 class，而不是构造复杂的选择器。</p>
+
 <p>真实的 $select 与我的实现略有差异，不过，理解思路就好了。</p>
+
 <p>OK，选择器就讲到这里啦。</p>
+
 <h3>Utilities</h3>
+
 <p>工具类中有三个方法，其中 $each 在上面见过了，来看其他两个。</p>
+
 <h4>$require</h4>
+
 <p>这个方法用于http://developer.yahoo.com/异步加载脚本和样式文件，并提供了回调函数，可以在文件加载完毕后执行。</p>
-<p>该方法值得说的就是如何去判断文件加载完毕，由于浏览器间存在差异(毫无疑问)，所以常见的办法就是同时监听两个事件：load 和 readystatechange，对于 load 事件来说，事件触发，表明文件加载完毕，而对于 readystatechange 事件，它设置了多个状态值，例如 &quot;loading&quot; 表示文件正在加载，&quot;interactive&quot; 表示解析完毕，但还在加载子资源，&quot;complete&quot; 表示文件加载结束。</p>
-<pre><code class="language-javascript">item.onload = item.onreadystatechange = function (event) {
-    if (event.type === 'load' || (/loaded|complete/.test(item.readyState))) {
-        queue.splice(queue.indexOf(src), 1);
-        if (queue.length === 0 &amp;&amp; callback) {
-            callback();
+
+<p>该方法值得说的就是如何去判断文件加载完毕，由于浏览器间存在差异(毫无疑问)，所以常见的办法就是同时监听两个事件：load 和 readystatechange，对于 load 事件来说，事件触发，表明文件加载完毕，而对于 readystatechange 事件，它设置了多个状态值，例如 &amp;quot;loading&amp;quot; 表示文件正在加载，&amp;quot;interactive&amp;quot; 表示解析完毕，但还在加载子资源，&amp;quot;complete&amp;quot; 表示文件加载结束。</p>
+
+<p>item.onload = item.onreadystatechange = function (event) {
+        if (event.type === &#39;load&#39; || (/loaded|complete/.test(item.readyState))) {
+            queue.splice(queue.indexOf(src), 1);
+            if (queue.length === 0 &amp;amp;&amp;amp; callback) {
+                callback();
+            }
         }
-    }
-};
-</code></pre>
+    };</p>
 
 <p>事件处理函数中判断了 loaded 和 complete 两个状态，这个……又是由于兼容性问题。</p>
+
 <p>不过作为编写代码的好习惯，无用的事件处理函数要尽快清除掉，上面的代码中，load 或 readystatechange 事件触发后，这个事件处理函数就没有用了，所以应该再加入一行代码：</p>
-<pre><code class="language-javascript">item.onload = item.onreadystatechange = null;
-</code></pre>
+
+<p>item.onload = item.onreadystatechange = null;</p>
 
 <h4>$template</h4>
-<p>Qatrix 提供了一个模板引擎，能够解析类似于 Mustache 语法的模板。</p>
-<pre><code class="language-javascript">$template: function (template, data) {
-    var content = template_cache[template];
 
-    if (!content) {
-        content = &quot;var s='';s+=\'&quot; +
-            template.replace(/[\r\t\n]/g, &quot; &quot;)
-            .split(&quot;'&quot;).join(&quot;\\'&quot;)
-            .split(&quot;\t&quot;).join(&quot;'&quot;)
+<p>Qatrix 提供了一个模板引擎，能够解析类似于 Mustache 语法的模板。</p>
+
+<p>$template: function (template, data) {
+        var content = template_cache[template];</p>
+
+<pre><code class="language-javascript">    if (!content) {
+        content = &amp;quot;var s=&#39;&#39;;s+=\&#39;&amp;quot; +
+            template.replace(/[\r\t\n]/g, &amp;quot; &amp;quot;)
+            .split(&amp;quot;&#39;&amp;quot;).join(&amp;quot;\\&#39;&amp;quot;)
+            .split(&amp;quot;\t&amp;quot;).join(&amp;quot;&#39;&amp;quot;)
             .replace(/\{\{#([\w]*)\}\}(.*)\{\{\/(\1)\}\}/ig, function (match, $1, $2) {
-                return &quot;\';var i=0,l=data.&quot; + $1 + &quot;.length,d=data.&quot; + $1 + &quot;;for(;i&lt;l;i++){s+=\'&quot; + $2.replace(/\{\{(\.|this)\}\}/g, &quot;'+d[i]+'&quot;).replace(/\{\{([\w]*)\}\}/g, &quot;'+d[i].$1+'&quot;) + &quot;\'}s+=\'&quot;;
+                return &amp;quot;\&#39;;var i=0,l=data.&amp;quot; + $1 + &amp;quot;.length,d=data.&amp;quot; + $1 + &amp;quot;;for(;i&amp;lt;l;i++){s+=\&#39;&amp;quot; + $2.replace(/\{\{(\.|this)\}\}/g, &amp;quot;&#39;+d[i]+&#39;&amp;quot;).replace(/\{\{([\w]*)\}\}/g, &amp;quot;&#39;+d[i].$1+&#39;&amp;quot;) + &amp;quot;\&#39;}s+=\&#39;&amp;quot;;
             })
-            .replace(/\{\{(.+?)\}\}/g, &quot;'+data.$1+'&quot;) +
-            &quot;';return s;&quot;;
+            .replace(/\{\{(.+?)\}\}/g, &amp;quot;&#39;+data.$1+&#39;&amp;quot;) +
+            &amp;quot;&#39;;return s;&amp;quot;;
 
         template_cache[template] = content;
     }
 
-    return data ? new Function(&quot;data&quot;, content)(data) : new Function(&quot;data&quot;, content);
-}
-</code></pre>
+    return data ? new Function(&amp;quot;data&amp;quot;, content)(data) : new Function(&amp;quot;data&amp;quot;, content);
+}</code></pre>
 
 <p>这个引擎的思路就是将模板字符串转成 JavaScript 代码字符串，然后使用 Function 来解析这段代码。</p>
-<pre><code class="language-javascript">new Function(param1, param2, ..., content)
-</code></pre>
+
+<p>new Function(param1, param2, ..., content)</p>
 
 <p>使用 Function 可以将字符串转为 JavaScript 函数，参数列表中最后一个参数为函数体，其余参数均为新生成的函数的参数名。在 Qatrix 这段代码中，最后解析的字符串便是函数体，而参数则为 data，用于提供数据。</p>
+
 <p>来分析下解析模板的过程，这段代码掺杂了字符串替换、分解、合并等诸多操作，看起来不是很容易。所以还是举一个例子，来逐步的分析代码的执行过程。</p>
-<pre><code class="language-javascript">var template = &quot;&lt;div&gt;\
-                    &lt;h1&gt;{{header}}&lt;/h1&gt;\
-                    &lt;h2&gt;{{header2}}&lt;/h2&gt;\
-                    &lt;h3&gt;{{header3}}&lt;/h3&gt;\
-                    &lt;h4&gt;{{header4}}&lt;/h4&gt;\
-                    &lt;h5&gt;{{header5}}&lt;/h5&gt;\
-                    &lt;h6&gt;{{header6}}&lt;/h6&gt;\
-                    &lt;ul&gt;\
-                        {{#list}}\
-                        &lt;li&gt;{{this}}&lt;/li&gt;\
-                        {{/list}}\
-                    &lt;/ul&gt;\
-                    &lt;ul&gt;\
-                        {{#people}}\
-                        &lt;li&gt;{{name}} - {{city}}&lt;/li&gt;\
-                        {{/people}}\
-                    &lt;/ul&gt;\
-                &lt;/div&gt;&quot;;
-</code></pre>
+
+<p>var template = &amp;quot;&amp;lt;div&amp;gt;\
+                        &amp;lt;h1&amp;gt;{{header}}&amp;lt;/h1&amp;gt;\
+                        &amp;lt;h2&amp;gt;{{header2}}&amp;lt;/h2&amp;gt;\
+                        &amp;lt;h3&amp;gt;{{header3}}&amp;lt;/h3&amp;gt;\
+                        &amp;lt;h4&amp;gt;{{header4}}&amp;lt;/h4&amp;gt;\
+                        &amp;lt;h5&amp;gt;{{header5}}&amp;lt;/h5&amp;gt;\
+                        &amp;lt;h6&amp;gt;{{header6}}&amp;lt;/h6&amp;gt;\
+                        &amp;lt;ul&amp;gt;\
+                            {{#list}}\
+                            &amp;lt;li&amp;gt;{{this}}&amp;lt;/li&amp;gt;\
+                            {{/list}}\
+                        &amp;lt;/ul&amp;gt;\
+                        &amp;lt;ul&amp;gt;\
+                            {{#people}}\
+                            &amp;lt;li&amp;gt;{{name}} - {{city}}&amp;lt;/li&amp;gt;\
+                            {{/people}}\
+                        &amp;lt;/ul&amp;gt;\
+                    &amp;lt;/div&amp;gt;&amp;quot;;</p>
 
 <p>这段代码来源于官网的文档，我增加了一些换行，可以看得更清楚一些。我们先看源码中对于 template 的操作：</p>
-<pre><code class="language-javascript">template.replace(/[\r\t\n]/g, &quot; &quot;)
-</code></pre>
+
+<p>template.replace(/[\r\t\n]/g, &amp;quot; &amp;quot;)</p>
 
 <p>这一句将回车、换行、制表符等字符转为一个空格，经过这个操作后，模板就变成了下面这个样子：</p>
-<pre><code class="language-javascript">&lt;div&gt;                        &lt;h1&gt;{{header}}&lt;/h1&gt;                        &lt;h2&gt;{{header2}}&lt;/h2&gt;                        &lt;h3&gt;{{header3}}&lt;/h3&gt;                        &lt;h4&gt;{{header4}}&lt;/h4&gt;                        &lt;h5&gt;{{header5}}&lt;/h5&gt;                        &lt;h6&gt;{{header6}}&lt;/h6&gt;                        &lt;ul&gt;                            {{#list}}                            &lt;li&gt;{{this}}&lt;/li&gt;                            {{/list}}                        &lt;/ul&gt;                        &lt;ul&gt;                            {{#people}}                            &lt;li&gt;{{name}} - {{city}}&lt;/li&gt;                            {{/people}}                        &lt;/ul&gt;                    &lt;/div&gt;
-</code></pre>
+
+<p>&amp;lt;div&amp;gt;                        &amp;lt;h1&amp;gt;{{header}}&amp;lt;/h1&amp;gt;                        &amp;lt;h2&amp;gt;{{header2}}&amp;lt;/h2&amp;gt;                        &amp;lt;h3&amp;gt;{{header3}}&amp;lt;/h3&amp;gt;                        &amp;lt;h4&amp;gt;{{header4}}&amp;lt;/h4&amp;gt;                        &amp;lt;h5&amp;gt;{{header5}}&amp;lt;/h5&amp;gt;                        &amp;lt;h6&amp;gt;{{header6}}&amp;lt;/h6&amp;gt;                        &amp;lt;ul&amp;gt;                            {{#list}}                            &amp;lt;li&amp;gt;{{this}}&amp;lt;/li&amp;gt;                            {{/list}}                        &amp;lt;/ul&amp;gt;                        &amp;lt;ul&amp;gt;                            {{#people}}                            &amp;lt;li&amp;gt;{{name}} - {{city}}&amp;lt;/li&amp;gt;                            {{/people}}                        &amp;lt;/ul&amp;gt;                    &amp;lt;/div&amp;gt;</p>
 
 <p>接下来的操作是：</p>
-<pre><code class="language-javascript">.split(&quot;'&quot;).join(&quot;\\'&quot;)
-.split(&quot;\t&quot;).join(&quot;'&quot;)
-</code></pre>
+
+<p>.split(&amp;quot;&#39;&amp;quot;).join(&amp;quot;\&#39;&amp;quot;)
+    .split(&amp;quot;\t&amp;quot;).join(&amp;quot;&#39;&amp;quot;)</p>
 
 <p>第一句是将模板按照单引号分组，然后又按照转义的单引号合并。而第二句和第一句类似，是将制表符转为单引号。(制表符 \t 已经在上面转成空白了，这里为什么又操作了一次？)</p>
+
 <p>呃，由于选择的这个模板的问题，经过上面的操作后，模板字符串没有变化。继续往下看，</p>
-<pre><code class="language-javascript">.replace(/\{\{#([\w]*)\}\}(.*)\{\{\/(\1)\}\}/ig, function (match, $1, $2) {
-                return &quot;\';var i=0,l=data.&quot; + $1 + &quot;.length,d=data.&quot; + $1 + &quot;;for(;i&lt;l;i++){s+=\'&quot; + $2.replace(/\{\{(\.|this)\}\}/g, &quot;'+d[i]+'&quot;).replace(/\{\{([\w]*)\}\}/g, &quot;'+d[i].$1+'&quot;) + &quot;\'}s+=\'&quot;;
-            })
-</code></pre>
+
+<p>.replace(/{{#([\w]<em>)}}(.</em>){{\/(\1)}}/ig, function (match, $1, $2) {
+                    return &amp;quot;\&#39;;var i=0,l=data.&amp;quot; + $1 + &amp;quot;.length,d=data.&amp;quot; + $1 + &amp;quot;;for(;i&amp;lt;l;i++){s+=\&#39;&amp;quot; + $2.replace(/{{(.|this)}}/g, &amp;quot;&#39;+d[i]+&#39;&amp;quot;).replace(/{{([\w]*)}}/g, &amp;quot;&#39;+d[i].$1+&#39;&amp;quot;) + &amp;quot;\&#39;}s+=\&#39;&amp;quot;;
+                })</p>
 
 <p>先看这个正则表达式，</p>
-<pre><code class="language-javascript">/\{\{#([\w]*)\}\}(.*)\{\{\/(\1)\}\}/
-</code></pre>
+
+<p>/{{#([\w]<em>)}}(.</em>){{\/(\1)}}/</p>
 
 <p>把转义内容还原下，再调整下位置，</p>
-<pre><code class="language-javascript">{{#([\w]*)}}
-    (.*)
-{{/(\1)}}
-</code></pre>
+
+<p>{{#([\w]<em>)}}
+        (.</em>)
+    {{/(\1)}}</p>
 
 <p>有些清晰了吧，这是在匹配模板中 {{#list}} 与 {{/list}} 中间的内容，因为在 mustache 语法中，被这两个标签包裹的内容是用于循环的。</p>
-<p>replace 方法的第二个参数可以是一个函数，该函数的参数为：匹配的字符串，捕获组1，捕获组2……它的返回值会替代匹配的字符串。对于这块字符串，</p>
-<pre><code class="language-javascript">{{#list}}
-    &lt;li&gt;{{this}}&lt;/li&gt;
-{{/list}}
-</code></pre>
 
-<p>match 为整个字符串，$1 为第一个匹配组：list，$2 为第二个匹配组：<li>{{this}}</li> 也就是循环体。</p>
+<p>replace 方法的第二个参数可以是一个函数，该函数的参数为：匹配的字符串，捕获组1，捕获组2……它的返回值会替代匹配的字符串。对于这块字符串，</p>
+
+<p>{{#list}}
+        &amp;lt;li&amp;gt;{{this}}&amp;lt;/li&amp;gt;
+    {{/list}}</p>
+
+<p>match 为整个字符串，$1 为第一个匹配组：list，$2 为第二个匹配组：&lt;li&gt;{{this}}&lt;/li&gt; 也就是循环体。</p>
+
 <p>上面说到，这条语句匹配的内容是用来循环的，因此代码在这里将这部分内容转为了 for 循环。下面就是其中的部分结果，我去掉了多余的空格，调整了格式：</p>
-<pre><code class="language-javascript">&lt;ul&gt;';
-    var i=0,l=data.list.length,d=data.list;
-    for(;i&lt;l;i++){
-        s+='&lt;li&gt;'+ d[i] + '&lt;/li&gt;'
-    }
-    s+='&lt;/ul&gt;&lt;ul&gt;';
-    var i=0,l=data.people.length,d=data.people;
-    for(;i&lt;l;i++){
-        s+='&lt;li&gt;'+d[i].name+' - '+d[i].city+'&lt;/li&gt;'
-    }
-    s+='&lt;/ul&gt;&lt;/div&gt;
-</code></pre>
+
+<p>&amp;lt;ul&amp;gt;&#39;;
+        var i=0,l=data.list.length,d=data.list;
+        for(;i&amp;lt;l;i++){
+            s+=&#39;&amp;lt;li&amp;gt;&#39;+ d[i] + &#39;&amp;lt;/li&amp;gt;&#39;
+        }
+        s+=&#39;&amp;lt;/ul&amp;gt;&amp;lt;ul&amp;gt;&#39;;
+        var i=0,l=data.people.length,d=data.people;
+        for(;i&amp;lt;l;i++){
+            s+=&#39;&amp;lt;li&amp;gt;&#39;+d[i].name+&#39; - &#39;+d[i].city+&#39;&amp;lt;/li&amp;gt;&#39;
+        }
+        s+=&#39;&amp;lt;/ul&amp;gt;&amp;lt;/div&amp;gt;</p>
 
 <p>在模板语法中，{{this}} 或 {{.}} 表示为当前循环的条目，如果是 {{xxx}} 则表明 xxx 是当前循环条目的属性，前面说了，最终生成的函数会传入一个名为 data 的参数，该对象用于提供数据。主要要注意的是单引号和字符串拼接的处理。</p>
+
 <p>最后一句 replace 是用来替换那些不属于循环的内容，例如 {{header}} 这些。它们就是 data 的属性：</p>
-<pre><code class="language-javascript">&lt;div&gt;
-    &lt;h1&gt;'+data.header+'  &lt;/h1&gt;
-    &lt;h2&gt;'+data.header2+' &lt;/h2&gt;
-    &lt;h3&gt;'+data.header3+' &lt;/h3&gt;
-    &lt;h4&gt;'+data.header4+' &lt;/h4&gt;
-    &lt;h5&gt;'+data.header5+' &lt;/h5&gt;
-    &lt;h6&gt;'+data.header6+' &lt;/h6&gt;
-    &lt;ul&gt;';
+
+<p>&amp;lt;div&amp;gt;
+        &amp;lt;h1&amp;gt;&#39;+data.header+&#39;  &amp;lt;/h1&amp;gt;
+        &amp;lt;h2&amp;gt;&#39;+data.header2+&#39; &amp;lt;/h2&amp;gt;
+        &amp;lt;h3&amp;gt;&#39;+data.header3+&#39; &amp;lt;/h3&amp;gt;
+        &amp;lt;h4&amp;gt;&#39;+data.header4+&#39; &amp;lt;/h4&amp;gt;
+        &amp;lt;h5&amp;gt;&#39;+data.header5+&#39; &amp;lt;/h5&amp;gt;
+        &amp;lt;h6&amp;gt;&#39;+data.header6+&#39; &amp;lt;/h6&amp;gt;
+        &amp;lt;ul&amp;gt;&#39;;
+            var i=0,
+                l=data.list.length,
+                d=data.list;
+            for(;i&amp;lt;l;i++){
+                s+=&#39;&amp;lt;li&amp;gt;&#39;+d[i]+&#39;&amp;lt;/li&amp;gt;&#39;
+            }
+            s+=&#39;&amp;lt;/ul&amp;gt;&amp;lt;ul&amp;gt;&#39;;
         var i=0,
-            l=data.list.length,
-            d=data.list;
-        for(;i&lt;l;i++){
-            s+='&lt;li&gt;'+d[i]+'&lt;/li&gt;'
+            l=data.people.length,
+            d=data.people;
+        for(;i&amp;lt;l;i++){
+            s+=&#39;&amp;lt;li&amp;gt;&#39;+d[i].name+&#39; - &#39;+d[i].city+&#39;&amp;lt;/li&amp;gt;&#39;
         }
-        s+='&lt;/ul&gt;&lt;ul&gt;';
-    var i=0,
-        l=data.people.length,
-        d=data.people;
-    for(;i&lt;l;i++){
-        s+='&lt;li&gt;'+d[i].name+' - '+d[i].city+'&lt;/li&gt;'
-    }
-    s+='&lt;/ul&gt;&lt;/div&gt;
-</code></pre>
+        s+=&#39;&amp;lt;/ul&amp;gt;&amp;lt;/div&amp;gt;</p>
 
 <p>看，内容基本上替换完毕，再加上前面变量 s 的声明，和最后 return s; 这句，整个模板解析便结束了。</p>
- </article>
-</div>
-<script type="text/javascript" src="../js/article.js"></script>
-<script type="text/javascript" src="../js/prism.js"></script>
-</body>
+      </article>
+    </div>
+    <script src="/assets/lib/platform/platform.js"></script>
+    <script src="/assets/js/prism.js"></script>
+  </body>
 </html>
-<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

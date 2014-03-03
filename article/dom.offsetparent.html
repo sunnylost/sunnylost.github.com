@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>offsetParent</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
+    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
+    <link href="/assets/lib/polymer/polymer.html" rel="import">
+    <link href="/assets/elements/x-menu.html" rel="import">
+  </head>
+  <body class="page-loading">
+    <div class="loading-bar"></div>
+    <x-menu></x-menu>
+    <div class="content">
+      <h1 class="header">offsetParent</h1>
+      <article class="article single-column">
+        <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement.offsetParent">offsetParent</a>：返回离当前元素最近的、设置过定位的祖先元素。。</p>
+
+<p>根据 <a href="http://www.quirksmode.org/dom/w3c_cssom.html#offsetParent">quirksmode</a> 中的介绍，查找元素 x 的 offsetParent 流程是这样的：沿着 DOM 树向上查找，遇到如下情况则停止并返回当前元素：</p>
+
+<ul><li>&amp;lt;body&amp;gt; </li><li>position 值不为 static 的元素</li><li>&amp;lt;table&amp;gt;，&amp;lt;th&amp;gt; 或是 &amp;lt;td&amp;gt;，前提是 x 的 position 为 static。</li></ul>
+
+<p>body 的 offsetParent 为 null。</p>
+
+<p>position 为 fixed 的元素的 offsetParent：在 IE (测试到 IE 9) 和 Chrome 中为 null，firefox 返回 body 元素。</p>
+
+<p>display 为 none 的元素的 offsetParent：IE 返回 body 元素，firefox 和 Chrome 均返回 null。</p>
+
+<p><a href="http://www.w3.org/TR/cssom-view/#offset-attributes">规范</a> 中关于 offsetParent 的介绍：</p>
+
+<p>返回 null 的情况：</p>
+
+<ol><li>元素没有与之关联的 CSS 布局盒。(例如 display 为 none)</li><li>元素为根元素</li><li>元素为 body</li><li>元素的 position 为 fixed </li></ol>
+
+<p>所以，从规范角度来看，目前浏览器均没有很好的遵循。</p>
+
+<p>jQuery 1.10.2 中对于这些情况统一返回 html 元素。</p>
+
+<p><a href="http://jsfiddle.net/5Cdp8/">http://jsfiddle.net/5Cdp8/</a>，我对 jQuery 和原生 js 做了对比，在不同浏览器下的差别很大。</p>
+      </article>
+    </div>
+    <script src="/assets/lib/platform/platform.js"></script>
+    <script src="/assets/js/prism.js"></script>
+  </body>
+</html>

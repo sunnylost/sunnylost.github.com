@@ -1,6 +1,7 @@
+@title:Range
+@filename:dom.range
+@list: DOM
 [DOM 2 Range](http://www.w3.org/TR/DOM-Level-2-Traversal-Range/ranges.html)
-
-# Range #
 
 Range 表现为文档、文档碎片、特性节点中的一段内容，它的最大特点就是能够根据两个边界点来选择该范围内的连续内容。
 

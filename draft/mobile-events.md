@@ -1,5 +1,6 @@
-###移动设备的事件
-
+@title:移动设备的事件
+@filename:mobile.event
+@list: Mobile
 ###scroll 事件：
 
 只有当滚动停止后才会触发，延迟十分严重

@@ -1,58 +1,63 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>jQuery 源码阅读 ready</title>
-<meta charset="utf-8" />
-<link href='http://fonts.googleapis.com/css?family=Graduate|Numans' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" type="text/css" href="../style/prism.css">
-<link rel="stylesheet" type="text/css" href="../style/article.css">
-</head>
-<body class="page-loading">
+  <head>
+    <meta charset="utf-8">
+    <title>jQuery 源码阅读 —— ready</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
+    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
+    <link href="/assets/lib/polymer/polymer.html" rel="import">
+    <link href="/assets/elements/x-menu.html" rel="import">
+  </head>
+  <body class="page-loading">
     <div class="loading-bar"></div>
-     <div class="content">
-        <header>
-            <h1>jQuery 源码阅读 data.js</h1>
-        </header>
-    <article>
-    <h4>本文由<a href="http://markdownpad.com/">MarkdownPad</a>生成。对文章内容有疑义，欢迎来<a href="http://weibo.com/sunnylost">我的微博</a>吐槽。</h4>
-    <hr/>
-<p>title: jQuery 源码阅读 —— ready</p>
-<p>create: 2013-05-26 13:43</p>
-<hr />
+    <x-menu></x-menu>
+    <div class="content">
+      <h1 class="header">jQuery 源码阅读 —— ready</h1>
+      <article class="article single-column">
+        <p>create: 2013-05-26 13:43</p>
+
+<hr/>
+
 <p>其实在我写这篇的时候，Deferred 还有一些细节没有理解，但对于这篇不会有太大的影响。</p>
+
 <p>接下来要说的 ready 是 core.js 中定义的内容。</p>
+
 <p>我想使用过 jQuery 的人一定对下面的内容不陌生：</p>
-<pre><code class="language-javascript">
-$(function() {
+
+<pre><code class="language-javascript">$(function() {
     //...
-})
-</code></pre>
+})</code></pre>
 
 <p>而这段内容，在我们分析 core.js 的第一篇中就已经讲解过，当为 $ 传入一个函数时，表示在 DOM 加载完毕后执行该函数。</p>
+
 <p>什么是 DOM 加载完毕？你可以理解为页面的结构全部加载，所有的节点都可以访问，这样你的 JS 在执行的时候，不会因为某个要操作的节点不存在而报错。</p>
+
 <p>在使用 jQuery 之前，你是否尝试过这样写：</p>
-<pre><code class="language-javascript">
-window.onload = function() {
+
+<pre><code class="language-javascript">window.onload = function() {
     //...
-}
-</code></pre>
+}</code></pre>
 
 <p>那么，这个 window.onload 和 jQuery 中的用法有什么区别吗？答案自然是肯定的。</p>
+
 <p>window 的 load 事件触发条件是：页面所有元素加载完毕，包括图片和框架。</p>
+
 <p>这就是说，如果页面有很多图片的情况下，你的代码需要等待所有图片下载完毕后才能运行，如果图片下载很慢，这会使页面在很长一段时间内不能进行交互操作，毕竟此时 JS 代码还不能运行。</p>
+
 <p>而 jQuery 则使用了另外的方式，来保证代码先于 load 事件执行。</p>
+
 <p>在前面的文章对 $ 参数进行分析时，我们看到了如下代码：</p>
-<pre><code class="language-javascript">
-// 处理: $(function)
+
+<pre><code class="language-javascript">// 处理: $(function)
 // document ready 的快捷方式
 else if ( jQuery.isFunction( selector ) ) {
     return rootjQuery.ready( selector );
-}
-</code></pre>
+}</code></pre>
 
 <p>这里的 rootjQuery 就是 $(document)。所以，你向 jQuery 中传递的参数，最终都是在调用 rootjQuery 的 ready 方法，那让我们来看下这个 ready 方法，它是定义在原型上的：</p>
-<pre><code class="language-javascript">
-$.fn = $.prototype = {
+
+<pre><code class="language-javascript">$.fn = $.prototype = {
     ...
     ready : function(fn) {
         // 增加回调函数
@@ -60,33 +65,33 @@ $.fn = $.prototype = {
         return this;
     },
     ...
-};
-</code></pre>
+};</code></pre>
 
 <p>很明显，在 ready 方法内部，它又调用了 jQuery.ready.promise()，看到 promise 就已经可以知道了，它返回了一个 promise 对象，将 fn 传入 done 方法，表明当 promise 对象的状态变为 resolved 后会执行它。</p>
+
 <p>jQuery.ready.promise 函数定义在 core.js 文件的下方：</p>
-<pre><code class="language-javascript">
-jQuery.ready.promise = function( obj ) {
+
+<pre><code class="language-javascript">jQuery.ready.promise = function( obj ) {
     if ( !readyList ) {
         readyList = jQuery.Deferred();
         ...
     }
     return readyList.promise( obj );
-};
-</code></pre>
+};</code></pre>
 
 <p>在 core.js 文件的开始处定义了一个变量 readyList，通过以上代码可知，readyList 是真正的 Deferred 对象。</p>
+
 <p>在 if 分支内，是检测 DOM 是否加载的主体方法：</p>
-<pre><code class="language-javascript">
-if ( document.readyState === &quot;complete&quot; ) {
+
+<pre><code class="language-javascript">if ( document.readyState === &amp;quot;complete&amp;quot; ) {
     setTimeout( jQuery.ready );
-}
-</code></pre>
+}</code></pre>
 
 <p>readyState 属性表明了当前 document 的状态，具体内容可以查看<a href="https://developer.mozilla.org/zh-CN/docs/DOM/document.readyState">这里</a>。如果它的值是 complete，则表明已经加载结束，此时可以触发你添加的函数了。这里使用了 setTimeout，并且没有传第二个时间参数，这实际上是一个常见的技巧，就是让 setTimeout 中的内容 “尽快”执行，具体解释查看<a href="http://stackoverflow.com/questions/779379/why-is-settimeoutfn-0-sometimes-useful">这里</a>。</p>
+
 <p>现在代码又跳到 jQuery 的静态方法 ready 里了，没办法，跟着走吧：</p>
-<pre><code class="language-javascript">
-// DOM 是否准备好了？如果是的话设置该值为 true
+
+<pre><code class="language-javascript">// DOM 是否准备好了？如果是的话设置该值为 true
 isReady: false,
 
 // 一个计数器，用于记录在 ready 事件触发前还有多少个函数在等待。查看 #6781
@@ -117,7 +122,7 @@ ready: function( wait ) {
     // 记住 DOM 已经准备就绪
     jQuery.isReady = true;
 
-    if ( wait !== true &amp;&amp; --jQuery.readyWait &gt; 0 ) {
+    if ( wait !== true &amp;amp;&amp;amp; --jQuery.readyWait &amp;gt; 0 ) {
         return;
     }
 
@@ -126,28 +131,28 @@ ready: function( wait ) {
 
     // 触发 ready 事件
     if ( jQuery.fn.trigger ) {
-        jQuery( document ).trigger(&quot;ready&quot;).off(&quot;ready&quot;);
+        jQuery( document ).trigger(&amp;quot;ready&amp;quot;).off(&amp;quot;ready&amp;quot;);
     }
-}
-</code></pre>
+}</code></pre>
 
 <p>isReady 属性表明 DOM 是否准备就绪，至于 holdReady 方法，没有查到哪里用到了。</p>
-<p>代码不复杂，看注释应该能够明白。如果确保 DOM 已经准备就绪，则 readyList 会调用 resolveWith 将状态修改为 resolved，所有通过 done 方法加入的函数会被依次执行。随后还会触发 ready 事件，因为页面只会载入一次，ready 事件也只会触发一次，所以在 trigger 后就使用 off 方法将 ready 事件删除。</p>
-<p>看完了 ready 方法，再回到上面的 promise 方法中，我们已经看完了第一个判断，接下来看 else：</p>
-<pre><code class="language-javascript">
-// 基于标准的浏览器支持 DOMContentLoaded
-} else if ( document.addEventListener ) {
-    document.addEventListener( &quot;DOMContentLoaded&quot;, completed, false );
 
-    window.addEventListener( &quot;load&quot;, completed, false );
-}
-</code></pre>
+<p>代码不复杂，看注释应该能够明白。如果确保 DOM 已经准备就绪，则 readyList 会调用 resolveWith 将状态修改为 resolved，所有通过 done 方法加入的函数会被依次执行。随后还会触发 ready 事件，因为页面只会载入一次，ready 事件也只会触发一次，所以在 trigger 后就使用 off 方法将 ready 事件删除。</p>
+
+<p>看完了 ready 方法，再回到上面的 promise 方法中，我们已经看完了第一个判断，接下来看 else：</p>
+
+<pre><code class="language-javascript">// 基于标准的浏览器支持 DOMContentLoaded
+} else if ( document.addEventListener ) {
+    document.addEventListener( &amp;quot;DOMContentLoaded&amp;quot;, completed, false );
+
+    window.addEventListener( &amp;quot;load&amp;quot;, completed, false );
+}</code></pre>
 
 <p>DOMContentLoaded 是另一个事件，当 DOM 结构加载完毕后，该事件会触发，基本上所有现代浏览器都已经支持这个事件。至于又使用 window 来监听 load 事件，则完全是提供一个被选方案，这会使得函数执行不会晚于 window 的 load。这两个事件的处理函数都是 completed，那么来看看这个函数：</p>
-<pre><code class="language-javascript">
-completed = function( event ) {
-    // readyState === &quot;complete&quot; 对于检测旧版本 IE 下 DOM 是否准备就绪已经足够好了
-    if ( document.addEventListener || event.type === &quot;load&quot; || document.readyState === &quot;complete&quot; ) {
+
+<pre><code class="language-javascript">completed = function( event ) {
+    // readyState === &amp;quot;complete&amp;quot; 对于检测旧版本 IE 下 DOM 是否准备就绪已经足够好了
+    if ( document.addEventListener || event.type === &amp;quot;load&amp;quot; || document.readyState === &amp;quot;complete&amp;quot; ) {
         detach();
         jQuery.ready();
     }
@@ -156,42 +161,41 @@ completed = function( event ) {
 // 清理 DOM ready 事件
 detach = function() {
     if ( document.addEventListener ) {
-        document.removeEventListener( &quot;DOMContentLoaded&quot;, completed, false );
-        window.removeEventListener( &quot;load&quot;, completed, false );
+        document.removeEventListener( &amp;quot;DOMContentLoaded&amp;quot;, completed, false );
+        window.removeEventListener( &amp;quot;load&amp;quot;, completed, false );
 
     } else {
-        document.detachEvent( &quot;onreadystatechange&quot;, completed );
-        window.detachEvent( &quot;onload&quot;, completed );
+        document.detachEvent( &amp;quot;onreadystatechange&amp;quot;, completed );
+        window.detachEvent( &amp;quot;onload&amp;quot;, completed );
     }
-};
-</code></pre>
+};</code></pre>
 
 <p>这段就更简单了……简单到我说了都会感觉侮辱了你的智商……让我们赶紧再跳回到 promise 方法中的最后一个分支吧：</p>
-<pre><code class="language-javascript">
-    // 如果 IE 的事件模式可用
+
+<pre><code class="language-javascript">    // 如果 IE 的事件模式可用
     } else {
         //确保在 onload 前触发，可能会有些延迟，但对于 iframe 很安全
-        document.attachEvent( &quot;onreadystatechange&quot;, completed );
+        document.attachEvent( &amp;quot;onreadystatechange&amp;quot;, completed );
 
         // 退化回 window.onload，它始终会执行
-        window.attachEvent( &quot;onload&quot;, completed );
+        window.attachEvent( &amp;quot;onload&amp;quot;, completed );
 
         // 如果是 IE 并且不在 frame 中
         // 持续检测来查看 document 是否准备就绪
         var top = false;
 
         try {
-            top = window.frameElement == null &amp;&amp; document.documentElement;
+            top = window.frameElement == null &amp;amp;&amp;amp; document.documentElement;
         } catch(e) {}
 
-        if ( top &amp;&amp; top.doScroll ) {
+        if ( top &amp;amp;&amp;amp; top.doScroll ) {
             (function doScrollCheck() {
                 if ( !jQuery.isReady ) {
 
                     try {
                         // 使用来自 Diego Perini 的技巧
                         // http://javascript.nwbox.com/IEContentLoaded/
-                        top.doScroll(&quot;left&quot;);
+                        top.doScroll(&amp;quot;left&amp;quot;);
                     } catch(e) {
                         return setTimeout( doScrollCheck, 50 );
                     }
@@ -204,22 +208,18 @@ detach = function() {
                 }
             })();
         }
-    }
-</code></pre>
+    }</code></pre>
 
 <p>这里就是 ready 的精华所在，也是难点所在。曾经很多人为检测 IE 下的 DOM ready 做了不懈的尝试，Diego Perini 在前人的基础上，总结了这个 hack。</p>
+
 <p>该方法适用于非 frame 页面，变量 top 为 document.documentElement，而 doScroll 方法则是模拟鼠标点击页面滚动条的行为，若该方法调用成功，则表明 document 载入完毕，否则会出现异常，这个 hack 就是利用了 doScroll 的这一点特性来检测 DOM ready。当异常发生时，延迟 50 毫秒，继续调用 doScrollCheck，直至没有异常出现。</p>
+
 <p>最后让我们梳理下思路：</p>
-<ul>
-<li>为了判断 DOM 是否可用，首先使用标准浏览器提供的 DOMContentLoaded 事件</li>
-<li>如果不支持这个事件，则手动检测，方法是使用 Diego Perini 提供的技巧：top.doScroll(&quot;left&quot;)</li>
-<li>当 DOM 准备就绪，执行 completed 方法，它会将和 DOM ready 有关的事件解除，然后调用 jQuery.ready()</li>
-<li>jQuery.ready() 方法会执行所有绑定的函数，随后触发 ready 事件</li>
-</ul>
-</article>
-</div>
-<script type="text/javascript" src="../js/article.js"></script>
-<script type="text/javascript" src="../js/prism.js"></script>
-</body>
+
+<ul><li>为了判断 DOM 是否可用，首先使用标准浏览器提供的 DOMContentLoaded 事件</li><li>如果不支持这个事件，则手动检测，方法是使用 Diego Perini 提供的技巧：top.doScroll(&amp;quot;left&amp;quot;)</li><li>当 DOM 准备就绪，执行 completed 方法，它会将和 DOM ready 有关的事件解除，然后调用 jQuery.ready()</li><li>jQuery.ready() 方法会执行所有绑定的函数，随后触发 ready 事件</li></ul>
+      </article>
+    </div>
+    <script src="/assets/lib/platform/platform.js"></script>
+    <script src="/assets/js/prism.js"></script>
+  </body>
 </html>
-<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

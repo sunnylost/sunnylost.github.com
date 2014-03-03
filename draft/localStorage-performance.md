@@ -1,4 +1,5 @@
-#localStorage 性能
+@title:localStorage 性能
+@filename:html5.localstorage
 
 上午读了两篇文章：[localStorage Read Performance](http://calendar.perfplanet.com/2011/localstorage-read-performance/) 和 [There is no simple solution for local storage](https://hacks.mozilla.org/2012/03/there-is-no-simple-solution-for-local-storage/)。总结起来一句话：localStorage 的性能不咋地。
 

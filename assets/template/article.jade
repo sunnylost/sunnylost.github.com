@@ -1,0 +1,19 @@
+doctype html
+html
+    head
+        meta(charset="utf-8")
+        title=title
+        link(rel="stylesheet", type="text/css", href="http://fonts.googleapis.com/css?family=Graduate|Numans")
+        link(rel="stylesheet", type="text/css", href="/assets/style/site.css")
+        link(rel="stylesheet", type="text/css", href="/assets/style/prism.css")
+        link(href="/assets/lib/polymer/polymer.html", rel="import")
+        link(href="/assets/elements/x-menu.html", rel="import")
+    body.page-loading
+        div.loading-bar
+        x-menu
+        div.content
+            h1.header=title
+            article.article.single-column
+                #{content}
+        script(src="/assets/lib/platform/platform.js")
+        script(src="/assets/js/prism.js")

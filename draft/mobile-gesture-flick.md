@@ -1,3 +1,6 @@
+@title:移动端事件测试
+@filename:mobile.eventtest
+@list: Mobile
 [http://www.quirksmode.org/mobile/advisoryTouch.html](http://www.quirksmode.org/mobile/advisoryTouch.html)
 
 [http://www.sitepen.com/blog/2011/12/07/touching-and-gesturing-on-iphone-android-and-more/](http://www.sitepen.com/blog/2011/12/07/touching-and-gesturing-on-iphone-android-and-more/)

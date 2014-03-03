@@ -1,4 +1,6 @@
-#Border
+@title: Border
+@filename: css.border
+@list:CSS
 
 source: [CSS Refresher:Borders](http://net.tutsplus.com/tutorials/html-css-techniques/css-refreshers-borders/)
 

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CSS 层叠与集成</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
+    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
+    <link href="/assets/lib/polymer/polymer.html" rel="import">
+    <link href="/assets/elements/x-menu.html" rel="import">
+  </head>
+  <body class="page-loading">
+    <div class="loading-bar"></div>
+    <x-menu></x-menu>
+    <div class="content">
+      <h1 class="header">CSS 层叠与集成</h1>
+      <article class="article single-column">
+        <p><a href="http://www.w3.org/TR/css3-cascade">规范地址(2013-10-3)</a></p>
+
+<h2><code class="language-javascript">@import</code> 规则</h2>
+
+<p>从其他样式表中导入规则。</p>
+
+<p><code class="language-javascript">@import</code> 必须放在所有 at 规则(除了 <code class="language-javascript">@charset</code>)前面。</p>
+
+<h2>速记属性(shorthand properties)</h2>
+
+<p>速记属性中确实的声明部分，默认会使用它的初始值来声明。</p>
+
+<h3><code class="language-javascript">all</code> 属性</h3>
+
+<p>是所有属性(除了 <code class="language-javascript">direction</code> 和 <code class="language-javascript">unicode-bidi</code>)的速记方式，可以设置 <code class="language-javascript">inherit</code>，<code class="language-javascript">initial</code> 和 <code class="language-javascript">unset</code>。</p>
+
+<p>Firefox 从 27 开始支持。</p>
+
+<h2>值处理</h2>
+
+<p>获取 CSS 属性的最终值需要经过诸多步骤：</p>
+
+<ol><li>收集元素的所有声明值(declared value)。</li><li>层叠产生层叠值(cascaded value)。</li><li>缺省化产生指定值(specified value)。</li><li>解析值的依赖产生计算值(computed value)。</li><li>格式化文档产生使用值(used value)。</li><li>最终，使用值基于显示环境的限制转为实际值(actual value)。</li></ol>
+      </article>
+    </div>
+    <script src="/assets/lib/platform/platform.js"></script>
+    <script src="/assets/js/prism.js"></script>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>文章列表</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href='http://fonts.googleapis.com/css?family=Graduate|Numans' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+        <link rel="stylesheet" type="text/css" href="/assets/style/list.css">
+        <link rel="import" href="/assets/lib/polymer/polymer.html">
+        <link rel="import" href="/assets/elements/x-menu.html">
+    </head>
+    <body>
+        <x-menu></x-menu>
+        <div class="content">
+            <h1 class="header">Articles List</h1>
+            <article class="article">
+                {{-content}}
+            </article>
+        </div>
+        <script src="/assets/lib/platform/platform.js"></script>
+    </body>
+</html>

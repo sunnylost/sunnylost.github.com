@@ -1,4 +1,6 @@
-#可视化格式模型
+@title:可视化格式模型
+@filename:css.visuren
+@list: CSS
 
 规范：[visuren](http://www.w3.org/TR/CSS21/visuren.html)
 

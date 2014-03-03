@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>移动端事件测试</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
+    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
+    <link href="/assets/lib/polymer/polymer.html" rel="import">
+    <link href="/assets/elements/x-menu.html" rel="import">
+  </head>
+  <body class="page-loading">
+    <div class="loading-bar"></div>
+    <x-menu></x-menu>
+    <div class="content">
+      <h1 class="header">移动端事件测试</h1>
+      <article class="article single-column">
+        <p><a href="http://www.quirksmode.org/mobile/advisoryTouch.html">http://www.quirksmode.org/mobile/advisoryTouch.html</a></p>
+
+<p><a href="http://www.sitepen.com/blog/2011/12/07/touching-and-gesturing-on-iphone-android-and-more/">http://www.sitepen.com/blog/2011/12/07/touching-and-gesturing-on-iphone-android-and-more/</a></p>
+
+<p><strong>浏览器内核相同，行为一致</strong>。(我就这么随口一说……感觉上是对的……)</p>
+
+<p>小米 2S 的默认浏览器和 HTC 8060 的浏览器内核一致，行为也相同。</p>
+
+<p>iPhone 4s IOS 7.04：</p>
+
+<ul><li>chrome：AppleWebkit/537.51.1  Safari/8536.25</li><li>safari：AppleWebkit/537.51.1  Safari/9537.53</li></ul>
+
+<p>Android:</p>
+
+<ul><li><p>小米 2S 默认和 safari，HTC 8060 默认：</p><ul><li><p>AppleWebkit/534.30 Safari/534.30</p></li></ul></li><li><p>UC 9.2.0.308 - 9.3...：</p><ul><li><p>AppleWebkit/534.31  Safari/534.31</p></li></ul></li><li><p>chrome for Android(不知道版本): </p><ul><li><p>AppleWebKit/537.36 Safari/537.36</p></li></ul></li><li><p>Maxthon</p><ul><li><p>AppleWebKit/534.30 Safari/534.30</p></li></ul></li><li><p>Firefox 25</p></li></ul>
+
+<p>以下内容缩写</p>
+
+<ul><li>start —— touchstart</li><li>move —— touchmove</li><li>end —— touchend</li></ul>
+
+<p>测试机型：
+- 小米 2S, 3S
+- HTC 8060
+- iPhone 4s
+- 魅族 MX3</p>
+
+<h3>滑动(页面发生滚动):</h3>
+
+<pre><code class="language-javascript"> iPhone:
+      safari:
+           start——&gt;move(多次触发)——&gt;end——&gt;scroll
+
+ Android:
+     HTC 默认, firefox, Mathon:
+           start——&gt;(scroll——&gt;move 这两个事件交替多次触发)——&gt;end——&gt;scroll(多次)  应该是 move 触发 scroll，因此 move 应该先于 scroll 触发
+
+     UC:
+           start——&gt;move(即使手指还在屏幕上也只触发一次事件)——&gt;scroll(多次)</code></pre>
+
+<h3>滑动(在页面顶部向下滑动)：</h3>
+
+<pre><code class="language-javascript"> iPhone:
+      safari:
+           start——&gt;end
+
+ Android:
+     HTC 默认, firefox, safari, Maxthon:
+           start——&gt;end
+
+     chrome:
+           start
+
+     UC 9.2:
+           start
+
+     UC 9.3:
+           start——&gt;move</code></pre>
+
+<h3>滑动(在页面底部向上滑动)：</h3>
+
+<pre><code class="language-javascript"> iPhone:
+      safari:
+           start——&gt;move(多次)——&gt;end——&gt;scroll
+
+ Android:
+     HTC 默认, safari, firefox, Maxthon：
+           start——&gt;move(多次)——&gt;end
+
+     chrome, UC 9.2, 9.3:
+           start——&gt;move</code></pre>
+      </article>
+    </div>
+    <script src="/assets/lib/platform/platform.js"></script>
+    <script src="/assets/js/prism.js"></script>
+  </body>
+</html>

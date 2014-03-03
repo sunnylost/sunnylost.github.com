@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>移动设备的事件</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
+    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
+    <link href="/assets/lib/polymer/polymer.html" rel="import">
+    <link href="/assets/elements/x-menu.html" rel="import">
+  </head>
+  <body class="page-loading">
+    <div class="loading-bar"></div>
+    <x-menu></x-menu>
+    <div class="content">
+      <h1 class="header">移动设备的事件</h1>
+      <article class="article single-column">
+        <h3>scroll 事件：</h3>
+
+<p>只有当滚动停止后才会触发，延迟十分严重</p>
+
+<hr/>
+
+<h3>orientationchange 事件：</h3>
+
+<p>window.orientation 属性表示当前设备角度。</p>
+
+<p>事件触发后，需要一定的时间来重新设置 window 的大小，如果立即获取，则还是原来的宽高。</p>
+
+<hr/>
+
+<h3>focus 事件：</h3>
+
+<p>譬如 input 在获得焦点后，想设置它的光标位置，但在手机上会有一个出现键盘的过程，如果在 focus 事件中立即设置光标位置，
+则很快又被重置，这时候使用 setTimeout(0) 即可。</p>
+
+<p>晚上时解决了 UC 浏览器中的一个问题，即触发 input 的 blur 事件后仍然无法移除它的焦点。当时我有两个念头：
+- 同一页面中只能有一个元素获得焦点
+- 焦点影响键盘(有焦点表示可输入文字，浏览器会弹出键盘)</p>
+
+<p>解决办法就是强制一个新的 input 获得焦点，这样旧 input 失去焦点，然后移除新 input 元素，弹出键盘收回。</p>
+
+<hr/>
+
+<h3>click 与 tap 事件：</h3>
+
+<p>这里说的 tap 是 KISSY 封装的事件，用的是 touch 系列。</p>
+
+<p>经过不太严谨的测试，得到一些结论：鼠标点击可以用一个点来表示，手指触摸则应该是一个圆。根据触发 tap 时 touch 对象的 pageX 和 pageY 来判断，只有当触摸点(touch point)的确落在元素内时才会触发 tap 事件。</p>
+
+<p>而对于 click 就像是在这个圆的范围内都会触发一样，我用食指(应该跟哪个手指无关)触摸，发现误差在 10 像素，即宽为 100 px 的元素，手指落在 110 px 的位置会触发 click 事件，但不会触发 tap 事件。</p>
+
+<p>在 PC 上 touch 对象的 webkitRadiusX 和 webkitRadiusY 两个属性的值都是 1，看起来挺正常，可到了手机上(小米的 UC 浏览器)，x 值始终为 0，y 值有好几位，没办法，机器太少，得不到进一步的结论。</p>
+
+<p>我又发现这玩意和 padding 还有关系！太复杂了……</p>
+
+<h4>tap 穿透：</h4>
+
+<p>大概的场景就是：在元素上绑定了 tap，点击后隐藏，但是元素后面的元素此时被点中了。</p>
+
+<p>解决(就测试了三星 N7100，不太确定)：给元素绑定 click，在里面禁止事件的默认行为。</p>
+
+<p>十分不幸的是，上面的方法没有解决，通过测试发现，是后面元素的 click 事件触发了，目前只能在这个元素的 click 里做处理，不喜欢这种方式。</p>
+      </article>
+    </div>
+    <script src="/assets/lib/platform/platform.js"></script>
+    <script src="/assets/js/prism.js"></script>
+  </body>
+</html>

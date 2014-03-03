@@ -1,5 +1,6 @@
-#jQuery 源码阅读 callbacks.js
-
+@title:jQuery 源码阅读 callbacks.js
+@filename:jquery.callbacks
+@list: jQuery
 create-date: 2013-10-16
 
 jQuery 中的 Callbacks 对象是众多模块的基础，例如 Deferred 对象。

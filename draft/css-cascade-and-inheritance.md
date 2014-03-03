@@ -1,4 +1,7 @@
-#CSS 层叠与继承
+@title: CSS 层叠与集成
+@filename: css.cascade
+@list: CSS
+
 [规范地址(2013-10-3)](http://www.w3.org/TR/css3-cascade)
 
 ##`@import` 规则

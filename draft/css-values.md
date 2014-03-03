@@ -1,4 +1,6 @@
-#CSS 中的值类型
+@filename: jquery.core2
+@title: CSS 中的值类型
+@list: CSS
 
 规范地址：[css3-values](http://www.w3.org/TR/css3-values)
 

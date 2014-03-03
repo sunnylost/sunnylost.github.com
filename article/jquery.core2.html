@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CSS 中的值类型</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
+    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
+    <link href="/assets/lib/polymer/polymer.html" rel="import">
+    <link href="/assets/elements/x-menu.html" rel="import">
+  </head>
+  <body class="page-loading">
+    <div class="loading-bar"></div>
+    <x-menu></x-menu>
+    <div class="content">
+      <h1 class="header">CSS 中的值类型</h1>
+      <article class="article single-column">
+        <p>规范地址：<a href="http://www.w3.org/TR/css3-values">css3-values</a></p>
+
+<p>时间：2013-09-25</p>
+
+<p>注意：此文档在此时尚未成为正式版</p>
+
+<h2>前言</h2>
+
+<p>刚刚看到一篇文章提到了众多 css 单位，一个都不认识……于是就翻出了规范瞧瞧。下面我就摘抄一些我不认识或概念模糊的单位。 </p>
+
+<h2>长度单位</h2>
+
+<p>首先，值为 0 是不需要写单位的。</p>
+
+<h3>相对长度 relative length</h3>
+
+<p>相对长度就是说该长度依赖于其他长度。使用相对长度的目的是为了在不同输出环境中更好的缩放。</p>
+
+<p>子元素不会继承父元素的相对值，它们继承的是计算值。</p>
+
+<h4>字体相对长度 font-relative length</h4>
+
+<h5>em</h5>
+
+<p>等于元素的 font-size 属性。</p>
+
+<h5>ex</h5>
+
+<p>第一个可用字体的 x 的高度。我好像没见有人用这个。</p>
+
+<h5>ch</h5>
+
+<p>字体中符号 0 的宽度，更没见过了。</p>
+
+<h5>rem</h5>
+
+<p>等于根元素的 font-size 的计算值。这个倒是很有用。</p>
+
+<h4>视口百分比长度 viewport-percentage length</h4>
+
+<p>这些单位相对于<a href="http://www.w3.org/TR/CSS21/visudet.html#containing-block-details">初始包含块</a>的尺寸。该包含块的尺寸改变时，这些长度也会随着缩放。</p>
+
+<h5>vw</h5>
+
+<p>初始包含块宽度的 1%。</p>
+
+<h5>vh</h5>
+
+<p>初始包含块高度的 1%。</p>
+
+<h5>vmin</h5>
+
+<p>vw 或 vh 中的较小值。</p>
+
+<h5>vmax</h5>
+
+<p>vw 或 vh 中的较大值。</p>
+
+<h3>其他单位</h3>
+
+<h4>角度</h4>
+
+<h5>deg</h5>
+
+<p>角度。一个圆有 360°。</p>
+
+<h5>grad</h5>
+
+<p>梯度。一个圆有 400 梯度。</p>
+
+<h5>rad</h5>
+
+<p>弧度。一个圆有 2π 个弧度。</p>
+
+<h5>turn</h5>
+
+<p>圈数。一个圆就是一圈。</p>
+
+<h4>时间</h4>
+
+<h5>s</h5>
+
+<p>秒</p>
+
+<h5>ms</h5>
+
+<p>毫秒</p>
+
+<h4>频率</h4>
+
+<h5>Hz</h5>
+
+<p>赫兹。表示每秒发生的次数。</p>
+
+<h5>kHz</h5>
+
+<p>千赫。表示 1000 赫兹。</p>
+
+<h4>分辨率</h4>
+
+<h5>dpi</h5>
+
+<p>每英寸点数。</p>
+
+<h5>dpcm</h5>
+
+<p>每厘米点数。</p>
+
+<h5>dppx</h5>
+
+<p>每像素点数。</p>
+      </article>
+    </div>
+    <script src="/assets/lib/platform/platform.js"></script>
+    <script src="/assets/js/prism.js"></script>
+  </body>
+</html>

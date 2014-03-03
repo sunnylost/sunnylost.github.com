@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Qatrix 源码阅读 2</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
+    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
+    <link href="/assets/lib/polymer/polymer.html" rel="import">
+    <link href="/assets/elements/x-menu.html" rel="import">
+  </head>
+  <body class="page-loading">
+    <div class="loading-bar"></div>
+    <x-menu></x-menu>
+    <div class="content">
+      <h1 class="header">Qatrix 源码阅读 2</h1>
+      <article class="article single-column">
+        <h3>Manipulation</h3>
+
+<p>这里只说一个方法 $text。</p>
+
+<p>该方法用于获取或设置元素的文本。本来该方法和 $html 应该是同样的代码量，毕竟用法和功能类似，但是看看源码，比 $html 多出了两倍不止，为什么会这样？</p>
+
+<p>我们知道获取元素的 HTML 代码用 innerHTML()，本来获取元素的文本也应该是 innerText()，但是 Firefox 使用了另一个名字：textContent。到后来，textContent 成了标准，IE 9 开始支持该方法。</p>
+
+<p>这两个方法可不仅仅是名字上的区别，参见 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Node.textContent">MDN</a> 关于两者的区别介绍：</p>
+
+<p>1，textContent 会获取所有元素的内容，包括 &amp;lt;script&amp;gt; 和 &amp;lt;style&amp;gt; 元素，但是 innerText 不会。</p>
+
+<p>2，innerText 会受到样式的影响，它不会返回隐藏元素的文本，但 textContent 会。</p>
+
+<p>3，由于 innerText 受到 CSS 样式影响，因此它会触发 reflow，但 textContent 不会。</p>
+
+<p>由于以上存在的区别(尤其是第一，二条)，所以 Qatrix 自己实现了获取元素内容的方法。</p>
+
+<p>让我们略过 mapcall 方法调用，来看源码：</p>
+
+<pre><code class="language-javascript">if (text) {
+	// Set text node.
+	$empty(elem);
+	elem.appendChild(document.createTextNode(text));
+
+	return elem;
+}</code></pre>
+
+<p>当 text 参数传入，表明是设置元素的文本，先使用 $empty 清空元素，然后再添加文本节点。</p>
+
+<pre><code class="language-javascript">else {
+	var rtext = &#39;&#39;,
+		textContent = elem.textContent,
+		nodeType;
+
+	// 如果元素的内容只是文本
+	if ((textContent || elem.innerText) === elem.innerHTML) {
+		rtext = textContent ? $string.trim(elem.textContent.replace(rbline, &#39;&#39;)) : elem.innerText.replace(rline, &#39;&#39;);
+	}
+	else {
+		for (elem = elem.firstChild; elem; elem = elem.nextSibling) {
+			nodeType = elem.nodeType;
+
+			if (nodeType === 3 &amp;&amp; $string.trim(elem.nodeValue) !== &#39;&#39;) {
+				rtext += elem.nodeValue.replace(rbline, &#39;&#39;) + (elem.nextSibling &amp;&amp; elem.nextSibling.tagName &amp;&amp; elem.nextSibling.tagName.toLowerCase() !== &#39;br&#39; ? &quot;\n&quot; : &#39;&#39;);
+			}
+
+			if (nodeType === 1 || nodeType === 2) {
+				rtext += $text(elem) + ($style.get(elem, &#39;display&#39;) === &#39;block&#39; || elem.tagName.toLowerCase() === &#39;br&#39; ? &quot;\n&quot; : &#39;&#39;);
+			}
+		}
+	}
+
+	return rtext;
+}</code></pre>
+
+<p>该段内容里有一个 if else 分支，当元素的内容仅包含文本时，使用元素支持的获取文本的方法来调用。因为 innerHTML 没有 innerText 的那些限制，因此如果元素是 script、style 或是隐藏的元素，那么 innerHTML 和 innerText 获取的值必然不同，就不会进入该分支。</p>
+
+<p>在下一个分支里，开始手动循环元素的子节点。</p>
+
+<p>如果子节点是文本节点，即 nodeType 为 3，去掉换行，但接下来的判断我搞不太懂了，下一个元素不是 br 的话，什么要生成一个换行呢？</p>
+
+<p>如果子节点是元素节点或属性节点，则递归调用 $text 来处理子节点下的子节点。在拼接字符串时判断了元素的 display 是否为 block，因为块状元素会产生换行，所以这里把它和 br 元素一并处理。</p>
+      </article>
+    </div>
+    <script src="/assets/lib/platform/platform.js"></script>
+    <script src="/assets/js/prism.js"></script>
+  </body>
+</html>

@@ -1,4 +1,6 @@
-## Qatrix 源码阅读 2 ##
+@title:Qatrix 源码阅读 2
+@filename:qatrix2
+@list: Qatrix
 ### Manipulation ###
 这里只说一个方法 $text。
 

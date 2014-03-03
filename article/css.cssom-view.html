@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CSS 视图模块</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
+    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
+    <link href="/assets/lib/polymer/polymer.html" rel="import">
+    <link href="/assets/elements/x-menu.html" rel="import">
+  </head>
+  <body class="page-loading">
+    <div class="loading-bar"></div>
+    <x-menu></x-menu>
+    <div class="content">
+      <h1 class="header">CSS 视图模块</h1>
+      <article class="article single-column">
+        <p>规范：<a href="http://www.w3.org/TR/cssom-view/">CSSOM View Module</a></p>
+
+<h2>简介</h2>
+
+<p>该规范定义了检查与操作文档视图的方法，包括获得元素的位置、宽高，滚动元素。</p>
+
+<h2>window 对象上的扩展接口</h2>
+
+<p>screen：返回 Screen 对象，下面再介绍。</p>
+
+<p>innerWidth：视口宽度，包含滚动条。</p>
+
+<p>innerHeight：视口高度，包含滚动条。</p>
+
+<p>scrollX 和 pageXOffset：返回距离初始包含块原点(左上角)的横轴距离。</p>
+
+<p>scrollY 和 pageYOffset：返回距离初始包含块原点的纵轴距离。</p>
+
+<p>scroll(x, y)：滚动窗口到指定坐标。</p>
+
+<p>scrollTo(x, y)：同 scroll()。</p>
+
+<p>scrollBy(x, y)：将当前位置作为原点来滚动。</p>
+
+<p>screenX：窗口相对于屏幕左上角的横轴坐标。</p>
+
+<p>screenY：窗口相对于屏幕左上角的纵轴坐标。这两个属性会受到系统的默认 UI 影响，例如 windows 的任务栏。</p>
+
+<p>outerWidth：窗口区域的宽度。</p>
+
+<p>outerHeight：窗口区域的高度。这个高度包括浏览器的一些默认 UI，例如标签栏、地址栏等。</p>
+
+<h2>Screen 对象</h2>
+
+<p>该对象表示为输出设备的屏幕。</p>
+
+<p>availWidth：输出设备提供的渲染区域的可用宽度。</p>
+
+<p>availHeight：输出设备提供的渲染区域的可用高度。这两个属性会受到系统的默认 UI 影响。</p>
+
+<p>width：输出设备的宽度。</p>
+
+<p>height：输出设备的高度。</p>
+
+<p>colorDepth 和 pixelDepth：输出设备分配给颜色的比特值。</p>
+
+<h2>Document 对象上的扩展接口</h2>
+
+<p>elementFromPoint(x, y)：指定坐标，返回当前处于该坐标上的元素。</p>
+
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/document.caretPositionFromPoint">caretPositionFromPoint(x, y)</a>：看起来是个很有用的方法。该方法根据坐标来获取光标位置。</p>
+
+<pre><code class="language-javascript">兼容性问题：
+	firefox 20 支持该方法，返回 CaretPosition 对象。
+
+	webkit 实现了旧的规范，方法名为 caretRangeFromPoint，返回一个 Range对象
+
+	IE 浏览器的 TextRange.moveToPoint(x, y) 具有类似作用。</code></pre>
+
+<h2>Element 对象上的扩展接口</h2>
+
+<p>getClientRects()：返回包含边界矩形的集合。如果元素没有与之对应的 css 布局盒，那么返回空集合。否则返回包含一系列 ClientRect 对象的 ClientRectList 对象。</p>
+
+<p>getBoundingClientRect()：返回一个范围，能够包含 getClientRects() 返回的所有矩形。</p>
+
+<h3>scroll</h3>
+
+<p>scrollIntoView()：将元素滚动到视图中。</p>
+
+<p>scrollTop：获取和设置元素内容中向上滚动的部分的高度。</p>
+
+<p>scrollLeft：获取和设置元素内容中向左滚动的部分的宽度。</p>
+
+<p>scrollWidth：只读。返回元素宽度和元素内容宽度中的较大值。即当存在滚动条，scrollWidth 要大于 clientWidth。</p>
+
+<p>scrollHeight：只读。返回元素高度和元素内容高度中的较大值。</p>
+
+<h3>client</h3>
+
+<p>clientTop：元素上边框宽度。只读。</p>
+
+<p>clientLeft：元素左边框宽度。只读。</p>
+
+<p>clientWidth：返回元素视口宽度。不包括滚动条。</p>
+
+<p>clientHeight：返回元素视口高度。不包括滚动条。</p>
+
+<h2>HTMLElement 对象上的扩展接口</h2>
+
+<p>offsetParent：单独做过笔记。</p>
+
+<p>offsetTop：返回元素相对于 offsetParent 的纵轴距离。</p>
+
+<p>offsetLeft：返回元素相对于 offsetParent 的横轴距离。</p>
+
+<p>offsetWidth：元素的边框边界宽度(border + padding + contentWidth)。</p>
+
+<p>offsetHeight：元素的边框边界高度。</p>
+
+<h2>MouseEvent 对象上的扩展接口</h2>
+
+<p>screenX，screenY：相对于屏幕原点的距离。</p>
+
+<p>pageX，pageY：相对于初始包含块原点的距离。</p>
+
+<p>clientX，clientY：相对于元素 viewport 原点的距离。</p>
+
+<p>x，y：同 client 系列。</p>
+
+<p>offsetX，offsetY：相对于触发事件元素的 padding edge 的距离。</p>
+      </article>
+    </div>
+    <script src="/assets/lib/platform/platform.js"></script>
+    <script src="/assets/js/prism.js"></script>
+  </body>
+</html>

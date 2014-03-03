@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>z-index</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
+    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
+    <link href="/assets/lib/polymer/polymer.html" rel="import">
+    <link href="/assets/elements/x-menu.html" rel="import">
+  </head>
+  <body class="page-loading">
+    <div class="loading-bar"></div>
+    <x-menu></x-menu>
+    <div class="content">
+      <h1 class="header">z-index</h1>
+      <article class="article single-column">
+        <p>规范地址：<a href="http://www.w3.org/TR/CSS21/visuren.html#layers">CSS21 layers</a></p>
+
+<p>以下用 SC 表示堆叠上下文(stack context)，SL 表示堆叠层级(stack level)。</p>
+
+<p>对于一个定位了的盒子，z-index 属性指定了：</p>
+
+<p>1，盒子在当前 SC 的 SL。</p>
+
+<p>2，盒子是否创建一个 SC。</p>
+
+<p>z-index 接受的值：</p>
+
+<p>1，&amp;lt;integer&amp;gt;： 盒子在当前 SC 中的 SL，并且创建一个新的 SC。</p>
+
+<p>2，auto：SL 为 0，不创建新的 SC(如果元素是根元素，那么它会创建 SC)。</p>
+
+<h2>解释</h2>
+
+<p>页面中的元素除了有横向(x 轴)和纵向(y 轴)两个方向外，还有第三个维度的方向，即 z 轴，元素彼此之间难免会有重叠的地方，那么哪个元素显示在前(即离屏幕前的你更近一些)就需要它们在 z 轴上的位置来判断。</p>
+
+<p>SC 是用来描述渲染树在将元素渲染到画布上的顺序的名词。SC 可以包含 SC，每一个 SC 对于它的父 SC 来说都是不可分割的。</p>
+
+<p>每个元素都属于一个 SC 中。每一个定位的盒子都在一个给定的 SC 中都有一个 SL，用于标示元素在 z 轴上的位置。数值越大，越靠前。</p>
+
+<p>SL 可以为负数。具有相同的 SL 的两个盒子依赖它们在文档树中的顺序来判断显示的先后。</p>
+
+<p>根节点生成根 SC。其余定位(包括相对定位)的盒子生成 SC，它们的 z-index 不为 auto。</p>
+
+<p>在一个 SC 中，以下各层按照从后向前的顺序渲染：</p>
+
+<ol><li>元素的背景和边框</li><li>拥有负 SL 的子 SC</li><li>在文档流中，非行内级别，非定位的后代节点。</li><li>非定位的浮动元素。</li><li>在文档流中，行内级别，非定位的后代节点，包括行内表格和行内块(inline-block)。</li><li>SL 为 0 的子 SC 和定位后代节点。</li><li>拥有正值 SL 的子 SC。</li></ol>
+      </article>
+    </div>
+    <script src="/assets/lib/platform/platform.js"></script>
+    <script src="/assets/js/prism.js"></script>
+  </body>
+</html>

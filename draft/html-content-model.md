@@ -1,5 +1,6 @@
-# HTML 的 Content model
-
+@title: HTML 的 Content model
+@filename: html.content.model
+@list: HTML
 刚开始接触 HTML 的时候，就听过「块级元素」，「行内元素」什么的。比如说 `div` 啦，`p` 啦都是「块级元素」，`span` 啦是「行内元素」。可这么区分是正确的吗？
 
 困扰我的地方在于，同为「块级元素」的 `div` 和 `p` 之间是有区别的，最明显区别在于 `div` 可以嵌套 `p`，可 `p` 无法嵌套 `div`。

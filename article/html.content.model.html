@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>HTML 的 Content model</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
+    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
+    <link href="/assets/lib/polymer/polymer.html" rel="import">
+    <link href="/assets/elements/x-menu.html" rel="import">
+  </head>
+  <body class="page-loading">
+    <div class="loading-bar"></div>
+    <x-menu></x-menu>
+    <div class="content">
+      <h1 class="header">HTML 的 Content model</h1>
+      <article class="article single-column">
+        <p>刚开始接触 HTML 的时候，就听过「块级元素」，「行内元素」什么的。比如说 <code class="language-javascript">div</code> 啦，<code class="language-javascript">p</code> 啦都是「块级元素」，<code class="language-javascript">span</code> 啦是「行内元素」。可这么区分是正确的吗？</p>
+
+<p>困扰我的地方在于，同为「块级元素」的 <code class="language-javascript">div</code> 和 <code class="language-javascript">p</code> 之间是有区别的，最明显区别在于 <code class="language-javascript">div</code> 可以嵌套 <code class="language-javascript">p</code>，可 <code class="language-javascript">p</code> 无法嵌套 <code class="language-javascript">div</code>。</p>
+
+<p>好在 HTML 5 为我解答了这个疑惑。因为 HTML 5 抛弃了以上那些粗浅的划分方式，转而使用 content model。以下我用「内容模型」来代表 content model。</p>
+
+<h2>什么是内容模型？</h2>
+
+<p>每个元素都有一个内容模型，它是元素能够包含何种内容的描述。内容模型共有八种，分别是：</p>
+
+<ul><li>Metadata content</li><li>Flow content</li><li>Sectioning content</li><li>Heading content</li><li>Phrasing content</li><li>Embedded content</li><li>Interactive content</li><li>Palpable content</li></ul>
+
+<p>基本上所有元素都会落入上述内容中。下面的图可能会看的更清楚：</p>
+
+<p><img alt="" src="http://images.whatwg.org/content-venn.png"/></p>
+
+<p>其中，<code class="language-javascript">div</code> 和 <code class="language-javascript">p</code> 都属于 Flow content。但它们的内容模型并不同，<code class="language-javascript">div</code> 的内容模型是 Flow content，而 <code class="language-javascript">p</code> 则是 Phrasing content。这就说明了为什么 <code class="language-javascript">p</code> 无法嵌套 <code class="language-javascript">div</code> 的原因。</p>
+
+<p>至于为什么要这么划分，那就有待我继续学习啦。</p>
+
+<p>参考文档：</p>
+
+<ul><li><a href="http://developers.whatwg.org/content-models.html#content-models">HTML 5 规范</a></li><li><a href="http://www.w3.org/TR/html5-diff/#content-model">HTML 5 与 HTML 4 的区别</a></li></ul>
+      </article>
+    </div>
+    <script src="/assets/lib/platform/platform.js"></script>
+    <script src="/assets/js/prism.js"></script>
+  </body>
+</html>

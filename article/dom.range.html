@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Range</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
+    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
+    <link href="/assets/lib/polymer/polymer.html" rel="import">
+    <link href="/assets/elements/x-menu.html" rel="import">
+  </head>
+  <body class="page-loading">
+    <div class="loading-bar"></div>
+    <x-menu></x-menu>
+    <div class="content">
+      <h1 class="header">Range</h1>
+      <article class="article single-column">
+        <p><a href="http://www.w3.org/TR/DOM-Level-2-Traversal-Range/ranges.html">DOM 2 Range</a></p>
+
+<p>Range 表现为文档、文档碎片、特性节点中的一段内容，它的最大特点就是能够根据两个边界点来选择该范围内的连续内容。</p>
+
+<p>boundary-points：Range 的起点和终点，在文档中可以表现为一个节点和一个位移。这个节点叫做边界点和位置的 container。</p>
+
+<p>边界点必须拥有一个共同的祖先容器(ancestor container)。</p>
+
+<p><img alt="" src="http://www.w3.org/TR/DOM-Level-2-Traversal-Range/images/RangeExample.gif"/></p>
+
+<p>如果两个边界点的容器和偏移相同，则该 Range 为一个 collapsed Range</p>
+
+<h2>创建 Range</h2>
+
+<pre><code class="language-javascript">document.createRange()</code></pre>
+
+<h2>修改 Range 的位置</h2>
+
+<pre><code class="language-javascript">setStart(Node parent, int long offset);
+setEnd(Node parent, int long offset);</code></pre>
+
+<p>如果 Range 的一个边界点被设置为另一个 root container 而不是当前这个，那么 Range 就会折叠放置到新的位置。</p>
+
+<p>Range 的起点始终在终点之前，如果强制设置起点在终点后面，那么 Range 会折叠到新的位置。</p>
+
+<pre><code class="language-javascript">setStartBefore(Node node);
+setStartAfter(Node node);
+setEndBefore(Node node);
+setEndAfter(Node node);</code></pre>
+
+<p>使用相对位置来设置边界点。</p>
+
+<pre><code class="language-javascript">collapse(boolean toStart);</code></pre>
+
+<p>传入 true，Range 会折叠到起点，否则到终点。</p>
+
+<pre><code class="language-javascript">collapsed; //判断是否折叠
+
+selectNode(Node n);
+selectNodeContents(Node n);</code></pre>
+
+<p>selectNode() 是让 Range 包含指定的节点。</p>
+
+<p>selectNodeContents() 是包含指定节点的内容。</p>
+
+<h2>比较 Range 边界点</h2>
+
+<pre><code class="language-javascript">compareBoundaryPoints(CompareHow how, Range sourceRange)</code></pre>
+
+<p>how 为四个值之一：START<em>TO</em>START,START<em>TO</em>END,END<em>TO</em>END,END<em>TO</em>START。返回值 -1,0,1 表示在前、相等、后。</p>
+
+<h2>删除 Range 中的内容</h2>
+
+<pre><code class="language-javascript">deleteContents();
+
+(1) &lt;FOO&gt;AB&lt;MOO&gt;CD&lt;/MOO&gt;CD&lt;/FOO&gt;  --&gt;
+&lt;FOO&gt;A^CD&lt;/FOO&gt;
+(2) &lt;FOO&gt;A&lt;MOO&gt;BC&lt;/MOO&gt;DE&lt;/FOO&gt;  --&gt;
+&lt;FOO&gt;A&lt;MOO&gt;B&lt;/MOO&gt;^E&lt;/FOO&gt;
+(3) &lt;FOO&gt;XY&lt;BAR&gt;ZW&lt;/BAR&gt;Q&lt;/FOO&gt;  --&gt;
+&lt;FOO&gt;X^&lt;BAR&gt;W&lt;/BAR&gt;Q&lt;/FOO&gt;
+(4) &lt;FOO&gt;&lt;BAR1&gt;AB&lt;/BAR1&gt;&lt;BAR2/&gt;&lt;BAR3&gt;CD&lt;/BAR3&gt;&lt;/FOO&gt;
+--&gt;  &lt;FOO&gt;&lt;BAR1&gt;A&lt;/BAR1&gt;^&lt;BAR3&gt;D&lt;/BAR3&gt;</code></pre>
+
+<p>删除内容后，如果留下两个毗邻的文本节点，通常它们不会合并，可以使用 Node 接口的 normalize()方法。</p>
+
+<h2>提取内容</h2>
+
+<pre><code class="language-javascript">extractContents()</code></pre>
+
+<p>删除内容，将其内容放入一个文档碎片中返回。</p>
+
+<pre><code class="language-javascript">(1) &lt;FOO&gt;AB&lt;MOO&gt;CD&lt;/MOO&gt;CD&lt;/FOO&gt;  --&gt;
+B&lt;MOO&gt;CD&lt;/MOO&gt;
+(2) &lt;FOO&gt;A&lt;MOO&gt;BC&lt;/MOO&gt;DE&lt;/FOO&gt;  --&gt;
+&lt;MOO&gt;C&lt;MOO&gt;D
+(3) &lt;FOO&gt;XY&lt;BAR&gt;ZW&lt;/BAR&gt;Q&lt;/FOO&gt;  --&gt;
+Y&lt;BAR&gt;Z&lt;/BAR&gt;
+(4)
+&lt;FOO&gt;&lt;BAR1&gt;AB&lt;/BAR1&gt;&lt;BAR2/&gt;&lt;BAR3&gt;CD&lt;/BAR3&gt;&lt;/FOO&gt; --&gt;
+&lt;BAR1&gt;B&lt;/BAR1&gt;&lt;BAR2/&gt;&lt;BAR3&gt;C&lt;/BAR3&gt;</code></pre>
+
+<p>对于部分选择(partially selected)的节点，它们会被复制，然后移动到文档碎片中。</p>
+
+<h2>复制内容</h2>
+
+<pre><code class="language-javascript">cloneContents()</code></pre>
+
+<p>和 extractContents() 类似，但不会删除选中的内容。</p>
+
+<h2>插入内容</h2>
+
+<pre><code class="language-javascript">insertNode(Node n);</code></pre>
+
+<p>将一个节点插入 Range 中。</p>
+
+<p>如果将节点插入一个文本节点，那么文本节点会被拆分，如果要插入的节点也是一个文本节点，那么这些文本节点不会自动合并。</p>
+
+<p>可以插入一个文档碎片，碎片内容会被插入到 Range 中。</p>
+
+<h2>环绕内容</h2>
+
+<pre><code class="language-javascript">surroundContents(Node newParent);</code></pre>
+
+<p>将 Range 内容放入到新节点中。</p>
+
+<p>如果 newParent 含有任何子节点，那么在插入前会被删除。</p>
+
+<h2>混杂成员</h2>
+
+<pre><code class="language-javascript">cloneRange();</code></pre>
+
+<p>复制 Range。</p>
+
+<pre><code class="language-javascript">toString();</code></pre>
+
+<h2>文档变动时修改 Range</h2>
+      </article>
+    </div>
+    <script src="/assets/lib/platform/platform.js"></script>
+    <script src="/assets/js/prism.js"></script>
+  </body>
+</html>

@@ -1,4 +1,7 @@
-#CSS 视图模块
+
+@title: CSS 视图模块
+@filename: css.cssom-view
+@list: CSS
 
 规范：[CSSOM View Module](http://www.w3.org/TR/cssom-view/)
 

@@ -1,5 +1,6 @@
-#jQuery 源码阅读 support.js
-
+@title:jQuery 源码阅读 support.js
+@filename:jquery.support
+@list: jQuery
 create-date: 2013-10-17
 
 jQuery.support 对象中包含了一系列和浏览器特性或 bug 有关的判断。主要是 jQuery 内部使用，如果你需要类似的功能，官方文档推荐使用 [Modernizr](http://modernizr.com/)。

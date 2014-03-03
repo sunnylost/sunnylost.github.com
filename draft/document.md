@@ -1,4 +1,7 @@
-# document 对象属性和方法
+
+@title: document 对象属性和方法
+@filename:dom.property
+@list: DOM
 
 方才我在 Chrome 下的控制台中敲代码，输入完 document. 之后，控制台给出了自动提示，我突然就想知道，在这些提示的属性或方法中，哪些是我不知道的，这其中会不会有一些被我忽略的重要内容呢？因为就在看 sea.js 的源码时，我发现自己根本不记得 document 拥有一个 URL 属性。
 

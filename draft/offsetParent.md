@@ -1,5 +1,6 @@
-#offsetParent
-
+@title:offsetParent
+@filename:dom.offsetparent
+@list: DOM
 [offsetParent](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement.offsetParent)：返回离当前元素最近的、设置过定位的祖先元素。。
 
 根据 [quirksmode](http://www.quirksmode.org/dom/w3c_cssom.html#offsetParent) 中的介绍，查找元素 x 的 offsetParent 流程是这样的：沿着 DOM 树向上查找，遇到如下情况则停止并返回当前元素：

@@ -1,0 +1,18 @@
+doctype html
+html
+    head
+        meta(charset="utf-8")
+        meta(name="viewport",content="width=device-width, initial-scale=1.0")
+        title="文章列表"
+        link(rel="stylesheet", type="text/css", href="http://fonts.googleapis.com/css?family=Graduate|Numans")
+        link(rel="stylesheet", type="text/css", href="/assets/style/site.css")
+        link(rel="stylesheet", type="text/css", href="/assets/style/list.css")
+        link(href="/assets/lib/polymer/polymer.html", rel="import")
+        link(href="/assets/elements/x-menu.html", rel="import")
+    body
+        x-menu
+        div.content
+            h1.header="Articles List"
+            article.article
+                #{content}
+        script(src="/assets/lib/platform/platform.js")
