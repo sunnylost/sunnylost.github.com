@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <title>Qatrix 源码阅读 2</title>
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
-    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
     <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
+    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
     <link href="/assets/lib/polymer/polymer.html" rel="import">
     <link href="/assets/elements/x-menu.html" rel="import">
   </head>
@@ -80,6 +80,8 @@
 <p>如果子节点是元素节点或属性节点，则递归调用 $text 来处理子节点下的子节点。在拼接字符串时判断了元素的 display 是否为 block，因为块状元素会产生换行，所以这里把它和 br 元素一并处理。</p>
       </article>
     </div>
+    <div class="progressbar"><div class="progress"></div></div>
+    <script src="/assets/js/article.js"></script>
     <script src="/assets/lib/platform/platform.js"></script>
     <script src="/assets/js/prism.js"></script>
   </body>

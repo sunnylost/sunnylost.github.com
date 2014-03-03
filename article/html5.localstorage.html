@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <title>localStorage 性能</title>
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
-    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
     <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
+    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
     <link href="/assets/lib/polymer/polymer.html" rel="import">
     <link href="/assets/elements/x-menu.html" rel="import">
   </head>
@@ -36,6 +36,8 @@
 <ol><li>使用 localStorage 的 getItem() 而不是直接通过 key 来读取数据的效率会更好。</li><li>频繁调用 localStorage 的 API 会影响性能。</li><li>数据的大小不会对 API 调用产生影响，因此应该尽量向一个条目中存储多的内容。</li></ol>
       </article>
     </div>
+    <div class="progressbar"><div class="progress"></div></div>
+    <script src="/assets/js/article.js"></script>
     <script src="/assets/lib/platform/platform.js"></script>
     <script src="/assets/js/prism.js"></script>
   </body>
