@@ -4,8 +4,7 @@
  * @version 0.0.1
  */
 
-var fat = require('./fat.js'),
-    fs = require('fs'),
+var fs = require('fs'),
     ejs = require('ejs'),
     md = require('markdown').markdown,
     list = {},
@@ -15,7 +14,7 @@ function parse(path) {
 	ejs.open = '{{';
     ejs.close = '}}';
 
-	fs.readFile('../../assets/template/article.ejs', {
+	fs.readFile('../assets/template/article.ejs', {
 		encoding: 'utf-8'
 	}, function(err, data) {
 		var fn = ejs.compile(data);
@@ -40,7 +39,7 @@ function parse(path) {
 					content: md.toHTML(data)
 				});
 	
-				fs.writeFile('../../article/' + metas.filename + '.html', html.replace(/<code>/g, '<code class="language-javascript">'), function() {
+				fs.writeFile('../article/' + metas.filename + '.html', html.replace(/<code>/g, '<code class="language-javascript">'), function() {
 					files.length ? generateHTML(null, files) : generateArticlesList();
 				});
 			})
@@ -49,7 +48,7 @@ function parse(path) {
 };
 
 function generateArticlesList() {
-	fs.readFile('../../assets/template/article-index.ejs', {
+	fs.readFile('../assets/template/article-index.ejs', {
 		encoding: 'utf-8'
 	}, function(err, data) {
 		var fn = ejs.compile(data),
@@ -67,7 +66,7 @@ function generateArticlesList() {
 			}
 			html.push('</ul></section>');
 		}
-		fs.writeFile('../../article/index.html', fn({
+		fs.writeFile('../article/index.html', fn({
 			content: html.join('')
 		}));
 	});
@@ -86,14 +85,14 @@ function reverse(path) {
 
 function convertHtmlToMarkdown(files) {
 	var filename = files.shift();
-	fs.readFile('../../article/' + filename, {
+	fs.readFile('../article/' + filename, {
 		encoding: 'utf-8'
 	}, function(err, data) {
-		fs.writeFile('../../build/' + filename.replace('html', 'md'), htmlToMd(data.replace(/<(\/)?pre>/g, '')), function() {
+		fs.writeFile('../build/' + filename.replace('html', 'md'), htmlToMd(data.replace(/<(\/)?pre>/g, '')), function() {
 			files.length && convertHtmlToMarkdown(files)
 		})
 	})
 }
 
-//reverse('../../article/');
-parse('../../draft/');
+//reverse('../article/');
+parse('../draft/');
