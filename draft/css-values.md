@@ -1,4 +1,4 @@
-@filename: jquery.core2
+@filename: css.values
 @title: CSS 中的值类型
 @list: CSS
 
