@@ -1,0 +1,100 @@
+<polymer-element name="x-table-of-content" attributes="root">
+    <template>
+    	<style>
+            :host {
+                position: fixed;
+                left: 20em;
+                top: 110px;
+            }
+
+            :host h3 {
+                padding-bottom: 0.5em;
+                border-bottom: 1px solid #ddd;
+                width: 60%;
+            }
+
+            :host li {
+                padding: 0;
+            }
+
+            :host li:before {
+                content: '#';
+                font-size: 12px;
+                padding: 0 3px;
+                vertical-align: super;
+                color: #000;
+            }
+
+            :host li.active {
+                background: #03a678;
+            }
+
+            :host a {
+                display: inline-block;
+                font-size: 16px;
+                line-height: 1;
+                width: 15em;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                color: #555;
+            }
+
+            :host a:hover {
+                text-decoration: underline;
+            }
+
+            :host li.active:before, :host li.active a {
+                color: #fff;
+            }
+    	</style>
+        <ul>
+            <h3>目录</h3>
+            <template repeat="{{t in titles}}">
+                <li><a href="{{t.link}}" title="{{t.name}}" index={{t.index}} on-click="{{jump}}">{{t.name}}</a></li>
+            </template>    
+        </ul>
+    </template>
+    <script>
+        !function() {
+            var ACTIVE_CLASS = 'active';
+
+            Polymer('x-table-of-content', {
+                ready: function() {
+                    var el = this.rootEl = document.querySelector(this.root);
+                    this.activeEl = null;
+                    this.titles = [];
+                    this.generateTitles(el);
+                },
+
+                generateTitles: function(el) {
+                    var h2s = el.querySelectorAll('h2'),
+                        h2, title,
+                        titles = this.titles;
+                    for(var i = 0, len = h2s.length; i < len; i++) {
+                        h2 = h2s[i];
+                        title = {
+                            el: h2,
+                            name: h2.innerText || h2.textContent,
+                            index: i,
+                            link: '#' //FIXME: 直接在 href 里写 # 前面会自动加上路径，这个问题还没有解决。
+                        };
+                        titles.push(title);
+                    }
+                },
+
+                jump: function(e, _, el) {
+                    var t = this.titles[el.getAttribute('index')],
+                        activeEl = this.activeEl;
+                    if(t) {
+                        if(activeEl) {
+                            activeEl.parentNode.classList.remove(ACTIVE_CLASS);
+                        }
+                        t.el.scrollIntoView();
+                        (this.activeEl = el).parentNode.classList.add(ACTIVE_CLASS);
+                    }
+                }
+            });
+        }();
+    </script>
+</polymer-element>
