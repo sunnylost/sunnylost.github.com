@@ -20,35 +20,37 @@
 			    transition: width 0.8s;
 			}
     	</style>
-    	
+
     	<div id="progressbar">
     		<div id="progress"></div>
     	</div>
     </template>
     <script>
-    	var root,
-    		win = window,
-    		progress,
-    		timeoutId;
+    	var timeoutId;
 
     	Polymer('x-progressbar', {
     		root: '',
 
     		ready: function() {
-    			progress = this.$.progress;
-    			root = document.querySelectorAll(this.root)[0];
-    			root.onscroll = changeProgressbar;
-    			win.onresize = changeProgressbar;
-
+    			var changeProgressbar = this.changeProgressbar.bind(this);
+    			this.progressEl = this.$.progress;
+    			this.rootEl 	= document.querySelectorAll(this.root)[0];
+    			this.rootEl.onscroll = changeProgressbar;
+    			window.onresize = changeProgressbar;
+    			/**
+    			 * init progressbar
+    			 */
     			changeProgressbar();
+    		},
+
+    		changeProgressbar: function() {
+    			var _this = this;
+	    		clearTimeout(timeoutId);
+	    		timeoutId = setTimeout(function() {
+	    			var root = _this.rootEl;
+	    			_this.progressEl.style.width = ((root.scrollTop + window.innerHeight) / root.scrollHeight) * 100 + '%';
+	    		}, 100);
     		}
     	});
-
-    	function changeProgressbar() {
-    		clearTimeout(timeoutId);
-    		timeoutId = setTimeout(function() {
-    			progress.style.width = ((root.scrollTop + win.innerHeight) / root.scrollHeight) * 100 + '%';
-    		}, 100);
-    	}
     </script>
 </polymer-element>
