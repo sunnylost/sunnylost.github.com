@@ -22,7 +22,8 @@
       <h1 class="header">移动设备的事件</h1>
       <x-table-of-content root=".article"></x-table-of-content>
       <article class="article single-column">
-        <h3>scroll 事件：</h3>
+        <div class="wrap">
+          <h3>scroll 事件：</h3>
 
 <p>只有当滚动停止后才会触发，延迟十分严重</p>
 
@@ -67,7 +68,8 @@
 
 <p>解决(就测试了三星 N7100，不太确定)：给元素绑定 click，在里面禁止事件的默认行为。</p>
 
-<p>十分不幸的是，上面的方法没有解决，通过测试发现，是后面元素的 click 事件触发了，目前只能在这个元素的 click 里做处理，不喜欢这种方式。</p>
+<p>十分不幸的是，上面的方法没有解决，通过测试发现，是后面元素的 click 事件触发了，目前只能在这个元素的 click 里做处理，不喜欢这种方式。</p>  
+        </div>
       </article>
     </div>
     <x-progressbar root=".content"></x-progressbar>

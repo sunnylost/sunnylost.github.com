@@ -22,7 +22,8 @@
       <h1 class="header">jQuery 源码阅读 core.js</h1>
       <x-table-of-content root=".article"></x-table-of-content>
       <article class="article single-column">
-        <p>我打算将 jQuery 1.9.1 完整阅读一遍，写这篇文章的缘故就是为了督促自己读下去，对于我来说，坚持做一件事真的很困难:(</p>
+        <div class="wrap">
+          <p>我打算将 jQuery 1.9.1 完整阅读一遍，写这篇文章的缘故就是为了督促自己读下去，对于我来说，坚持做一件事真的很困难:(</p>
 
 <p>好吧，先从核心文件 core.js 读起。</p>
 
@@ -460,7 +461,8 @@ jQuery.fn = jQuery.prototype = {
 
 <p>猜猜这样做的好处，首先你不需要判断是否使用了 new，因为内部统一会进行 new 操作，然后我们返回了 init 的实例，但这个实例已经与 jQuery 对象没有了任何联系，所以我们再将 init 的 prototype 属性重新指向给 jQuery 的原型对象，于是 init 的实例就变成了 jQuery 的实例。</p>
 
-<p>大概就是这样吧:)</p>
+<p>大概就是这样吧:)</p>  
+        </div>
       </article>
     </div>
     <x-progressbar root=".content"></x-progressbar>

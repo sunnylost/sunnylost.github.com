@@ -22,7 +22,8 @@
       <h1 class="header">localStorage 性能</h1>
       <x-table-of-content root=".article"></x-table-of-content>
       <article class="article single-column">
-        <p>上午读了两篇文章：<a href="http://calendar.perfplanet.com/2011/localstorage-read-performance/">localStorage Read Performance</a> 和 <a href="https://hacks.mozilla.org/2012/03/there-is-no-simple-solution-for-local-storage/">There is no simple solution for local storage</a>。总结起来一句话：localStorage 的性能不咋地。</p>
+        <div class="wrap">
+          <p>上午读了两篇文章：<a href="http://calendar.perfplanet.com/2011/localstorage-read-performance/">localStorage Read Performance</a> 和 <a href="https://hacks.mozilla.org/2012/03/there-is-no-simple-solution-for-local-storage/">There is no simple solution for local storage</a>。总结起来一句话：localStorage 的性能不咋地。</p>
 
 <p>Chris Heilmann 在文章中总结了 localStorage 的优点：</p>
 
@@ -40,7 +41,8 @@
 
 <p>再次回到 Zakas 做的 Benchmark 中，可以总结一些 localStorage 的最佳方式：</p>
 
-<ol><li>使用 localStorage 的 getItem() 而不是直接通过 key 来读取数据的效率会更好。</li><li>频繁调用 localStorage 的 API 会影响性能。</li><li>数据的大小不会对 API 调用产生影响，因此应该尽量向一个条目中存储多的内容。</li></ol>
+<ol><li>使用 localStorage 的 getItem() 而不是直接通过 key 来读取数据的效率会更好。</li><li>频繁调用 localStorage 的 API 会影响性能。</li><li>数据的大小不会对 API 调用产生影响，因此应该尽量向一个条目中存储多的内容。</li></ol>  
+        </div>
       </article>
     </div>
     <x-progressbar root=".content"></x-progressbar>

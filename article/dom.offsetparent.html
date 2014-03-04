@@ -22,7 +22,8 @@
       <h1 class="header">offsetParent</h1>
       <x-table-of-content root=".article"></x-table-of-content>
       <article class="article single-column">
-        <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement.offsetParent">offsetParent</a>：返回离当前元素最近的、设置过定位的祖先元素。。</p>
+        <div class="wrap">
+          <p><a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement.offsetParent">offsetParent</a>：返回离当前元素最近的、设置过定位的祖先元素。。</p>
 
 <p>根据 <a href="http://www.quirksmode.org/dom/w3c_cssom.html#offsetParent">quirksmode</a> 中的介绍，查找元素 x 的 offsetParent 流程是这样的：沿着 DOM 树向上查找，遇到如下情况则停止并返回当前元素：</p>
 
@@ -44,7 +45,8 @@
 
 <p>jQuery 1.10.2 中对于这些情况统一返回 html 元素。</p>
 
-<p><a href="http://jsfiddle.net/5Cdp8/">http://jsfiddle.net/5Cdp8/</a>，我对 jQuery 和原生 js 做了对比，在不同浏览器下的差别很大。</p>
+<p><a href="http://jsfiddle.net/5Cdp8/">http://jsfiddle.net/5Cdp8/</a>，我对 jQuery 和原生 js 做了对比，在不同浏览器下的差别很大。</p>  
+        </div>
       </article>
     </div>
     <x-progressbar root=".content"></x-progressbar>

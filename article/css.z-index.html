@@ -22,7 +22,8 @@
       <h1 class="header">z-index</h1>
       <x-table-of-content root=".article"></x-table-of-content>
       <article class="article single-column">
-        <p>规范地址：<a href="http://www.w3.org/TR/CSS21/visuren.html#layers">CSS21 layers</a></p>
+        <div class="wrap">
+          <p>规范地址：<a href="http://www.w3.org/TR/CSS21/visuren.html#layers">CSS21 layers</a></p>
 
 <p>以下用 SC 表示堆叠上下文(stack context)，SL 表示堆叠层级(stack level)。</p>
 
@@ -52,7 +53,8 @@
 
 <p>在一个 SC 中，以下各层按照从后向前的顺序渲染：</p>
 
-<ol><li>元素的背景和边框</li><li>拥有负 SL 的子 SC</li><li>在文档流中，非行内级别，非定位的后代节点。</li><li>非定位的浮动元素。</li><li>在文档流中，行内级别，非定位的后代节点，包括行内表格和行内块(inline-block)。</li><li>SL 为 0 的子 SC 和定位后代节点。</li><li>拥有正值 SL 的子 SC。</li></ol>
+<ol><li>元素的背景和边框</li><li>拥有负 SL 的子 SC</li><li>在文档流中，非行内级别，非定位的后代节点。</li><li>非定位的浮动元素。</li><li>在文档流中，行内级别，非定位的后代节点，包括行内表格和行内块(inline-block)。</li><li>SL 为 0 的子 SC 和定位后代节点。</li><li>拥有正值 SL 的子 SC。</li></ol>  
+        </div>
       </article>
     </div>
     <x-progressbar root=".content"></x-progressbar>

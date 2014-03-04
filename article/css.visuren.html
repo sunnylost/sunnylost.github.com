@@ -22,7 +22,8 @@
       <h1 class="header">可视化格式模型</h1>
       <x-table-of-content root=".article"></x-table-of-content>
       <article class="article single-column">
-        <p>规范：<a href="http://www.w3.org/TR/CSS21/visuren.html">visuren</a></p>
+        <div class="wrap">
+          <p>规范：<a href="http://www.w3.org/TR/CSS21/visuren.html">visuren</a></p>
 
 <h2>介绍</h2>
 
@@ -221,7 +222,8 @@
 
 <p>(这个地方生词挺多，先随便写点，准确度未知)假设每个字体都有字体规格，按照 baseline 将字体分为上下两部分，用 A 代表上面高度，D 代表下部分的深度，此外 AD = A + D。</p>
 
-<p>行间距为 L，L = <code class="language-javascript">line-height</code> - AD。将行间距的一半加到 A 上，另一半加到 D 上。即 A&#39; = A + L/2， D&#39; = D + L/2。</p>
+<p>行间距为 L，L = <code class="language-javascript">line-height</code> - AD。将行间距的一半加到 A 上，另一半加到 D 上。即 A&#39; = A + L/2， D&#39; = D + L/2。</p>  
+        </div>
       </article>
     </div>
     <x-progressbar root=".content"></x-progressbar>

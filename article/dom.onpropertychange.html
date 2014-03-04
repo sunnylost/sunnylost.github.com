@@ -22,7 +22,8 @@
       <h1 class="header">onpropertychange</h1>
       <x-table-of-content root=".article"></x-table-of-content>
       <article class="article single-column">
-        <p><a href="http://msdn.microsoft.com/en-us/library/ie/ms536956(v=vs.85.aspx">MSDN</a></p>
+        <div class="wrap">
+          <p><a href="http://msdn.microsoft.com/en-us/library/ie/ms536956(v=vs.85.aspx">MSDN</a></p>
 
 <p>IE 私有的事件，当元素的属性发生变化时触发。</p>
 
@@ -30,7 +31,8 @@
 
 <p>使用 event.propertyName 来获得发生变动的属性名。我测试的时候修改了元素的 style.background，结果触发了很多次，因为 background 是个复合属性。</p>
 
-<p>子元素使用 innerText 或 innerHTML 不会触发父元素的该事件。</p>
+<p>子元素使用 innerText 或 innerHTML 不会触发父元素的该事件。</p>  
+        </div>
       </article>
     </div>
     <x-progressbar root=".content"></x-progressbar>

@@ -22,7 +22,9 @@
       <h1 class="header">{{=title}}</h1>
       <x-table-of-content root=".article"></x-table-of-content>
       <article class="article single-column">
-        {{-content}}
+        <div class="wrap">
+          {{-content}}  
+        </div>
       </article>
     </div>
     <x-progressbar root=".content"></x-progressbar>

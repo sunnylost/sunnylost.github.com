@@ -22,7 +22,8 @@
       <h1 class="header">HTML 的 Content model</h1>
       <x-table-of-content root=".article"></x-table-of-content>
       <article class="article single-column">
-        <p>刚开始接触 HTML 的时候，就听过「块级元素」，「行内元素」什么的。比如说 <code class="language-javascript">div</code> 啦，<code class="language-javascript">p</code> 啦都是「块级元素」，<code class="language-javascript">span</code> 啦是「行内元素」。可这么区分是正确的吗？</p>
+        <div class="wrap">
+          <p>刚开始接触 HTML 的时候，就听过「块级元素」，「行内元素」什么的。比如说 <code class="language-javascript">div</code> 啦，<code class="language-javascript">p</code> 啦都是「块级元素」，<code class="language-javascript">span</code> 啦是「行内元素」。可这么区分是正确的吗？</p>
 
 <p>困扰我的地方在于，同为「块级元素」的 <code class="language-javascript">div</code> 和 <code class="language-javascript">p</code> 之间是有区别的，最明显区别在于 <code class="language-javascript">div</code> 可以嵌套 <code class="language-javascript">p</code>，可 <code class="language-javascript">p</code> 无法嵌套 <code class="language-javascript">div</code>。</p>
 
@@ -44,7 +45,8 @@
 
 <p>参考文档：</p>
 
-<ul><li><a href="http://developers.whatwg.org/content-models.html#content-models">HTML 5 规范</a></li><li><a href="http://www.w3.org/TR/html5-diff/#content-model">HTML 5 与 HTML 4 的区别</a></li></ul>
+<ul><li><a href="http://developers.whatwg.org/content-models.html#content-models">HTML 5 规范</a></li><li><a href="http://www.w3.org/TR/html5-diff/#content-model">HTML 5 与 HTML 4 的区别</a></li></ul>  
+        </div>
       </article>
     </div>
     <x-progressbar root=".content"></x-progressbar>

@@ -22,7 +22,8 @@
       <h1 class="header">jQuery 源码阅读 access() 方法</h1>
       <x-table-of-content root=".article"></x-table-of-content>
       <article class="article single-column">
-        <p><strong>关于 bulk 暂时没找到例子，所以这篇文章不算完成……</strong></p>
+        <div class="wrap">
+          <p><strong>关于 bulk 暂时没找到例子，所以这篇文章不算完成……</strong></p>
 
 <p>access() 是个很巧妙的方法，它被放置于 core.js 中，作为静态方法存在。</p>
 
@@ -127,7 +128,8 @@ if ( fn ) {
 
 <p>bulk 为 true，说明需要在所有 elems 上调用 fn，它的操作结果就是返回值。</p>
 
-<p>接下来判断 length，即元素集合中元素的个数，如果集合为空，则返回默认值 emptyGet，否则返回集合中第一个元素与 key 传入 fn。</p>
+<p>接下来判断 length，即元素集合中元素的个数，如果集合为空，则返回默认值 emptyGet，否则返回集合中第一个元素与 key 传入 fn。</p>  
+        </div>
       </article>
     </div>
     <x-progressbar root=".content"></x-progressbar>

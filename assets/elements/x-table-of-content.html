@@ -3,8 +3,12 @@
     	<style>
             :host {
                 position: fixed;
-                left: 20em;
+                left: 20%;
                 top: 110px;
+                bottom: 10px;
+                overflow-x: hidden;
+                overflow-y: auto;
+                margin-left: -100px;
             }
 
             :host h3 {
@@ -33,7 +37,7 @@
                 display: inline-block;
                 font-size: 16px;
                 line-height: 1;
-                width: 15em;
+                width: 10em;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -47,14 +51,19 @@
             :host li.active:before, :host li.active a {
                 color: #fff;
             }
+
+            @media screen and (max-width: 820px) {
+
+            }
     	</style>
         <ul>
             <h3>目录</h3>
             <template repeat="{{t in titles}}">
-                <li><a href="{{t.link}}" title="{{t.name}}" index={{t.index}} on-click="{{jump}}">{{t.name}}</a></li>
+                <li><a href="{{url}}" title="{{t.name}}" index={{t.index}} on-click="{{jump}}">{{t.name}}</a></li>
             </template>    
         </ul>
     </template>
+   
     <script>
         !function() {
             var ACTIVE_CLASS = 'active';
@@ -67,6 +76,12 @@
                     this.generateTitles(el);
                 },
 
+                /**
+                 * 导入不同文档的时候，platform.js 中的 url.js 就会处理路径问题
+                 * 对于有 {{.*}} 这样的属性不做处理
+                 */
+                url: '#', 
+
                 generateTitles: function(el) {
                     var h2s = el.querySelectorAll('h2'),
                         h2, title,
@@ -76,8 +91,7 @@
                         title = {
                             el: h2,
                             name: h2.innerText || h2.textContent,
-                            index: i,
-                            link: '#' //FIXME: 直接在 href 里写 # 前面会自动加上路径，这个问题还没有解决。
+                            index: i
                         };
                         titles.push(title);
                     }
@@ -93,6 +107,7 @@
                         t.el.scrollIntoView();
                         (this.activeEl = el).parentNode.classList.add(ACTIVE_CLASS);
                     }
+                    e.preventDefault();
                 }
             });
         }();

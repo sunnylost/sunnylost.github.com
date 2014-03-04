@@ -22,7 +22,8 @@
       <h1 class="header">Qatrix 源码阅读 2</h1>
       <x-table-of-content root=".article"></x-table-of-content>
       <article class="article single-column">
-        <h3>Manipulation</h3>
+        <div class="wrap">
+          <h3>Manipulation</h3>
 
 <p>这里只说一个方法 $text。</p>
 
@@ -84,7 +85,8 @@
 
 <p>如果子节点是文本节点，即 nodeType 为 3，去掉换行，但接下来的判断我搞不太懂了，下一个元素不是 br 的话，什么要生成一个换行呢？</p>
 
-<p>如果子节点是元素节点或属性节点，则递归调用 $text 来处理子节点下的子节点。在拼接字符串时判断了元素的 display 是否为 block，因为块状元素会产生换行，所以这里把它和 br 元素一并处理。</p>
+<p>如果子节点是元素节点或属性节点，则递归调用 $text 来处理子节点下的子节点。在拼接字符串时判断了元素的 display 是否为 block，因为块状元素会产生换行，所以这里把它和 br 元素一并处理。</p>  
+        </div>
       </article>
     </div>
     <x-progressbar root=".content"></x-progressbar>
