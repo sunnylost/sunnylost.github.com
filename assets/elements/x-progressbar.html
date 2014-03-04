@@ -26,31 +26,31 @@
     	</div>
     </template>
     <script>
-    	var timeoutId;
+        !function() {
+            var timeoutId;
 
-    	Polymer('x-progressbar', {
-    		root: '',
+            Polymer('x-progressbar', {
+                ready: function() {
+                    var changeProgressbar = this.changeProgressbar.bind(this);
+                    this.progressEl = this.$.progress;
+                    this.rootEl     = document.querySelectorAll(this.root)[0];
+                    this.rootEl.onscroll = changeProgressbar;
+                    window.onresize = changeProgressbar;
+                    /**
+                     * init progressbar
+                     */
+                    changeProgressbar();
+                },
 
-    		ready: function() {
-    			var changeProgressbar = this.changeProgressbar.bind(this);
-    			this.progressEl = this.$.progress;
-    			this.rootEl 	= document.querySelectorAll(this.root)[0];
-    			this.rootEl.onscroll = changeProgressbar;
-    			window.onresize = changeProgressbar;
-    			/**
-    			 * init progressbar
-    			 */
-    			changeProgressbar();
-    		},
-
-    		changeProgressbar: function() {
-    			var _this = this;
-	    		clearTimeout(timeoutId);
-	    		timeoutId = setTimeout(function() {
-	    			var root = _this.rootEl;
-	    			_this.progressEl.style.width = ((root.scrollTop + window.innerHeight) / root.scrollHeight) * 100 + '%';
-	    		}, 100);
-    		}
-    	});
+                changeProgressbar: function() {
+                    var _this = this;
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(function() {
+                        var root = _this.rootEl;
+                        _this.progressEl.style.width = ((root.scrollTop + window.innerHeight) / root.scrollHeight) * 100 + '%';
+                    }, 100);
+                }
+            });
+        }();
     </script>
 </polymer-element>
