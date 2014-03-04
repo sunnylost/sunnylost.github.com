@@ -34,8 +34,8 @@
                     var changeProgressbar = this.changeProgressbar.bind(this);
                     this.progressEl = this.$.progress;
                     this.rootEl     = document.querySelectorAll(this.root)[0];
-                    this.rootEl.onscroll = changeProgressbar;
-                    window.onresize = changeProgressbar;
+                    this.rootEl.addEventListener('scroll', changeProgressbar);
+                    window.addEventListener('resize', changeProgressbar);
                     /**
                      * init progressbar
                      */
