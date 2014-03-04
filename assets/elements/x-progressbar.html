@@ -1,0 +1,54 @@
+<polymer-element name="x-progressbar" attributes="root">
+    <template>
+    	<style>
+    		:host #progressbar {
+			    position: fixed;
+			    bottom: 0;
+			    left: 0;
+			    width: 100%;
+			    height: 10px;
+			    z-index: 1000;
+			}
+
+			:host #progress {
+			    background: #03a678;
+			    height: 100%;
+			    width: 0;
+			    -webkit-transition: width 0.8s;
+			    -moz-transition: width 0.8s;
+			    -o-transition: width 0.8s;
+			    transition: width 0.8s;
+			}
+    	</style>
+    	
+    	<div id="progressbar">
+    		<div id="progress"></div>
+    	</div>
+    </template>
+    <script>
+    	var root,
+    		win = window,
+    		progress,
+    		timeoutId;
+
+    	Polymer('x-progressbar', {
+    		root: '',
+
+    		ready: function() {
+    			progress = this.$.progress;
+    			root = document.querySelectorAll(this.root)[0];
+    			root.onscroll = changeProgressbar;
+    			win.onresize = changeProgressbar;
+
+    			changeProgressbar();
+    		}
+    	});
+
+    	function changeProgressbar() {
+    		clearTimeout(timeoutId);
+    		timeoutId = setTimeout(function() {
+    			progress.style.width = ((root.scrollTop + win.innerHeight) / root.scrollHeight) * 100 + '%';
+    		}, 100);
+    	}
+    </script>
+</polymer-element>
