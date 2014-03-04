@@ -8,9 +8,13 @@
     <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
     <link href="/assets/lib/polymer/polymer.html" rel="import">
     <link href="/assets/elements/x-menu.html" rel="import">
+    <link href="/assets/elements/x-progressbar.html" rel="import">
+    <script src="/assets/lib/platform/platform.js" defer></script>
+    <script src="/assets/js/article.js" defer></script>
+    <script src="/assets/js/prism.js" defer></script>
   </head>
   <body class="page-loading">
-    <div class="loading-bar"></div>
+    <x-loadingbar></x-loadingbar>
     <x-menu></x-menu>
     <div class="content">
       <h1 class="header">CSS 层叠与集成</h1>
@@ -40,9 +44,7 @@
 <ol><li>收集元素的所有声明值(declared value)。</li><li>层叠产生层叠值(cascaded value)。</li><li>缺省化产生指定值(specified value)。</li><li>解析值的依赖产生计算值(computed value)。</li><li>格式化文档产生使用值(used value)。</li><li>最终，使用值基于显示环境的限制转为实际值(actual value)。</li></ol>
       </article>
     </div>
-    <div class="progressbar"><div class="progress"></div></div>
-    <script src="/assets/js/article.js"></script>
-    <script src="/assets/lib/platform/platform.js"></script>
-    <script src="/assets/js/prism.js"></script>
+    <x-progressbar root=".content"></x-progressbar>
+    <x-go-top></x-go-top>
   </body>
 </html>
