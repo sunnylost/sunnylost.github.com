@@ -1,0 +1,186 @@
+<polymer-element name="x-loadingbar">
+    <template>
+    	<style>
+			/* these codes are from https://medium.com */
+			:host .loading-bar {
+			    position: fixed;
+			    display: none;
+			    top: 102px;
+			    left: 0;
+			    right: 0;
+			    height: 4px;
+			    z-index: 2000;
+			    background: #1798e9;
+			    -webkit-transform: translateX(100%);
+			    -moz-transform: translateX(100%);
+			    -ms-transform: translateX(100%); 
+			    -o-transform: translateX(100%);
+			    transform: translateX(100%);
+			}
+
+			:host.page-loading .loading-bar{
+			    display:block;
+			    -webkit-animation: shift-rightwards 1s ease-in-out infinite;
+			    -moz-animation: shift-rightwards 1s ease-in-out infinite;
+			    -ms-animation: shift-rightwards 1s ease-in-out infinite;
+			    -o-animation: shift-rightwards 1s ease-in-out infinite;
+			    animation: shift-rightwards 1s ease-in-out infinite;
+			    -webkit-animation-delay: .4s;
+			    -moz-animation-delay: .4s;
+			    -o-animation-delay: .4s;
+			    animation-delay: .4s
+			}
+
+			@-webkit-keyframes shift-rightwards {
+			    0% {
+			    	-webkit-transform: translateX(-100%);
+				    -moz-transform: translateX(-100%);
+				    -ms-transform: translateX(-100%); 
+				    -o-transform: translateX(-100%);
+				    transform: translateX(-100%);
+			    }
+
+			    40% {
+			    	-webkit-transform: translateX(0%);
+				    -moz-transform: translateX(0%);
+				    -ms-transform: translateX(0%); 
+				    -o-transform: translateX(0%);
+				    transform: translateX(0%);
+			    }
+
+			    60% {
+			        -webkit-transform: translateX(0%);
+				    -moz-transform: translateX(0%);
+				    -ms-transform: translateX(0%); 
+				    -o-transform: translateX(0%);
+				    transform: translateX(0%);
+			    }
+
+			    100% {
+			        -webkit-transform: translateX(100%);
+				    -moz-transform: translateX(100%);
+				    -ms-transform: translateX(100%); 
+				    -o-transform: translateX(100%);
+				    transform: translateX(100%);
+			    }
+			}
+
+			@-moz-keyframes shift-rightwards {
+			    0% {
+			    	-webkit-transform: translateX(-100%);
+				    -moz-transform: translateX(-100%);
+				    -ms-transform: translateX(-100%); 
+				    -o-transform: translateX(-100%);
+				    transform: translateX(-100%);
+			    }
+
+			    40% {
+			    	-webkit-transform: translateX(0%);
+				    -moz-transform: translateX(0%);
+				    -ms-transform: translateX(0%); 
+				    -o-transform: translateX(0%);
+				    transform: translateX(0%);
+			    }
+
+			    60% {
+			        -webkit-transform: translateX(0%);
+				    -moz-transform: translateX(0%);
+				    -ms-transform: translateX(0%); 
+				    -o-transform: translateX(0%);
+				    transform: translateX(0%);
+			    }
+
+			    100% {
+			        -webkit-transform: translateX(100%);
+				    -moz-transform: translateX(100%);
+				    -ms-transform: translateX(100%); 
+				    -o-transform: translateX(100%);
+				    transform: translateX(100%);
+			    }
+			}
+
+			@-o-keyframes shift-rightwards {
+			    0% {
+			    	-webkit-transform: translateX(-100%);
+				    -moz-transform: translateX(-100%);
+				    -ms-transform: translateX(-100%); 
+				    -o-transform: translateX(-100%);
+				    transform: translateX(-100%);
+			    }
+
+			    40% {
+			    	-webkit-transform: translateX(0%);
+				    -moz-transform: translateX(0%);
+				    -ms-transform: translateX(0%); 
+				    -o-transform: translateX(0%);
+				    transform: translateX(0%);
+			    }
+
+			    60% {
+			        -webkit-transform: translateX(0%);
+				    -moz-transform: translateX(0%);
+				    -ms-transform: translateX(0%); 
+				    -o-transform: translateX(0%);
+				    transform: translateX(0%);
+			    }
+
+			    100% {
+			        -webkit-transform: translateX(100%);
+				    -moz-transform: translateX(100%);
+				    -ms-transform: translateX(100%); 
+				    -o-transform: translateX(100%);
+				    transform: translateX(100%);
+			    }
+			}
+
+			@keyframes shift-rightwards {
+			    0% {
+			    	-webkit-transform: translateX(-100%);
+				    -moz-transform: translateX(-100%);
+				    -ms-transform: translateX(-100%); 
+				    -o-transform: translateX(-100%);
+				    transform: translateX(-100%);
+			    }
+
+			    40% {
+			    	-webkit-transform: translateX(0%);
+				    -moz-transform: translateX(0%);
+				    -ms-transform: translateX(0%); 
+				    -o-transform: translateX(0%);
+				    transform: translateX(0%);
+			    }
+
+			    60% {
+			        -webkit-transform: translateX(0%);
+				    -moz-transform: translateX(0%);
+				    -ms-transform: translateX(0%); 
+				    -o-transform: translateX(0%);
+				    transform: translateX(0%);
+			    }
+
+			    100% {
+			        -webkit-transform: translateX(100%);
+				    -moz-transform: translateX(100%);
+				    -ms-transform: translateX(100%); 
+				    -o-transform: translateX(100%);
+				    transform: translateX(100%);
+			    }
+			}
+    	</style>
+    	<div class="loading-bar"></div>
+    </template>
+    <script>
+    	Polymer('x-loadingbar', {
+    		ready: function() {
+    			document.readyState === 'complete' ? this.finish() : window.addEventListener('load', this.finish.bind(this));
+    		},
+
+    		finish: function() {
+    			var _this = this;
+    			setTimeout(function() {
+    				_this.classList.remove('page-loading');   
+	            }, 1000);			
+    		}
+    	});
+    </script>
+</polymer-element>
