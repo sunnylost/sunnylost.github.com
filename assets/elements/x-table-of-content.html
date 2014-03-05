@@ -1,4 +1,4 @@
-<polymer-element name="x-table-of-content" attributes="root">
+<polymer-element name="x-table-of-content" attributes="root scroll">
     <template>
     	<style>
             :host {
@@ -56,10 +56,10 @@
 
             }
     	</style>
-        <ul>
+        <ul id="toc">
             <h3>目录</h3>
             <template repeat="{{t in titles}}">
-                <li><a href="{{url}}" title="{{t.name}}" index={{t.index}} on-click="{{jump}}">{{t.name}}</a></li>
+                <li><a href="{{'#'}}" title="{{t.name}}" index={{t.index}} on-click="{{jump}}">{{t.name}}</a></li>
             </template>    
         </ul>
     </template>
@@ -71,17 +71,35 @@
             Polymer('x-table-of-content', {
                 ready: function() {
                     var el = this.rootEl = document.querySelector(this.root);
+                    this.scrollEl = document.querySelector(this.scroll);
                     this.activeEl = null;
                     this.titles = [];
+                    this.initEvent();
                     this.generateTitles(el);
                 },
 
-                /**
-                 * 导入不同文档的时候，platform.js 中的 url.js 就会处理路径问题
-                 * 对于有 {{.*}} 这样的属性不做处理
-                 */
-                url: '#', 
+                initEvent: function() {
+                    var timeId,
+                        _this = this;
+                    _this.scrollEl.addEventListener('scroll', function() {
+                        clearTimeout(timeId);
+                        timeId = setTimeout(function() {
+                            _this.highlight(_this.findTheTitleInTheView());
+                        }, 100);
+                    })
+                },
 
+                /**
+                 * 根据 index 来查找条目
+                 */
+                findTitleByIndex: function(index) {
+                    return this.$.toc.querySelectorAll('a')[index];
+                },
+
+                /**
+                 * 生成标题
+                 * Polymer 有双向绑定，会自动更新模板
+                 */
                 generateTitles: function(el) {
                     var h2s = el.querySelectorAll('h2'),
                         h2, title,
@@ -97,15 +115,44 @@
                     }
                 },
 
+                /**
+                 * 高亮条目
+                 */
+                highlight: function(el) {
+                    var activeEl = this.activeEl;
+                    if(activeEl) {
+                        activeEl.parentNode.classList.remove(ACTIVE_CLASS);
+                    }
+                    (this.activeEl = el).parentNode.classList.add(ACTIVE_CLASS);
+                },
+
+                /**
+                 * 查找在视口内的标题，继而找到对应的条目
+                 */
+                findTheTitleInTheView: function() {
+                    var titles     = this.titles,
+                        scrollEl   = this.scrollEl,
+                        comparePos = scrollEl.scrollTop + window.innerHeight,
+                        item, el;
+
+                    for(var i = 0, len = titles.length; i < len; i++) {
+                        item = titles[i];
+                        el   = item.el;
+                        if(el.offsetTop - comparePos > 0) return this.findTitleByIndex(titles[i == 0 ? 0 : i - 1].index);
+                    }
+
+                    return this.findTitleByIndex(titles[i - 1].index);
+                },
+
+                /**
+                 * 点击条目，自动跳到对应的标题处
+                 */
                 jump: function(e, _, el) {
-                    var t = this.titles[el.getAttribute('index')],
-                        activeEl = this.activeEl;
-                    if(t) {
-                        if(activeEl) {
-                            activeEl.parentNode.classList.remove(ACTIVE_CLASS);
-                        }
-                        t.el.scrollIntoView();
-                        (this.activeEl = el).parentNode.classList.add(ACTIVE_CLASS);
+                    var index = el.getAttribute('index'),
+                        title = this.titles[index];
+                    if(title) {
+                        this.highlight(el);
+                        title.el.scrollIntoView();
                     }
                     e.preventDefault();
                 }
