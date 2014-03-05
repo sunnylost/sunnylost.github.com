@@ -83,8 +83,8 @@
                     this.activeEl = null;
                     this.titles   = [];
                     this.onOrOff  = 'on';
-                    this.initEvent();
                     this.generateTitles(el);
+                    this.onOrOff == 'on' && this.initEvent();
                 },
 
                 initEvent: function() {
