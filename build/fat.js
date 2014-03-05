@@ -1,19 +1,25 @@
 /**
  * @description generate files from markdown file
  * @author sunnylost
- * @version 0.0.1
+ * @version 0.0.2
  */
 
-var fs = require('fs'),
-    ejs = require('ejs'),
-    md = require('markdown').markdown,
+var fs 		 = require('fs'),
+    ejs 	 = require('ejs'),
+    md 		 = require('markdown').markdown,
+    Promise  = require('promise'),
+
     htmlToMd,
+
+    readfile = Promise.denodeify(fs.readFile),
+	
+	readdir  = Promise.denodeify(fs.readdir),
 
     /**
      * 列表页对象
      * @type {Object}
      */
-    list = {},
+    listObj = {},
 
     /**
      * 匹配 markdown 文件
@@ -39,62 +45,47 @@ var fs = require('fs'),
     ENCODING = 'utf-8';
 
 function parse(path) {
-	ejs.open  = '{{';
-    ejs.close = '}}';
+    var parseArticleFn;
 
-	fs.readFile(PATH_TEMPLATE + 'article.ejs', {
-		encoding: ENCODING
-	}, function(err, data) {
-		var fn = ejs.compile(data);
+    readfile(PATH_TEMPLATE + 'article.ejs', ENCODING)
+    	.then(function(data) {
+    		parseArticleFn = ejs.compile(data);
+    		return readdir(path);
+    	}).then(function(files) {
+    		return generateHTML(files);
+    	});
 
-		fs.readdir(path, function generateHTML(err, files) {
-			var filename = files.shift();
-			if(!rfiletype.test(filename)) return files.length ? generateHTML(null, files) : generateArticlesList();
-	    	fs.readFile(path + filename, {
-				encoding: ENCODING
-			}, function(err, data) {
+    function generateHTML(files) {
+		var filename = files.shift();
+		if(!rfiletype.test(filename)) return files.length ? generateHTML(files) : generateArticlesList();
+
+		readfile(path + filename, ENCODING)
+			.then(function(data) {
 				var metas = {};
 				data = data.replace(rmeta, function(text, n, v) {
 					metas[n] = v;
 					return '';					
 				});
-				(list[metas.list] || (list[metas.list] = [])).push(metas);
-				var html = fn({
+				(listObj[metas.list] || (listObj[metas.list] = [])).push(metas);
+				var html = parseArticleFn({
 					title: metas.title,
 					content: md.toHTML(data)
 				});
-	
+
 				fs.writeFile(PATH_ARTICLE + metas.filename + '.html', html.replace(/<code>/g, '<code class="language-javascript">'), function() {
-					files.length ? generateHTML(null, files) : generateArticlesList();
+					files.length ? generateHTML(files) : generateArticlesList();
 				});
 			})
-	    })
-	})
+	}
 };
 
 function generateArticlesList() {
-	fs.readFile(PATH_TEMPLATE + 'article-index.ejs', {
-		encoding: ENCODING
-	}, function(err, data) {
-		var fn = ejs.compile(data),
-			values,
-			v,
-			html = [];
-
-		for(var key in list) {
-			if(key === 'undefined') continue;
-			values = list[key];
-			html.push('<section><h2>' + key + '</h2><ul>');
-			for(var i = 0, len = values.length; i < len; i++) {
-				v = values[i];
-				html.push('<li><a href="' + v.filename + '.html">' + v.title + '</a></li>')
-			}
-			html.push('</ul></section>');
-		}
-		fs.writeFile(PATH_ARTICLE + 'index.html', fn({
-			content: html.join('')
-		}));
-	});
+	readfile(PATH_TEMPLATE + 'article-index.ejs', ENCODING)
+		.then(function(data) {
+			fs.writeFile(PATH_ARTICLE + 'index.html', ejs.compile(data)({
+				list: listObj
+			}));
+		})
 }
 
 /**
