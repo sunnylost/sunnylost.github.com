@@ -7,26 +7,51 @@
 var fs = require('fs'),
     ejs = require('ejs'),
     md = require('markdown').markdown,
+    htmlToMd,
+
+    /**
+     * 列表页对象
+     * @type {Object}
+     */
     list = {},
-    htmlToMd;
+
+    /**
+     * 匹配 markdown 文件
+     */
+    rfiletype = /\.md$/,
+
+    /**
+     * 匹配 markdown 文件中的 meta
+     * meta 是我自己定义的，目前包括：
+     * 		title：文件标题
+     * 	 	filename：文件名
+     * 	 	list：所属系列名称
+     * @type {RegExp}
+     */
+	rmeta = /@(title|filename|list):\s*(.+)/g,
+
+    RELATIVE_PATH = '../',
+
+    PATH_ARTICLE  = RELATIVE_PATH + 'article/',
+
+    PATH_TEMPLATE = RELATIVE_PATH + 'assets/template/',
+
+    ENCODING = 'utf-8';
 
 function parse(path) {
-	ejs.open = '{{';
+	ejs.open  = '{{';
     ejs.close = '}}';
 
-	fs.readFile('../assets/template/article.ejs', {
-		encoding: 'utf-8'
+	fs.readFile(PATH_TEMPLATE + 'article.ejs', {
+		encoding: ENCODING
 	}, function(err, data) {
 		var fn = ejs.compile(data);
-
-		var rfiletype = /\.md$/,
-			rmeta = /@(title|filename|list):\s*(.+)/g;
 
 		fs.readdir(path, function generateHTML(err, files) {
 			var filename = files.shift();
 			if(!rfiletype.test(filename)) return files.length ? generateHTML(null, files) : generateArticlesList();
 	    	fs.readFile(path + filename, {
-				encoding: 'utf-8'
+				encoding: ENCODING
 			}, function(err, data) {
 				var metas = {};
 				data = data.replace(rmeta, function(text, n, v) {
@@ -39,7 +64,7 @@ function parse(path) {
 					content: md.toHTML(data)
 				});
 	
-				fs.writeFile('../article/' + metas.filename + '.html', html.replace(/<code>/g, '<code class="language-javascript">'), function() {
+				fs.writeFile(PATH_ARTICLE + metas.filename + '.html', html.replace(/<code>/g, '<code class="language-javascript">'), function() {
 					files.length ? generateHTML(null, files) : generateArticlesList();
 				});
 			})
@@ -48,8 +73,8 @@ function parse(path) {
 };
 
 function generateArticlesList() {
-	fs.readFile('../assets/template/article-index.ejs', {
-		encoding: 'utf-8'
+	fs.readFile(PATH_TEMPLATE + 'article-index.ejs', {
+		encoding: ENCODING
 	}, function(err, data) {
 		var fn = ejs.compile(data),
 			values,
@@ -66,7 +91,7 @@ function generateArticlesList() {
 			}
 			html.push('</ul></section>');
 		}
-		fs.writeFile('../article/index.html', fn({
+		fs.writeFile(PATH_ARTICLE + 'index.html', fn({
 			content: html.join('')
 		}));
 	});
@@ -85,8 +110,8 @@ function reverse(path) {
 
 function convertHtmlToMarkdown(files) {
 	var filename = files.shift();
-	fs.readFile('../article/' + filename, {
-		encoding: 'utf-8'
+	fs.readFile(PATH_ARTICLE + filename, {
+		encoding: ENCODING
 	}, function(err, data) {
 		fs.writeFile('../build/' + filename.replace('html', 'md'), htmlToMd(data.replace(/<(\/)?pre>/g, '')), function() {
 			files.length && convertHtmlToMarkdown(files)
