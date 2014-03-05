@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>{{=title}}</title>
+    <title><%=title%></title>
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
     <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
     <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
@@ -19,11 +19,11 @@
     <x-loadingbar class="page-loading"></x-loadingbar>
     <x-menu></x-menu>
     <div class="content">
-      <h1 class="header">{{=title}}</h1>
+      <h1 class="header"><%=title%></h1>
       <x-table-of-content root=".article" scroll=".content"></x-table-of-content>
       <article class="article single-column">
         <div class="wrap">
-          {{-content}}  
+          <%-content%>  
         </div>
       </article>
     </div>
