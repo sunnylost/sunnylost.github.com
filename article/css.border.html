@@ -9,14 +9,25 @@
     <link href="/assets/lib/polymer/polymer.html" rel="import">
     <link href="/assets/elements/x-menu.html" rel="import">
     <link href="/assets/elements/x-table-of-content.html" rel="import">
-    <link href="/assets/elements/x-loadingbar.html" rel="import">
     <link href="/assets/elements/x-progressbar.html" rel="import">
     <link href="/assets/elements/x-go-top.html" rel="import">
     <script src="/assets/lib/platform/platform.js" defer></script>
     <script src="/assets/js/prism.js" defer></script>
   </head>
   <body>
-    <x-loadingbar class="page-loading"></x-loadingbar>
+    <div class="page-loading">
+      <div class="loading-bar"></div>
+    </div>
+    <script>
+      !function(){
+        var s = 'page-loading'; 
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            document.querySelector('.' + s).classList.remove(s);
+          }, 500);
+        });
+      }();  
+    </script>
     <x-menu></x-menu>
     <div class="content">
       <h1 class="header">Border</h1>
