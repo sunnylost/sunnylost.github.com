@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+    <head>
+        <title> Test 2 </title>
+        <script> var test2 = "Test 2 :\n\n"; </script>
+        <script> document.addEventListener("DOMContentLoaded",
+                function(){
+                        test2 += "\tDOMContentLoaded\n";
+                }, false);
+        </script>
+        <script defer> test2 += "\tInline HEAD deferred\n"; </script>
+        <script> test2 += "\tInline HEAD\n"; </script>
+        <script src="script1.js" defer>
+                // External HEAD deferred (script1.js) 
+        </script>
+        <script src="script2.js">
+                // External HEAD  (script2.js)
+        </script>
+	<script>
+            // Dynamic DOM insertion of a script (script3.js)
+            head = document.getElementsByTagName('head')[0];
+            script3 = document.createElement('script');
+            script3.setAttribute('src', 'script3.js');
+            head.appendChild(script3);
+            // Dynamic DOM insertion of a deferred script (script4.js)
+            script4 = document.createElement('script');
+            script4.setAttribute('defer', 'defer');
+            script4.setAttribute('src', 'script4.js');
+            head.appendChild(script4);
+	</script>
+	<script defer>
+            // Deferred dynamic DOM insertion of a script (script5.js)
+            head = document.getElementsByTagName('head')[0];
+            script5 = document.createElement('script');
+            script5.setAttribute('src', 'script5.js');
+            head.appendChild(script5);
+            // Deferred dynamic DOM insertion of a deferred script
+            // (script6.js)
+            script6 = document.createElement('script');
+            script6.setAttribute('defer', 'defer');
+            script6.setAttribute('src', 'script6.js');
+            head.appendChild(script6);
+	</script>
+    </head>
+    <body onload="test2 += '\tBody onLoad\n';">
+        <script defer> test2 += "\tInline BODY deferred\n"; </script>
+        <script> test2 += "\tInline BODY\n"; </script>
+ 
+	... other body content ...
+ 
+		<a href="#" onclick="console.log(test2);">Launch test 2</a>
+ 
+	... other body content ...
+ 
+        <script src="script7.js" defer>
+                // External BODY deferred (script7.js)
+        </script>
+        <script src="script8.js">
+                // External BODY (script8.js)
+        </script>
+    </body>
+</html>

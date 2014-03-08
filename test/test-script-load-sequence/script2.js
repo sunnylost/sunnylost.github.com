@@ -1,0 +1,1 @@
+test2 += '\tExternal HEAD (script2.js)\n';

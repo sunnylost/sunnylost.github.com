@@ -1,0 +1,1 @@
+test2 += '\tDeferred dynamic DOM insertion of a deferred script (script6.js)\n';

@@ -1,0 +1,1 @@
+test2 += '\tExternal HEAD deferred (script1.js)\n';

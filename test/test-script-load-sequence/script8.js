@@ -1,0 +1,1 @@
+test2 += '\tExternal BODY (script8.js)\n';

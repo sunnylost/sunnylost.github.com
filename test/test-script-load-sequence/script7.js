@@ -1,0 +1,1 @@
+test2 += '\tExternal BODY deferred (script7.js)\n';
