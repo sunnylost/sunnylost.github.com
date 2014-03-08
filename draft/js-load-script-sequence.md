@@ -2,9 +2,7 @@
 @title: Script 文件加载顺序
 @list: JavaScript
 
-#Script 文件加载顺序
-
-date：2014-3-8
+date: 2014-3-8
 
 [这篇文章](http://www.html5rocks.com/en/tutorials/speed/script-loading/)的中提到了Mozilla 的一篇[文章](https://hacks.mozilla.org/2009/06/defer/)。文中测试了 `script` 标签的 `defer` 属性对脚本加载顺序的影响。09 年的老文，但是也值得再做下测试。
 

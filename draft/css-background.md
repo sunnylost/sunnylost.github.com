@@ -2,6 +2,8 @@
 @title: CSS 规范——Background
 @list: CSS
 
+date: 2014-3-8
+
 规范地址：[css3-background](http://www.w3.org/TR/css3-background/)
 
 资源：
