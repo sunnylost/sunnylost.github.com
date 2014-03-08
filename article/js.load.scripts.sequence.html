@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Script 文件加载顺序</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
+    <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
+    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <link href="/assets/lib/polymer/polymer.html" rel="import">
+    <link href="/assets/elements/x-menu.html" rel="import">
+    <link href="/assets/elements/x-table-of-content.html" rel="import">
+    <link href="/assets/elements/x-loadingbar.html" rel="import">
+    <link href="/assets/elements/x-progressbar.html" rel="import">
+    <link href="/assets/elements/x-go-top.html" rel="import">
+    <script src="/assets/lib/platform/platform.js" defer></script>
+    <script src="/assets/js/prism.js" defer></script>
+  </head>
+  <body>
+    <x-loadingbar class="page-loading"></x-loadingbar>
+    <x-menu></x-menu>
+    <div class="content">
+      <h1 class="header">Script 文件加载顺序</h1>
+      <x-table-of-content root=".article" scroll=".content"></x-table-of-content>
+      <article class="article single-column">
+        <div class="wrap">
+          <h1>Script 文件加载顺序</h1>
+
+<p>date：2014-3-8</p>
+
+<p><a href="http://www.html5rocks.com/en/tutorials/speed/script-loading/">这篇文章</a>的中提到了Mozilla 的一篇<a href="https://hacks.mozilla.org/2009/06/defer/">文章</a>。文中测试了 <code class="language-javascript">script</code> 标签的 <code class="language-javascript">defer</code> 属性对脚本加载顺序的影响。09 年的老文，但是也值得再做下测试。</p>
+
+<p>测试文件地址在<a href="//sunnylost.com/test/test-script-load-sequence/">这里</a>。点击 <code class="language-javascript">Launch test 2</code> 即可。</p>
+
+<p>以下是测试结果(Opera 20 和 Chrome 输出一样)：</p>
+
+<p>Chrome 35(刷新后结果不一样，主要是 3,4,5,6 四个 js 的加载顺序)</p>
+
+<pre><code class="language-javascript">Inline HEAD deferred
+Inline HEAD
+External HEAD (script2.js)
+Inline BODY deferred
+Inline BODY
+External BODY (script8.js)
+External HEAD deferred (script1.js)
+External BODY deferred (script7.js)
+DOMContentLoaded
+Dynamic DOM insertion of a script (script3.js)
+Dynamic DOM insertion of a deferred script (script4.js)
+Deferred dynamic DOM insertion of a script (script5.js)
+Deferred dynamic DOM insertion of a deferred script (script6.js)
+Body onLoad</code></pre>
+
+<p>Firefox 30(多次刷新后顺序也不变)</p>
+
+<pre><code class="language-javascript">Inline HEAD deferred
+Inline HEAD
+External HEAD (script2.js)
+Inline BODY deferred
+Inline BODY
+External BODY (script8.js)
+External HEAD deferred (script1.js)
+External BODY deferred (script7.js)
+Dynamic DOM insertion of a script (script3.js)
+Dynamic DOM insertion of a deferred script (script4.js)
+Deferred dynamic DOM insertion of a script (script5.js)
+Deferred dynamic DOM insertion of a deferred script (script6.js)
+DOMContentLoaded
+Body onLoad</code></pre>
+
+<p>IE 11(顺序固定)</p>
+
+<pre><code class="language-javascript">Inline HEAD deferred
+Inline HEAD
+External HEAD (script2.js)
+Inline BODY deferred
+Inline BODY
+Dynamic DOM insertion of a script (script3.js)
+Dynamic DOM insertion of a deferred script (script4.js)
+Deferred dynamic DOM insertion of a script (script5.js)
+Deferred dynamic DOM insertion of a deferred script (script6.js)
+External BODY (script8.js)
+External HEAD deferred (script1.js)
+External BODY deferred (script7.js)
+DOMContentLoaded
+Body onLoad</code></pre>
+
+<p>以下 IE 版本均使用 IE 11 调试器模拟。</p>
+
+<p>IE 10(顺序固定)</p>
+
+<pre><code class="language-javascript">Inline HEAD deferred
+Inline HEAD
+External HEAD (script2.js)
+Dynamic DOM insertion of a script (script3.js)
+Dynamic DOM insertion of a deferred script (script4.js)
+Deferred dynamic DOM insertion of a script (script5.js)
+Deferred dynamic DOM insertion of a deferred script (script6.js)
+Inline BODY deferred
+Inline BODY
+External BODY (script8.js)
+External HEAD deferred (script1.js)
+External BODY deferred (script7.js)
+DOMContentLoaded
+Body onLoad</code></pre>
+
+<p>IE 9(顺序固定)</p>
+
+<pre><code class="language-javascript">Inline HEAD
+Inline HEAD deferred
+External HEAD (script2.js)
+Dynamic DOM insertion of a script (script3.js)
+Dynamic DOM insertion of a deferred script (script4.js)
+Inline BODY
+External BODY (script8.js)
+External HEAD deferred (script1.js)
+Deferred dynamic DOM insertion of a script (script5.js)
+Deferred dynamic DOM insertion of a deferred script (script6.js)
+Inline BODY deferred
+External BODY deferred (script7.js)
+DOMContentLoaded
+Body onLoad</code></pre>
+
+<p>IE 7，8(顺序固定，没有 <code class="language-javascript">DOMContentLoaded</code> 事件)</p>
+
+<pre><code class="language-javascript">Inline HEAD
+External HEAD (script2.js)
+Dynamic DOM insertion of a script (script3.js)
+Dynamic DOM insertion of a deferred script (script4.js)
+Inline BODY
+External BODY (script8.js)
+Inline HEAD deferred
+External HEAD deferred (script1.js)
+Deferred dynamic DOM insertion of a script (script5.js)
+Deferred dynamic DOM insertion of a deferred script (script6.js)
+Inline BODY deferred
+External BODY deferred (script7.js)
+Body onLoad</code></pre>
+
+<h2>总结</h2>
+
+<p><em>以下内容不保证准确性。</em></p>
+
+<ul><li><p>Firefox，按照标准实现</p><ul><li><code class="language-javascript">defer</code> 对于没有 <code class="language-javascript">src</code> 属性的脚本不生效</li><li>拥有 <code class="language-javascript">defer</code> 的脚本严格按照声明的顺序执行</li><li>动态生成的 <code class="language-javascript">defer</code> 脚本不具有延迟加载特性</li><li>动态生成的脚本在页面内所有脚本执行完毕后才执行</li><li><code class="language-javascript">DOMContentLoaded</code> 事件会在所有脚本执行完毕后才触发，<strong>包括</strong>动态创建的脚本</li></ul></li><li><p>Chrome</p><ul><li>动态生成的 <code class="language-javascript">defer</code> 脚本和普通脚本加载顺序不确定</li><li><p><code class="language-javascript">DOMContentLoaded</code> 事件会在所有脚本执行完毕后才触发，<strong>不包括</strong>动态创建的脚本</p></li></ul></li><li><p>IE 11</p><ul><li><p>HTML 页面中带有 <code class="language-javascript">defer</code> 的脚本在动态创建的脚本执行后才执行</p></li></ul></li><li><p>IE 10</p><ul><li><p>动态生成的脚本会立即加载</p></li></ul></li><li><p>IE 7，8，9</p><ul><li><code class="language-javascript">defer</code> 对于没有 <code class="language-javascript">src</code> 属性的脚本也会生效</li></ul></li></ul>  
+        </div>
+      </article>
+    </div>
+    <x-progressbar root=".content"></x-progressbar>
+    <x-go-top root=".content"></x-go-top>
+  </body>
+</html>
