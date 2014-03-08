@@ -1,1 +1,1 @@
-test2 += '\tDeferred dynamic DOM insertion of a deferred script (script6.js)Dynamic DOM insertion of a deferred script (script4.js)\n';
+test2 += '\tDynamic DOM insertion of a deferred script (script4.js)\n';
