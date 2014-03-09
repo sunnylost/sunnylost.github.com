@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flexbox</title>
+	<style type="text/css">
+		.flexbox {
+			display: flex;		 /* flex, inline-flex */
+			flex-direction: row; /* row, row-reverse, column, column-reverse */
+			justify-content: center; /* flex-start, flex-end, center, space-around, space-between */
+			align-items: center; /* flex-start, flex-end, center, baseline, stretch */
+			flex-wrap: wrap; /* nowrap, wrap, wrap-reverse */
+			align-content: stretch; /* stretch, flex-start, flex-end, center, space-between, space-around */
+
+			/*flex-flow: column wrap;*/ /* [flex-direction] [flex-wrap] */
+
+			width: 600px;
+			background: #ccc;
+		}
+
+		.flexbox p {
+			color: #fff;
+		}
+
+		.flexbox p:nth-child(1) {
+			height: 200px;
+			width: 100px;
+			background: blue;
+
+			flex: 3;
+		}
+
+		.flexbox p:nth-child(2) {
+			height: 100px;
+			width: 180px;
+			background: yellow;
+
+			order: -1;
+			flex: 2;
+		}
+
+		.flexbox p:nth-child(3) {
+			height: 150px;
+			width: 150px;
+			background: orange;
+
+			flex: 5;
+		}
+	</style>
+</head>
+<body>
+	<div class="flexbox">
+	  <p>child 1</p>
+	  <p>child 2</p>
+	  <p>child 3</p>
+	</div>
+</body>
+</html>
