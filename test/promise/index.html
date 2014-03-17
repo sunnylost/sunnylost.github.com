@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+	<script type="text/javascript" src="promise.js"></script>
+	<script type="text/javascript">
+		function get(url) {
+			return new myPromise(function(resolve, reject) {
+				var req = new XMLHttpRequest();
+				req.open('get', url);
+
+				req.onload = function() {
+					if(req.status === 200) {
+						resolve(req.response);
+					} else {
+						reject(Error(req.statusText));
+					}
+				};
+
+				req.onerror = function() {
+					reject(Error('Network Error'));
+				};
+
+				req.send();
+			})
+		}
+
+		window.onload = function() {
+			get('1.json').then(function(response) {
+			  return JSON.parse(response);
+			}).then(function(response) {
+			  console.log("Yey JSON!", response);
+			});
+		};
+	</script>
+</body>
+</html>
