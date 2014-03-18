@@ -29,10 +29,19 @@
 		}
 
 		window.onload = function() {
-			get('1.json').then(function(response) {
-			  return JSON.parse(response);
-			}).then(function(response) {
-			  console.log("Yey JSON!", response);
+			get('1.json').then(function(resp) {
+				var json = JSON.parse(resp);
+				console.log(json.heading);
+
+			  	return get(json.chapterUrls[0]);
+			}).then(function(resp) {
+				var json = JSON.parse(resp);
+			  	console.log(json.heading);
+
+			  	return get(json.chapterUrls[1]);
+			}).then(function(resp) {
+				var json = JSON.parse(resp);
+			  	console.log(json.heading);
 			});
 		};
 	</script>

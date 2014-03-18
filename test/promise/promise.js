@@ -11,12 +11,22 @@
 		return typeof fn === 'function';
 	}
 
+	/**
+	 * resolve 函数的默认值
+	 */
 	function identity(x) {
 		return x;
 	}
 
+	/**
+	 * reject 函数的默认值
+	 */
 	function thrower() {
 		throw new Error();
+	}
+
+	function IsPromise(promise) {
+		return promise instanceof Promise;
 	}
 
 	function resolveFn(reason) {
@@ -44,13 +54,21 @@
 	}
 
 	function TriggerPromiseReactions(reactions, reason) {
-		var i = 0,
-			len = reactions.length,
+		var len = reactions.length,
+			reaction,
 			result;
 
-		for(; i < len; i++) {
-			result = reactions[i].call(null, reason);
-			typeof result != 'undefined' && (this.PromiseResult = reason = result);
+		while(len--) {
+			reaction = reactions.shift();
+			result = reaction.call(null, reason);
+			if(typeof result != 'undefined') {
+				if(IsPromise(result)) {
+					result.resolveReactions = this.resolveReactions || reactions;
+					result.rejectReactions  = this.rejectReactions  || reactions;
+					return result;
+				}
+				this.PromiseResult = reason = result;
+			}
 		}
 	}
 
@@ -60,7 +78,10 @@
 		this.resolveReactions = [];
 		this.rejectReactions  = [];
 
-		executor.call(null, resolveFn.bind(this), rejectFn.bind(this));
+		var resolve = resolveFn.bind(this),
+			reject  = rejectFn.bind(this);
+
+		executor.call(null, resolve, reject);
 	}
 
 	Promise.prototype = {
