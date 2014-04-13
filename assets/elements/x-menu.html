@@ -1,5 +1,83 @@
 <polymer-element name="x-menu">
     <template>
+        <style>
+            :host {
+                position: absolute;
+                height: 100%;
+                font-size: 16px;
+                z-index: 2000;
+            }
+
+            .site-nav {
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+            }
+
+            .site-nav-logo {
+                width: 60px;
+                height: 60px;
+                margin: 10px;
+                background: url('../imgs/avatar1.png');
+                background-size: 60px;
+                border: 0;
+                outline: none;
+                border-radius: 50%;
+                cursor: pointer;
+                -webkit-transition: opacity 0.5s;
+                -moz-transition: opacity 0.5s;
+                -o-transition: opacity 0.5s;
+                transition: opacity 0.5s;
+            }
+
+            .site-nav-container {
+                display: none;
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 200px;
+                background: #03a678;
+            }
+
+            .site-nav-list {
+                margin-top: 100px;
+            }
+
+            .site-nav-list li {
+                list-style: none;
+            }
+
+            .site-nav-list a {
+                display: block;
+                width: 70%;
+                margin: auto;
+                padding: 0.5em;
+                color: #fff;
+                text-align: center;
+                font-size: 1.5em;
+                text-decoration: none;
+                -webkit-transition: all 0.8s;
+                -moz-transition: all 0.8s;
+                -o-transition: all 0.8s;
+                transition: all 0.8s;
+            }
+
+            .site-nav-list a:hover {
+                color: #03a678;
+                background: #fff;
+            }
+
+
+            :host-context(.site-nav-transition) .site-nav-logo {
+                opacity: 0;
+            }
+
+            :host-context(.site-nav-transition) .site-nav-container {
+                display: block;
+            }
+        </style>
         <nav class="site-nav">
             <button class="site-nav-logo" title="menu" on-click="{{menuClick}}"></button>
             <div class="site-nav-container">

@@ -26,14 +26,16 @@
             }
 
             :host li {
+                position: relative;
                 padding: 0;
+                list-style: none;
             }
 
-            :host li:before {
+            :host li::before {
                 content: '#';
+                position: absolute;
+                top: 5px;
                 font-size: 12px;
-                padding: 0 3px;
-                vertical-align: super;
                 color: #000;
             }
 
@@ -43,9 +45,12 @@
 
             :host a {
                 display: inline-block;
-                font-size: 16px;
-                line-height: 1;
                 width: 10em;
+                height: 30px;
+                line-height: 30px;
+                padding-left: 15px;
+                font-size: 16px;
+                text-decoration: none;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -56,22 +61,18 @@
                 text-decoration: underline;
             }
 
-            :host li.active:before, :host li.active a {
+            :host li.active::before, :host li.active a {
                 color: #fff;
-            }
-
-            @media screen and (max-width: 820px) {
-
             }
     	</style>
         <ul id="toc" class="{{onOrOff}}">
             <h3>目录</h3>
             <template repeat="{{t in titles}}">
                 <li><a href="{{'#'}}" title="{{t.name}}" index={{t.index}} on-click="{{jump}}">{{t.name}}</a></li>
-            </template>    
+            </template>
         </ul>
     </template>
-   
+
     <script>
         !function() {
             var ACTIVE_CLASS = 'active';

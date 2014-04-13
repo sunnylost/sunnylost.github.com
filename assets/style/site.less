@@ -11,7 +11,7 @@
 .transform(@args) {
     -webkit-transform: @args;
     -moz-transform: @args;
-    -ms-transform: @args; 
+    -ms-transform: @args;
     -o-transform: @args;
     transform: @args;
 }
@@ -90,76 +90,6 @@ li, p, pre, code {
     color: #555;
 }
 
-.site-nav {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-}
-
-.site-nav-logo {
-    width: 60px;
-    height: 60px;
-    margin: 10px;
-    background: url('../imgs/avatar1.png');
-    background-size: 60px;
-    border: 0;
-    outline: none;
-    border-radius: 50%;
-    cursor: pointer;
-    .transition(opacity 0.5s);
-}
-
-.site-nav-container {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: @nav-width;
-    background: @green-theme;
-}
-
-.site-nav-list {
-    margin-top: 100px;
-
-    a {
-        display: block;
-        width: 70%;
-        margin: auto;
-        padding: 0.5em;
-        color: #fff;
-        text-align: center;
-        font-size: 1.5em;
-        .transition(all 0.8s);
-    }
-
-    a:hover {
-        color: @green-theme;
-        background: #fff;
-    }
-}
-
-.site-nav-open {
-    .content {
-        .transform(translate3d(@nav-width, 0, 0));
-    }
-}
-
-.site-nav-transition {
-    .site-nav-logo {
-        opacity: 0;
-    }  
-
-    .site-nav-container {
-        display: block;
-    }
-
-    .content {
-        z-index: 3000;
-    }
-}
-
 .content {
     position: absolute;
     width: 100%;
@@ -200,10 +130,17 @@ li, p, pre, code {
     margin-left: auto;
 }
 
-x-menu {
-    position: absolute;
-    z-index: 2000;
-    height: 100%;
+
+.site-nav-open .content {
+    -webkit-transform: translate3d(200px, 0, 0);
+    -moz-transform: translate3d(200px, 0, 0);
+    -ms-transform: translate3d(200px, 0, 0);
+    -o-transform: translate3d(200px, 0, 0);
+    transform: translate3d(200px, 0, 0);
+}
+
+.site-nav-transition .content {
+    z-index: 3000;
 }
 
 /* these codes are from https://medium.com */
