@@ -12,7 +12,7 @@ var fs 		 = require('fs'),
     htmlToMd,
 
     readfile = Promise.denodeify(fs.readFile),
-	
+
 	readdir  = Promise.denodeify(fs.readdir),
 
     /**
@@ -64,7 +64,7 @@ function parse(path) {
 				var metas = {};
 				data = data.replace(rmeta, function(text, n, v) {
 					metas[n] = v;
-					return '';					
+					return '';
 				});
 				(listObj[metas.list] || (listObj[metas.list] = [])).push(metas);
 				var html = parseArticleFn({
@@ -73,6 +73,7 @@ function parse(path) {
 				});
 
 				fs.writeFile(PATH_ARTICLE + metas.filename + '.html', html.replace(/<code>/g, '<code class="language-javascript">'), function() {
+					console.log(metas.filename + ' is ok!');
 					files.length ? generateHTML(files) : generateArticlesList();
 				});
 			})

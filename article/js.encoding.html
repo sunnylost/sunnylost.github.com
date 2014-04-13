@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>JavaScript 字符编码</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
+    <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
+    <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <link href="/bower_components/polymer/polymer.html" rel="import">
+    <link href="/assets/elements/x-menu.html" rel="import">
+    <link href="/assets/elements/x-table-of-content.html" rel="import">
+    <link href="/assets/elements/x-progressbar.html" rel="import">
+    <link href="/assets/elements/x-go-top.html" rel="import">
+    <script src="/bower_components/platform/platform.js" defer></script>
+    <script src="/assets/js/prism.js" defer></script>
+  </head>
+  <body>
+    <div class="page-loading">
+      <div class="loading-bar"></div>
+    </div>
+    <script>
+      !function(){
+        var s = 'page-loading'; 
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            document.querySelector('.' + s).classList.remove(s);
+          }, 500);
+        });
+      }();  
+    </script>
+    <x-menu></x-menu>
+    <div class="content">
+      <h1 class="header">JavaScript 字符编码</h1>
+      <x-table-of-content root=".article" scroll=".content"></x-table-of-content>
+      <article class="article single-column">
+        <div class="wrap">
+          <p>参考资料：</p>
+
+<p><a href="http://mathiasbynens.be/notes/javascript-encoding">JavaScript’s internal character encoding: UCS-2 or UTF-16?</a></p>
+
+<p><a href="http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html">字符编码笔记：ASCII，Unicode和UTF-8</a></p>
+
+<p><a href="http://www.joelonsoftware.com/articles/Unicode.html">The Absolute Minimum Every Software Developer Absolutely, Positively Must Know About Unicode and Character Sets (No Excuses!)</a></p>
+
+<p><a href="http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&amp;item_id=IWS-Chapter03">Character set encoding basics</a></p>
+
+<p><a href="http://www.w3.org/International/questions/qa-what-is-encoding">Character encodings for beginners</a></p>
+
+<h2>1，<em>什么是编码？</em></h2>
+
+<p>将信息以某种方式展现的过程。</p>
+
+<h2>2，<em>什么是字符(character)？</em></h2>
+
+<p>字符是用于计算机系统内部代表字母和符号的单位。</p>
+
+<h2>3，<em>什么是字符编码(character set encoding，或 character encoding)？</em></h2>
+
+<p>由于计算机只能识别二进制，因此前面提到的字符也是用二进制来表示的，所以字符编码就是将字符转换为二进制的系统。</p>
+
+<p>一个完整的字符编码模型由四个级别的表现形式组成： abstract character repertoire， coded character set， character encoding form, character encoding scheme。</p>
+
+<h2>4，<em>什么是抽象字符指令集(Abstract character repertoire，ACR)？</em></h2>
+
+<p>需要编码的字符的无序集合。<em>抽象</em>的意思是说它只是一个概念，计算机里并不存在这样一个东西。</p>
+
+<h2>5，<em>什么是编码字符集(Coded character set，CCS)？</em></h2>
+
+<p>指令集与一组唯一的数字标志符(numeric designator)之间的映射。</p>
+
+<p>数字标志符通常被称为 <strong>codepoint</strong>。</p>
+
+<p>抽象字符和它对应的 codepoint 合起来称为 <strong>encoded character</strong>(已编码字符)。</p>
+
+<p>codepoint 是有范围的，通常是由编码规范来决定，这个范围被称为 <strong>codespace</strong>。</p>
+
+<p>已编码字符的集合称为 <strong>codepage</strong>。</p>
+
+<p>规范通常还会为已编码字符分配一个唯一的名字。</p>
+
+<h2>6，<em>什么是字符编码形式(Character encoding form，CEF)？</em></h2>
+
+<p>到这一级别开始涉及计算机内部表现形式。CEF 就是 CCS 中的 codepoint 与一个固定数据类型的值之间的映射。</p>
+
+<p>这个固定类型的值称为 <strong>code units</strong>。它可以为任意长度，常见的是 8 位，16 位和 32 位。</p>
+
+<p><strong>注意</strong>，codepoint 和 code unit 之间并不是一一对应的。通常一个 codepoint 会对应多个 code unit。</p>
+
+<p>Unicode 拥有一个 CCS，它适用于三种 CEF，即 UTF-8(8 位 code unit)，UTF-16(16 位 code unit)，UTF-32(32 位 code unit)。</p>
+
+<h2>7，<em>什么是字符编码方案(Character encoding scheme，CES)？</em></h2>
+
+<p>许多系统操作 8 位的字节，因此 16 位或 32 位的数据需要拆分为 8 位，这就涉及到了拆分后的顺序问题。little-endian 表示低位字节在前，big-endian 表示高位字节在前。CES 就是用于处理这种问题的。</p>
+
+<h2>8，<em>JavaScript 采用什么编码？</em></h2>
+
+<p>JavaScript 允许 UCS-2 或 UTF-16 编码。</p>
+
+<h2>9，<em>详细说说？</em></h2>
+
+<p>Unicode 由 17 个位面(plane)组成，每个位面包含 2^16 个 codepoint。这些 codepoint 由 16 进制表示，从 <code class="language-javascript">xy0000</code> 至 <code class="language-javascript">xyFFFF</code>，其中 <code class="language-javascript">xy</code> 是从 <code class="language-javascript">00</code> 到 <code class="language-javascript">10</code> 的十六进制值。</p>
+
+<p>第一个位面(<code class="language-javascript">xy</code> 为 <code class="language-javascript">00</code>)被称为 <em>Basic Multilingual Plane</em>，即 BMP。它包含了最常见的字符。</p>
+
+<p>其余十六个位面称为 <em>supplementary planes</em>，即 non-BMP。</p>
+
+<p>UCS-2 采用固定长度格式，即每个 codepoint 对应一个 16 位的 code unit。所以它覆盖的范围正好是 BMP。</p>
+
+<p>UTF-16 采用变长格式，每个 codepoint 对应一或两个 16 位的 code unit。</p>
+
+<h2>10，<em>这对 JavaScript 有什么影响？</em></h2>
+
+<p>问题出现在 JavaScript 对于字符的理解。在规范中，code unit 和字符都被看做是一个 16 位无符号的值。</p>
+
+<p>即当字符串中出现了一个 non-BMP 字符，它会对应两个 code unit，但实际上它只是一个字符，JavaScript 则认为它是两个。</p>
+
+<p>这影响到了一切和字符串有关的操作，包括正则表达式的匹配。</p>
+
+<h2>11，<em>怎么解决？</em></h2>
+
+<p>当要操作 non-BMP 的字符时，可使用 <a href="https://github.com/bestiejs/punycode.js">Punycode.js</a>。</p>
+
+<p>ES 6 为 String 增加了新的方法：fromCodePoint() 和 codePointAt()，它们都会操作 codepoint 而并非 code unit。</p>
+
+<p>正则表达式也会增加一个新的标识 <code class="language-javascript">u</code> 来处理该问题。</p>  
+        </div>
+      </article>
+    </div>
+    <x-progressbar root=".content"></x-progressbar>
+    <x-go-top root=".content"></x-go-top>
+  </body>
+</html>
