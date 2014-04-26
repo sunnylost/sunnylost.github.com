@@ -6,12 +6,12 @@
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
     <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
     <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <script src="/bower_components/platform/platform.js"></script>
     <link href="/bower_components/polymer/polymer.html" rel="import">
     <link href="/assets/elements/x-menu.html" rel="import">
     <link href="/assets/elements/x-table-of-content.html" rel="import">
     <link href="/assets/elements/x-progressbar.html" rel="import">
     <link href="/assets/elements/x-go-top.html" rel="import">
-    <script src="/bower_components/platform/platform.js" defer></script>
     <script src="/assets/js/prism.js" defer></script>
   </head>
   <body>
@@ -20,13 +20,13 @@
     </div>
     <script>
       !function(){
-        var s = 'page-loading'; 
+        var s = 'page-loading';
         window.addEventListener('load', function() {
           setTimeout(function() {
             document.querySelector('.' + s).classList.remove(s);
           }, 500);
         });
-      }();  
+      }();
     </script>
     <x-menu></x-menu>
     <div class="content">
@@ -794,7 +794,7 @@ camelCase: function( string ) {
 
 <p>这篇文章中的内容实在是太多了，但即便如此，我还是放弃了去讲 ready 和 access。主要原因自然是自己还没看完，但另一个原因在于，讲解 ready 需要其他内容，例如 promise，但它又是在另外的文件中定义的，而 access 方法还不到讲解的时候，虽然它在 jQuery 内部用途十分广泛。</p>
 
-<p>接下来该看什么了呢？不知道，我也很期待下一篇:)</p>  
+<p>接下来该看什么了呢？不知道，我也很期待下一篇:)</p>
         </div>
       </article>
     </div>

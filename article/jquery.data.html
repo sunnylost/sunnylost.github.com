@@ -6,12 +6,12 @@
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
     <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
     <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <script src="/bower_components/platform/platform.js"></script>
     <link href="/bower_components/polymer/polymer.html" rel="import">
     <link href="/assets/elements/x-menu.html" rel="import">
     <link href="/assets/elements/x-table-of-content.html" rel="import">
     <link href="/assets/elements/x-progressbar.html" rel="import">
     <link href="/assets/elements/x-go-top.html" rel="import">
-    <script src="/bower_components/platform/platform.js" defer></script>
     <script src="/assets/js/prism.js" defer></script>
   </head>
   <body>
@@ -20,13 +20,13 @@
     </div>
     <script>
       !function(){
-        var s = 'page-loading'; 
+        var s = 'page-loading';
         window.addEventListener('load', function() {
           setTimeout(function() {
             document.querySelector('.' + s).classList.remove(s);
           }, 500);
         });
-      }();  
+      }();
     </script>
     <x-menu></x-menu>
     <div class="content">
@@ -472,7 +472,7 @@ var tallness = plant.dataset.plantHeight;</code></pre>
 
 <p>最后要注意的是，dataAttr() 不会覆盖已经设置过的数据，就是说如果缓存对象中存在了某个 key，而 HTML 特性上也拥有同样的 key，那么 HTML 特性值不会覆盖缓存对象中的对应值。</p>
 
-<p>啰嗦完了(撒花╮(╯_╰)╭)</p>  
+<p>啰嗦完了(撒花╮(╯_╰)╭)</p>
         </div>
       </article>
     </div>

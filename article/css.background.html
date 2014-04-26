@@ -6,12 +6,12 @@
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
     <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
     <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <script src="/bower_components/platform/platform.js"></script>
     <link href="/bower_components/polymer/polymer.html" rel="import">
     <link href="/assets/elements/x-menu.html" rel="import">
     <link href="/assets/elements/x-table-of-content.html" rel="import">
     <link href="/assets/elements/x-progressbar.html" rel="import">
     <link href="/assets/elements/x-go-top.html" rel="import">
-    <script src="/bower_components/platform/platform.js" defer></script>
     <script src="/assets/js/prism.js" defer></script>
   </head>
   <body>
@@ -20,13 +20,13 @@
     </div>
     <script>
       !function(){
-        var s = 'page-loading'; 
+        var s = 'page-loading';
         window.addEventListener('load', function() {
           setTimeout(function() {
             document.querySelector('.' + s).classList.remove(s);
           }, 500);
         });
-      }();  
+      }();
     </script>
     <x-menu></x-menu>
     <div class="content">
@@ -112,7 +112,7 @@
 
 <ul><li><code class="language-javascript">contain</code>：等比缩放背景图片到最大，确保它的尺寸小于等于<em>背景定位区域</em>。</li><li><code class="language-javascript">cover</code>：等比缩放背景图片到最小，确保它的尺寸大于等于……</li><li><code class="language-javascript">auto</code>：根据图片默认比例计算，如果失败则使用原始尺寸，否则的话为 100%。</li></ul>
 
-<p>除了这三个特殊值外，还可以指定长度或百分比。如果有两个值，那么第一个值表示宽度，第二个值表示高度。</p>  
+<p>除了这三个特殊值外，还可以指定长度或百分比。如果有两个值，那么第一个值表示宽度，第二个值表示高度。</p>
         </div>
       </article>
     </div>

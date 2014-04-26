@@ -6,12 +6,12 @@
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
     <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
     <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <script src="/bower_components/platform/platform.js"></script>
     <link href="/bower_components/polymer/polymer.html" rel="import">
     <link href="/assets/elements/x-menu.html" rel="import">
     <link href="/assets/elements/x-table-of-content.html" rel="import">
     <link href="/assets/elements/x-progressbar.html" rel="import">
     <link href="/assets/elements/x-go-top.html" rel="import">
-    <script src="/bower_components/platform/platform.js" defer></script>
     <script src="/assets/js/prism.js" defer></script>
   </head>
   <body>
@@ -20,13 +20,13 @@
     </div>
     <script>
       !function(){
-        var s = 'page-loading'; 
+        var s = 'page-loading';
         window.addEventListener('load', function() {
           setTimeout(function() {
             document.querySelector('.' + s).classList.remove(s);
           }, 500);
         });
-      }();  
+      }();
     </script>
     <x-menu></x-menu>
     <div class="content">
@@ -149,7 +149,7 @@ Body onLoad</code></pre>
 
 <p><em>以下内容不保证准确性。</em></p>
 
-<ul><li><p>Firefox，按照标准实现</p><ul><li><code class="language-javascript">defer</code> 对于没有 <code class="language-javascript">src</code> 属性的脚本不生效</li><li>拥有 <code class="language-javascript">defer</code> 的脚本严格按照声明的顺序执行</li><li>动态生成的 <code class="language-javascript">defer</code> 脚本不具有延迟加载特性</li><li>动态生成的脚本在页面内所有脚本执行完毕后才执行</li><li><code class="language-javascript">DOMContentLoaded</code> 事件会在所有脚本执行完毕后才触发，<strong>包括</strong>动态创建的脚本</li></ul></li><li><p>Chrome</p><ul><li>动态生成的 <code class="language-javascript">defer</code> 脚本和普通脚本加载顺序不确定</li><li><p><code class="language-javascript">DOMContentLoaded</code> 事件会在所有脚本执行完毕后才触发，<strong>不包括</strong>动态创建的脚本</p></li></ul></li><li><p>IE 11</p><ul><li><p>HTML 页面中带有 <code class="language-javascript">defer</code> 的脚本在动态创建的脚本执行后才执行</p></li></ul></li><li><p>IE 10</p><ul><li><p>动态生成的脚本会立即加载</p></li></ul></li><li><p>IE 7，8，9</p><ul><li><code class="language-javascript">defer</code> 对于没有 <code class="language-javascript">src</code> 属性的脚本也会生效</li></ul></li></ul>  
+<ul><li><p>Firefox，按照标准实现</p><ul><li><code class="language-javascript">defer</code> 对于没有 <code class="language-javascript">src</code> 属性的脚本不生效</li><li>拥有 <code class="language-javascript">defer</code> 的脚本严格按照声明的顺序执行</li><li>动态生成的 <code class="language-javascript">defer</code> 脚本不具有延迟加载特性</li><li>动态生成的脚本在页面内所有脚本执行完毕后才执行</li><li><code class="language-javascript">DOMContentLoaded</code> 事件会在所有脚本执行完毕后才触发，<strong>包括</strong>动态创建的脚本</li></ul></li><li><p>Chrome</p><ul><li>动态生成的 <code class="language-javascript">defer</code> 脚本和普通脚本加载顺序不确定</li><li><p><code class="language-javascript">DOMContentLoaded</code> 事件会在所有脚本执行完毕后才触发，<strong>不包括</strong>动态创建的脚本</p></li></ul></li><li><p>IE 11</p><ul><li><p>HTML 页面中带有 <code class="language-javascript">defer</code> 的脚本在动态创建的脚本执行后才执行</p></li></ul></li><li><p>IE 10</p><ul><li><p>动态生成的脚本会立即加载</p></li></ul></li><li><p>IE 7，8，9</p><ul><li><code class="language-javascript">defer</code> 对于没有 <code class="language-javascript">src</code> 属性的脚本也会生效</li></ul></li></ul>
         </div>
       </article>
     </div>

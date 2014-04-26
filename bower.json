@@ -9,11 +9,10 @@
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
     "test",
     "tests"
   ],
   "dependencies": {
-    "polymer": "*"
+    "polymer": "Polymer/polymer#~0.2.3"
   }
 }

@@ -6,12 +6,12 @@
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
     <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
     <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
+    <script src="/bower_components/platform/platform.js"></script>
     <link href="/bower_components/polymer/polymer.html" rel="import">
     <link href="/assets/elements/x-menu.html" rel="import">
     <link href="/assets/elements/x-table-of-content.html" rel="import">
     <link href="/assets/elements/x-progressbar.html" rel="import">
     <link href="/assets/elements/x-go-top.html" rel="import">
-    <script src="/bower_components/platform/platform.js" defer></script>
     <script src="/assets/js/prism.js" defer></script>
   </head>
   <body>
@@ -20,13 +20,13 @@
     </div>
     <script>
       !function(){
-        var s = 'page-loading'; 
+        var s = 'page-loading';
         window.addEventListener('load', function() {
           setTimeout(function() {
             document.querySelector('.' + s).classList.remove(s);
           }, 500);
         });
-      }();  
+      }();
     </script>
     <x-menu></x-menu>
     <div class="content">
@@ -472,7 +472,7 @@ jQuery.fn = jQuery.prototype = {
 
 <p>猜猜这样做的好处，首先你不需要判断是否使用了 new，因为内部统一会进行 new 操作，然后我们返回了 init 的实例，但这个实例已经与 jQuery 对象没有了任何联系，所以我们再将 init 的 prototype 属性重新指向给 jQuery 的原型对象，于是 init 的实例就变成了 jQuery 的实例。</p>
 
-<p>大概就是这样吧:)</p>  
+<p>大概就是这样吧:)</p>
         </div>
       </article>
     </div>
