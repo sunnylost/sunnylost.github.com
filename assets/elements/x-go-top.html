@@ -12,7 +12,7 @@
 			    transition: all 0.5s;
     		}
 
-    		:host.active {
+    		:host(.active) {
     			bottom: 5em;
     		}
 
@@ -37,7 +37,7 @@
     	Polymer('x-go-top', {
     		ready: function() {
     			var el    = this.rootEl = this.root ? document.querySelector(this.root) : window,
-    				_this = this;;
+    				_this = this;
 
     			el.addEventListener('scroll', function(e) {
     				var top = el.scrollTop,
