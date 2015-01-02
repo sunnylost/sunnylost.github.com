@@ -1,4 +1,4 @@
-<polymer-element name="x-table-of-content" attributes="root scroll">
+<polymer-element name="x-table-of-content" attributes="root content">
     <template>
     	<style>
             :host {
@@ -80,7 +80,7 @@
             Polymer('x-table-of-content', {
                 ready: function() {
                     var el = this.rootEl = document.querySelector(this.root);
-                    this.scrollEl = document.querySelector(this.scroll);
+                    this.scrollEl = document.querySelector(this.content);
                     this.activeEl = null;
                     this.titles   = [];
                     this.onOrOff  = 'on';
