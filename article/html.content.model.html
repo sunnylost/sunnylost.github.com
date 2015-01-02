@@ -6,7 +6,6 @@
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Graduate|Numans">
     <link rel="stylesheet" type="text/css" href="/assets/style/prism.css">
     <link rel="stylesheet" type="text/css" href="/assets/style/site.css">
-    <script src="/bower_components/platform/platform.js"></script>
     <link href="/bower_components/polymer/polymer.html" rel="import">
     <link href="/assets/elements/x-menu.html" rel="import">
     <link href="/assets/elements/x-table-of-content.html" rel="import">
@@ -31,7 +30,7 @@
     <x-menu></x-menu>
     <div class="content">
       <h1 class="header">HTML 的 Content model</h1>
-      <x-table-of-content root=".article" scroll=".content"></x-table-of-content>
+      <x-table-of-content root=".article" content=".content"></x-table-of-content>
       <article class="article single-column">
         <div class="wrap">
           <p>刚开始接触 HTML 的时候，就听过「块级元素」，「行内元素」什么的。比如说 <code class="language-javascript">div</code> 啦，<code class="language-javascript">p</code> 啦都是「块级元素」，<code class="language-javascript">span</code> 啦是「行内元素」。可这么区分是正确的吗？</p>
