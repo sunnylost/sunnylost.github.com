@@ -1,0 +1,3 @@
+[submodule "web-weekly"]
+	path = web-weekly
+	url = https://github.com/sunnylost/web-weekly.git
