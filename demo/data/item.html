@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Item</title>
+</head>
+<body>
+	<canvas id="file" width="400" height="400"></canvas>
+	<canvas id="css" width="400" height="400"></canvas>
+	<script src="chart.min.js"></script>
+	<script>
+		!function() {
+			var js    = 'execOnceForNew.js',
+				css   = 'sale.wide.css',
+				labels = [ '1.10', '1.18', '1.25', '2.1' ],
+
+				fdata = {
+					labels: labels,
+				    datasets: [
+				        {
+				            label: js,
+				            fillColor: "rgba(220,220,220,0.2)",
+				            strokeColor: "rgba(220,220,220,1)",
+				            pointColor: "rgba(220,220,220,1)",
+				            pointStrokeColor: "#fff",
+				            pointHighlightFill: "#fff",
+				            pointHighlightStroke: "rgba(220,220,220,1)",
+				            data: [ 51.3, 45.5, 45.4, 45.2 ]
+				        },
+				        {
+				            label: css,
+				            fillColor: "rgba(151,187,205,0.2)",
+				            strokeColor: "rgba(151,187,205,1)",
+				            pointColor: "rgba(151,187,205,1)",
+				            pointStrokeColor: "#fff",
+				            pointHighlightFill: "#fff",
+				            pointHighlightStroke: "rgba(151,187,205,1)",
+				            data: [ 355, 242, 243, 242 ]
+				        }
+				    ]},
+
+			    cdata = {
+			    	labels: labels,
+			    	datasets: [{
+			            label: 'rules',
+			            fillColor: "rgba(220,220,220,0.2)",
+			            strokeColor: "rgba(220,220,220,1)",
+			            pointColor: "rgba(220,220,220,1)",
+			            pointStrokeColor: "#fff",
+			            pointHighlightFill: "#fff",
+			            pointHighlightStroke: "rgba(220,220,220,1)",
+			            data: [ 665, 609, 607, 606 ]
+			        },
+			        {
+			            label: 'selectors',
+			            fillColor: "rgba(151,187,205,0.2)",
+			            strokeColor: "rgba(151,187,205,1)",
+			            pointColor: "rgba(151,187,205,1)",
+			            pointStrokeColor: "#fff",
+			            pointHighlightFill: "#fff",
+			            pointHighlightStroke: "rgba(151,187,205,1)",
+			            data: [ 779, 710, 712, 709 ]
+			        },
+			        {
+			            label: 'declarations',
+			            fillColor: "rgba(30, 190, 142, .2)",
+			            strokeColor: "rgba(174, 183, 187, 1)",
+			            pointColor: "rgba(174, 183, 187, 1)",
+			            pointStrokeColor: "#fff",
+			            pointHighlightFill: "#fff",
+			            pointHighlightStroke: "rgba(174, 183, 187, 1)",
+			            data: [ 2063, 1892, 1886, 1892 ]
+			        }]
+			    },
+
+				fctx  = document.getElementById( 'file' ).getContext( '2d' ),
+				cctx  = document.getElementById( 'css' ).getContext( '2d' )
+
+				new Chart( fctx ).Line( fdata )
+				new Chart( cctx ).Line( cdata )
+		}()
+	</script>
+</body>
+</html>
