@@ -5,8 +5,8 @@
   "author": "sunnylost <sunnylost@gmail.com>",
   "main"           : "fat.js",
   "dependencies"   : {
-    "ejs"       : "~1.0.0",
+    "ejs"       : "~2.5.7",
     "markdown"  : "~0.5.0",
-    "promise"   : "~6.0.1"
+    "promise"   : "~8.0.1"
   }
 }
