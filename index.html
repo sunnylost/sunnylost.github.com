@@ -1,115 +1,129 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Sunnylost</title>
-  <meta name="author" content="sunnylost">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <link href='http://fonts.googleapis.com/css?family=Numans' rel='stylesheet' type='text/css'>
-  <style type="text/css">
-    * {
-        padding: 0;
-        margin: 0;
-    }
+<html lang="zh-Hans">
+    <head>
+        <meta charset="utf-8" />
+        <title>Sunnylost</title>
+        <meta name="author" content="sunnylost" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <link
+            href="http://fonts.googleapis.com/css?family=Numans"
+            rel="stylesheet"
+            type="text/css"
+        />
+        <style>
+            * {
+                padding: 0;
+                margin: 0;
+            }
 
-    html {
-        font-family: Numans, serif;
-        font-size: 16px;
-        background: url(assets/imgs/matterhorn-mountain-stars.jpg) no-repeat 0 0;
-        background-size: cover;
-        background-attachment: fixed;
-        overflow-x: hidden;
-        width: 100%;
-        height: 100%;
-        min-height: 400px;
-    }
+            html {
+                font-family: Numans, serif;
+                font-size: 16px;
+                background: url(assets/imgs/matterhorn-mountain-stars.jpg) no-repeat fixed 0 0;
+                background-size: cover;
+                overflow-x: hidden;
+                width: 100%;
+                height: 100%;
+                min-height: 400px;
+            }
 
-    body {
-        background: rgba(255, 255, 255, .1);
-        width: 100%;
-        height: 100%;
-    }
+            body {
+                background: rgba(255, 255, 255, 0.1);
+                width: 100%;
+                height: 100%;
+            }
 
-    a {
-        text-decoration: none;
-        -webkit-transition: all .5s;
-        -moz-transition: all .5s;
-        -o-transition: all .5s;
-        -ms-transition: all .5s;
-        transition: all .5s;
-    }
+            a {
+                text-decoration: none;
+                -webkit-transition: all 0.5s;
+                -moz-transition: all 0.5s;
+                -o-transition: all 0.5s;
+                -ms-transition: all 0.5s;
+                transition: all 0.5s;
+            }
 
-    a:hover {
-        color: #1899d3;
-    }
+            a:hover {
+                color: #1899d3;
+            }
 
-    .wrapper {
-        height: 100%;
-        width: 70%;
-        margin: 0 auto;
-        text-align: center;
-    }
+            .wrapper {
+                height: 100%;
+                width: 70%;
+                margin: 0 auto;
+                text-align: center;
+            }
 
-    nav {
-        padding-top: 5%;
-        font-size: 1.5rem;
-        text-align: right;
-    }
+            nav {
+                padding-top: 5%;
+                font-size: 1.5rem;
+                text-align: right;
+            }
 
-    nav a {
-        color: #fff;
-        display: inline-block;
-        padding: 10px;
-        margin: 0 20px;
-        text-transform: capitalize;
-    }
+            nav a {
+                color: #fff;
+                display: inline-block;
+                padding: 10px;
+                margin: 0 20px;
+                text-transform: capitalize;
+            }
 
-    .intro {
-        color: #fff;
-        text-align: left;
-        margin: 5rem;
-    }
+            .intro {
+                color: #fff;
+                text-align: left;
+                margin: 5rem;
+            }
 
-    .intro h2 {
-        font-size: 6rem;
-        margin-bottom: 2rem;
-        display: inline-block;
-    }
+            .intro h2 {
+                font-size: 6rem;
+                margin-bottom: 2rem;
+                display: inline-block;
+            }
 
-    .intro p {
-        font-size: 1.5rem;
-        line-height: 2;
-    }
+            .intro p {
+                font-size: 1.5rem;
+                line-height: 2;
+            }
 
-    .intro a, .intro a:visited {
-        color: #1899d3;
-    }
+            .intro a,
+            .intro a:visited {
+                color: #1899d3;
+            }
 
-    @media screen and (max-width: 700px) {
-        html {
-            font-size: 12px;
-        }
+            @media screen and (max-width: 700px) {
+                html {
+                    font-size: 12px;
+                }
 
-        .wrapper {
-            width: 90%;
-        }
-    }
-  </style>
-</head>
-<body>
-    <div class="wrapper">
-        <nav>
-            <a href="article/index.html" title="Article">article</a>
-            <a href="demo/index.html" title="Demo">demo</a>
-            <a href="web-weekly" title="Web Weekly">web weekly</a>
-            <a href="https://github.com/sunnylost/sunnylost.github.com" target="_blank" title="GitHub">gitHub</a>
-        </nav>
-        <article class="intro">
-            <h2>Welcome.</h2>
-            <p>I'm sunnylost. </p>
-            <p>I'm a front-end engineer.</p>
-            <p>I borrowed this style from <a href="http://dribbble.com/shots/1214287-Personal-Website-Header/attachments/162422">Patrick Johnson's wonderful work.</a></p>
-        </article>
-    </div>
-</body>
+                .wrapper {
+                    width: 90%;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <nav>
+                <a href="article/index.html" title="Article">article</a>
+                <a href="demo/index.html" title="Demo">demo</a>
+                <a
+                    href="https://github.com/sunnylost/sunnylost.github.com"
+                    target="_blank"
+                    title="GitHub"
+                    >gitHub</a
+                >
+            </nav>
+            <article class="intro">
+                <h2>Welcome.</h2>
+                <p>I'm sunnylost.</p>
+                <p>I'm a front-end engineer.</p>
+                <p>
+                    I borrowed this style from
+                    <a
+                        href="http://dribbble.com/shots/1214287-Personal-Website-Header/attachments/162422"
+                        >Patrick Johnson's wonderful work.</a
+                    >
+                </p>
+            </article>
+        </div>
+    </body>
 </html>

@@ -1,12 +1,11 @@
 {
-  "name"           : "fat",
-  "version"        : "0.0.1",
-  "description"    : "Generate articles",
-  "author": "sunnylost <sunnylost@gmail.com>",
-  "main"           : "fat.js",
-  "dependencies"   : {
-    "ejs"       : "~2.5.7",
-    "markdown"  : "~0.5.0",
-    "promise"   : "~8.0.1"
-  }
+    "name": "fat",
+    "version": "0.0.1",
+    "description": "Generate articles",
+    "author": "sunnylost <sunnylost@gmail.com>",
+    "main": "fat.js",
+    "dependencies": {
+        "ejs": "~2.5.7",
+        "markdown": "~0.5.0"
+    }
 }
