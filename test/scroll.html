@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"  />
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+        />
         <title>scroll</title>
         <style type="text/css">
             * {
@@ -12,7 +15,7 @@
             #wrap {
             }
 
-   /*         #result {
+            /*         #result {
                 position: fixed;
                 right: 0;
                 top: 5px;
@@ -37,7 +40,7 @@
             }
 
             #b2 {
-                -webkit-tap-highlight-color: rgba(0,0,0,0);
+                -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
             }
 
             i {
@@ -55,7 +58,7 @@
             }
 
             @media only screen and (-webkit-min-device-pixel-ratio: 2),
-only screen and (min-device-pixel-ratio: 2) {
+                only screen and (min-device-pixel-ratio: 2) {
                 #sprites {
                     width: 24px;
                     height: 30px;
@@ -101,150 +104,151 @@ only screen and (min-device-pixel-ratio: 2) {
                 width: 100px;
                 height: 100px;
                 background-color: #7f7f7f;
-                -webkit-transition: opacity .5s;
+                -webkit-transition: opacity 0.5s;
             }
         </style>
     </head>
     <body>
-        <div id="content">
-        </div>
+        <div id="content"></div>
 
         <div id="btn"></div>
 
         <script>
             //alert(navigator.userAgent);
             //alert('orientation' in window);
-            var $ = function(s) {
-                return document.getElementById(s);
-            };
+            var $ = function (s) {
+                return document.getElementById(s)
+            }
 
-            var c = $('content'),
+            var ctx = $('content'),
                 b = $('btn'),
                 isAtEdge = false,
-                timeOutId;
+                timeOutId
 
             function hide(el) {
-                el.style.display = 'none';
+                el.style.display = 'none'
             }
 
             function show(el) {
-                el.style.display = 'block';
+                el.style.display = 'block'
             }
 
             function start() {
-                var y = window.scrollY;
-                c.innerHTML = '<p>touch start';
-                if(y != 0) {
-                    hide(b);
-                    b.style.opacity = 0;
-                    isAtEdge = false;
+                var y = window.scrollY
+                ctx.innerHTML = '<p>touch start'
+                if (y != 0) {
+                    hide(b)
+                    b.style.opacity = 0
+                    isAtEdge = false
                 } else {
-                    isAtEdge = true;
+                    isAtEdge = true
                 }
                 //showButton();
             }
 
             function move(e) {
                 console.log(e)
-                if(isAtEdge && window.scrollY == 0) {
-                    hide(b);
-                    b.style.opacity = 0;
+                if (isAtEdge && window.scrollY == 0) {
+                    hide(b)
+                    b.style.opacity = 0
                     clearTimeout(timeOutId)
-                    return;
+                    return
                 }
-                c.innerHTML += '<p>touch move';
-                b.style.top = window.scrollY + window.innerHeight / 2 + 'px';
-                showButton();
+                ctx.innerHTML += '<p>touch move'
+                b.style.top = window.scrollY + window.innerHeight / 2 + 'px'
+                showButton()
             }
 
             function end(e) {
-                c.innerHTML += '<p>touch end';
-                if(isAtEdge && window.scrollY == 0) {
-                    hide(b);
-                    b.style.opacity = 0;
+                ctx.innerHTML += '<p>touch end'
+                if (isAtEdge && window.scrollY == 0) {
+                    hide(b)
+                    b.style.opacity = 0
                     clearTimeout(timeOutId)
-                    return;
+                    return
                 }
-                b.style.top = window.scrollY + window.innerHeight / 2 + 'px';
-                showButton();
+                b.style.top = window.scrollY + window.innerHeight / 2 + 'px'
+                showButton()
             }
 
             function scroll() {
-                if(isAtEdge && window.scrollY == 0) {
-                    hide(b);
-                    b.style.opacity = 0;
+                if (isAtEdge && window.scrollY == 0) {
+                    hide(b)
+                    b.style.opacity = 0
                     clearTimeout(timeOutId)
-                    return;
+                    return
                 }
-                c.innerHTML += '<p>scroll';
-                c.style.top = window.scrollY + 'px';
-                b.style.top = window.scrollY + window.innerHeight / 2 + 'px';
-                showButton();
+                ctx.innerHTML += '<p>scroll'
+                ctx.style.top = window.scrollY + 'px'
+                b.style.top = window.scrollY + window.innerHeight / 2 + 'px'
+                showButton()
             }
 
             function handler() {
-                if(isAtEdge && window.scrollY == 0) {
-                    hide(b);
-                    b.style.opacity = 0;
+                if (isAtEdge && window.scrollY == 0) {
+                    hide(b)
+                    b.style.opacity = 0
                     clearTimeout(timeOutId)
-                    return;
+                    return
                 }
-                c.innerHTML += '<p>scroll';
-                c.style.top = window.scrollY + 'px';
-                b.style.top = window.scrollY + window.innerHeight / 2 + 'px';
-                showButton();
+                ctx.innerHTML += '<p>scroll'
+                ctx.style.top = window.scrollY + 'px'
+                b.style.top = window.scrollY + window.innerHeight / 2 + 'px'
+                showButton()
             }
 
             function showButton() {
-                clearTimeout(timeOutId);
-                timeOutId = setTimeout(function() {
-                    if(window.scrollY == 0) return;
-                    show(b);
-                    setTimeout(function() {
-                        b.style.opacity = 1;
+                clearTimeout(timeOutId)
+                timeOutId = setTimeout(function () {
+                    if (window.scrollY == 0) return
+                    show(b)
+                    setTimeout(function () {
+                        b.style.opacity = 1
                     }, 0)
                 }, 50)
             }
 
             function orientationFn(e) {
-                checkWindowSize(window.innerWidth, window.innerHeight);
+                checkWindowSize(window.innerWidth, window.innerHeight)
             }
 
             function checkWindowSize(w, h) {
-                if(!checkWindowSize.begin) {
-                    checkWindowSize.begin = new Date;
+                if (!checkWindowSize.begin) {
+                    checkWindowSize.begin = new Date()
                 }
 
                 var nw = window.innerWidth,
-                    nh = window.innerHeight;
-                if(nw === w && nh === h) {
-                    checkWindowSize.tryTime += 1;
-                    setTimeout(function() {
-                        checkWindowSize(w, h);
+                    nh = window.innerHeight
+                if (nw === w && nh === h) {
+                    checkWindowSize.tryTime += 1
+                    setTimeout(function () {
+                        checkWindowSize(w, h)
                     }, 0)
                 } else {
-                    alert('window needs "' + (new Date - checkWindowSize.begin) + '"ms to resize.');
-                    checkWindowSize.begin = null;
+                    alert(
+                        'window needs "' + (new Date() - checkWindowSize.begin) + '"ms to resize.'
+                    )
+                    checkWindowSize.begin = null
                 }
             }
 
-            window.addEventListener('touchstart', start);
-            window.addEventListener('touchmove', handler);
-            window.addEventListener('touchend', handler);
-            window.addEventListener('scroll', handler);
-            window.addEventListener('orientationchange', orientationFn);
+            window.addEventListener('touchstart', start)
+            window.addEventListener('touchmove', handler)
+            window.addEventListener('touchend', handler)
+            window.addEventListener('scroll', handler)
+            window.addEventListener('orientationchange', orientationFn)
 
-            c.addEventListener('touchstart', function(e) {
-                e.stopPropagation();
-            });
+            ctx.addEventListener('touchstart', function (e) {
+                e.stopPropagation()
+            })
 
-            c.addEventListener('touchmove', function(e) {
-                e.stopPropagation();
-            });
+            ctx.addEventListener('touchmove', function (e) {
+                e.stopPropagation()
+            })
 
-            c.addEventListener('touchend', function(e) {
-                e.stopPropagation();
-            });
+            ctx.addEventListener('touchend', function (e) {
+                e.stopPropagation()
+            })
         </script>
     </body>
 </html>

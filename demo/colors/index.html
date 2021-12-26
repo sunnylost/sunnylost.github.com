@@ -1,235 +1,238 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Canvas</title>
-    <style type="text/css">
-        .wrap {
-            position: relative;
-            width: 500px;
-            margin: auto;
-        }
-
-        #imgwrap {
-            height: 200px;
-            margin: 50px auto;
-            text-align: center;
-        }
-
-        #imgwrap img {
-            width: 200px;
-        }
-
-        #choose {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100px;
-        }
-
-        #show {
-            width: 500px;
-            margin: auto;
-            overflow: hidden;
-        }
-
-        #test {
-            display: none;
-        }
-
-        #show div {
-            float: left;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin: 0 30px;
-
-            font-size: 20px;
-            line-height: 100px;
-            text-align: center;
-        }
-
-        .text {
-            font-size: 18px;
-        }
-    </style>
-</head>
-<body>
-    <div class="wrap">
-        <canvas id="test"></canvas>
-        <div id="imgwrap">
-        </div>
-        <select id="choose">
-            <option>1.jpg</option>
-            <option>2.jpg</option>
-            <option>3.jpg</option>
-            <option>4.jpg</option>
-            <option>5.jpg</option>
-            <option>6.png</option>
-            <option>7.jpg</option>
-            <option>8.jpg</option>
-            <option>9.jpg</option>
-            <option>10.jpg</option>
-            <option>11.jpg</option>
-            <option>12.png</option>
-            <option>13.jpg</option>
-            <option>14.jpg</option>
-            <option>15.jpg</option>
-            <option>16.jpg</option>
-            <option>17.jpg</option>
-            <option>18.jpg</option>
-            <option>19.jpg</option>
-            <option>20.jpg</option>
-        </select>
-        <div id="show">
-            <div id="s0"></div>
-            <div id="s1"></div>
-            <div id="s2"></div>
-        </div>
-        <p class="text">
-            Most pictures from <a href="http://arcanis.github.io/colibri.js/demo/">here</a>.
-        </p>
-    </div>
-
-
-<script type="text/javascript">
-    var $ = function(id) {
-        return document.getElementById(id);
-    };
-
-    var buckets = function() {
-        var bins = [];
-
-        var colors = 'F0F8FF,FAEBD7,00FFFF,7FFFD4,F0FFFF,F5F5DC,FFE4C4,000000,FFEBCD,0000FF,8A2BE2,A52A2A,DEB887,5F9EA0,7FFF00,D2691E,FF7F50,6495ED,FFF8DC,DC143C,00FFFF,00008B,008B8B,B8860B,A9A9A9,006400,BDB76B,8B008B,556B2F,FF8C00,9932CC,8B0000,E9967A,8FBC8F,483D8B,2F4F4F,00CED1,9400D3,FF1493,00BFFF,696969,1E90FF,B22222,FFFAF0,228B22,FF00FF,DCDCDC,F8F8FF,FFD700,DAA520,808080,008000,ADFF2F,F0FFF0,FF69B4,CD5C5C,4B0082,FFFFF0,F0E68C,E6E6FA,FFF0F5,7CFC00,FFFACD,ADD8E6,F08080,E0FFFF,FAFAD2,D3D3D3,90EE90,FFB6C1,FFA07A,20B2AA,87CEFA,778899,B0C4DE,FFFFE0,00FF00,32CD32,FAF0E6,FF00FF,800000,66CDAA,0000CD,BA55D3,9370DB,3CB371,7B68EE,00FA9A,48D1CC,C71585,191970,F5FFFA,FFE4E1,FFE4B5,FFDEAD,000080,FDF5E6,808000,6B8E23,FFA500,FF4500,DA70D6,EEE8AA,98FB98,AFEEEE,DB7093,FFEFD5,FFDAB9,CD853F,FFC0CB,DDA0DD,B0E0E6,800080,FF0000,BC8F8F,4169E1,8B4513,FA8072,F4A460,2E8B57,FFF5EE,A0522D,C0C0C0,87CEEB,6A5ACD,708090,FFFAFA,00FF7F,4682B4,D2B48C,008080,D8BFD8,FF6347,40E0D0,EE82EE,F5DEB3,FFFFFF,F5F5F5,FFFF00,9ACD32'.split(',');
-
-        var len = colors.length;
-
-        while(len--) {
-            c = colors[len];
-
-            bins.push({
-                r : parseInt(c.substring(0, 2), 16),
-                g : parseInt(c.substring(2, 4), 16),
-                b : parseInt(c.substring(4, 6), 16),
-                colors : []
-            });
-        }
-        return bins;
-    }();
-
-    window.onload = choose.onchange = function() {
-        chooseImg(choose.selectedOptions[0].value);
-    };
-
-    /**
-     * 选择图片
-     */
-    function chooseImg(src) {
-        var img = document.createElement('img');
-        img.id = 'source';
-        img.onload = analyse;
-        img.src = src;
-        imgwrap.innerHTML = '';
-        imgwrap.appendChild(img);
-
-        reset();
-    }
-
-    function analyse() {
-        var c = $('test'),
-            ctx = c.getContext('2d'),
-            sum;
-
-        c.width  = this.width;
-        c.height = this.height;
-
-        ctx.drawImage(this, 0, 0);
-
-        var data = ctx.getImageData(0, 0, c.width, c.height).data;
-
-        /**
-         * 只取三种颜色
-         * TODO
-         *  第一个颜色始终是 000000
-         */
-        data = splitColor(data).sort(function(a, b) {
-            return b.colors.length - a.colors.length;
-        }).slice(1, 4);
-
-        /**
-         * br, bg, bb 是背景色
-         * r, g, b 是前景色，这里只是为了给文字上色，没有特别用途
-         */
-        var bcolor, color, br, bg, bb, r, g, b;
-        for(var i = 0, len = data.length; i < len; i++) {
-            var colors = data[i].colors;
-
-            sum = { r : 0, g : 0, b : 0 };
-
-            for(var j = 0, clen = colors.length; j < clen; j++) {
-                sum.r += colors[j][0];
-                sum.g += colors[j][1];
-                sum.b += colors[j][2];
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Canvas</title>
+        <style type="text/css">
+            .wrap {
+                position: relative;
+                width: 500px;
+                margin: auto;
             }
 
-            br = (sum.r/clen >> 0);
-            bg = (sum.g/clen >> 0);
-            bb = (sum.b/clen >> 0);
+            #imgwrap {
+                height: 200px;
+                margin: 50px auto;
+                text-align: center;
+            }
 
-            r = 0xff - br;
-            g = 0xff - bg;
-            b = 0xff - bb;
+            #imgwrap img {
+                width: 200px;
+            }
 
-            bcolor = '#' + fix([br, bg, bb]).join('');
-            color  = '#' + fix([r, g, b]).join('');
+            #choose {
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 100px;
+            }
 
-            var el = document.getElementById('s' + i);
-            el.style.backgroundColor = bcolor;
-            el.style.color = color;
-            el.innerHTML = bcolor;
-        }
+            #show {
+                width: 500px;
+                margin: auto;
+                overflow: hidden;
+            }
 
-    }
+            #test {
+                display: none;
+            }
 
-    function reset() {
-        buckets.forEach(function(v, i) {
-           this[i].colors = [];
-        }, buckets)
-    }
+            #show div {
+                float: left;
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                margin: 0 30px;
 
-    function fix(color) {
-        color.forEach(function(v, i) {
-            v = v.toString(16);
-            return this[i] = v.length < 2 ? ('0' + v) : v;
-        }, color)
-        return color;
-    }
+                font-size: 20px;
+                line-height: 100px;
+                text-align: center;
+            }
 
-    function splitColor(colors) {
-        var len = colors.length,
-            blen = buckets.length,
-            b,
-            c,
-            d,
-            minDistance = 50;
+            .text {
+                font-size: 18px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrap">
+            <canvas id="test"></canvas>
+            <div id="imgwrap"></div>
+            <select id="choose">
+                <option>1.jpg</option>
+                <option>2.jpg</option>
+                <option>3.jpg</option>
+                <option>4.jpg</option>
+                <option>5.jpg</option>
+                <option>6.png</option>
+                <option>7.jpg</option>
+                <option>8.jpg</option>
+                <option>9.jpg</option>
+                <option>10.jpg</option>
+                <option>11.jpg</option>
+                <option>12.png</option>
+                <option>13.jpg</option>
+                <option>14.jpg</option>
+                <option>15.jpg</option>
+                <option>16.jpg</option>
+                <option>17.jpg</option>
+                <option>18.jpg</option>
+                <option>19.jpg</option>
+                <option>20.jpg</option>
+            </select>
+            <div id="show">
+                <div id="s0"></div>
+                <div id="s1"></div>
+                <div id="s2"></div>
+            </div>
+            <p class="text">
+                Most pictures from <a href="http://arcanis.github.io/colibri.js/demo/">here</a>.
+            </p>
+        </div>
 
-        for(var i = 0; i < len; i += 4) {
+        <script type="text/javascript">
+            var $ = function (id) {
+                return document.getElementById(id)
+            }
 
-            c = [colors[i], colors[i + 1], colors[i + 2]];
+            var buckets = (function () {
+                var bins = []
 
-            for (var j = 0; j < blen; j++) {
-                b = buckets[j];
-                d = Math.sqrt(Math.pow(c[0] - b.r, 2) + Math.pow(c[1] - b.g, 2) + Math.pow(c[2] - b.b, 2));
-                if (d < minDistance) {
-                    buckets[j].colors.push(c);
-                    break;
+                var colors =
+                    'F0F8FF,FAEBD7,00FFFF,7FFFD4,F0FFFF,F5F5DC,FFE4C4,000000,FFEBCD,0000FF,8A2BE2,A52A2A,DEB887,5F9EA0,7FFF00,D2691E,FF7F50,6495ED,FFF8DC,DC143C,00FFFF,00008B,008B8B,B8860B,A9A9A9,006400,BDB76B,8B008B,556B2F,FF8C00,9932CC,8B0000,E9967A,8FBC8F,483D8B,2F4F4F,00CED1,9400D3,FF1493,00BFFF,696969,1E90FF,B22222,FFFAF0,228B22,FF00FF,DCDCDC,F8F8FF,FFD700,DAA520,808080,008000,ADFF2F,F0FFF0,FF69B4,CD5C5C,4B0082,FFFFF0,F0E68C,E6E6FA,FFF0F5,7CFC00,FFFACD,ADD8E6,F08080,E0FFFF,FAFAD2,D3D3D3,90EE90,FFB6C1,FFA07A,20B2AA,87CEFA,778899,B0C4DE,FFFFE0,00FF00,32CD32,FAF0E6,FF00FF,800000,66CDAA,0000CD,BA55D3,9370DB,3CB371,7B68EE,00FA9A,48D1CC,C71585,191970,F5FFFA,FFE4E1,FFE4B5,FFDEAD,000080,FDF5E6,808000,6B8E23,FFA500,FF4500,DA70D6,EEE8AA,98FB98,AFEEEE,DB7093,FFEFD5,FFDAB9,CD853F,FFC0CB,DDA0DD,B0E0E6,800080,FF0000,BC8F8F,4169E1,8B4513,FA8072,F4A460,2E8B57,FFF5EE,A0522D,C0C0C0,87CEEB,6A5ACD,708090,FFFAFA,00FF7F,4682B4,D2B48C,008080,D8BFD8,FF6347,40E0D0,EE82EE,F5DEB3,FFFFFF,F5F5F5,FFFF00,9ACD32'.split(
+                        ','
+                    )
+
+                var len = colors.length
+
+                while (len--) {
+                    ctx = colors[len]
+
+                    bins.push({
+                        r: parseInt(c.substring(0, 2), 16),
+                        g: parseInt(c.substring(2, 4), 16),
+                        b: parseInt(c.substring(4, 6), 16),
+                        colors: []
+                    })
+                }
+                return bins
+            })()
+
+            window.onload = choose.onchange = function () {
+                chooseImg(choose.selectedOptions[0].value)
+            }
+
+            /**
+             * 选择图片
+             */
+            function chooseImg(src) {
+                var img = document.createElement('img')
+                img.id = 'source'
+                img.onload = analyse
+                img.src = src
+                imgwrap.innerHTML = ''
+                imgwrap.appendChild(img)
+
+                reset()
+            }
+
+            function analyse() {
+                var c = $('test'),
+                    ctx = c.getContext('2d'),
+                    sum
+
+                c.width = this.width
+                c.height = this.height
+
+                ctx.drawImage(this, 0, 0)
+
+                var data = ctx.getImageData(0, 0, c.width, c.height).data
+
+                /**
+                 * 只取三种颜色
+                 * TODO
+                 *  第一个颜色始终是 000000
+                 */
+                data = splitColor(data)
+                    .sort(function (a, b) {
+                        return b.colors.length - a.colors.length
+                    })
+                    .slice(1, 4)
+
+                /**
+                 * br, bg, bb 是背景色
+                 * r, g, b 是前景色，这里只是为了给文字上色，没有特别用途
+                 */
+                var bcolor, color, br, bg, bb, r, g, b
+                for (var i = 0, len = data.length; i < len; i++) {
+                    var colors = data[i].colors
+
+                    sum = { r: 0, g: 0, b: 0 }
+
+                    for (var j = 0, clen = colors.length; j < clen; j++) {
+                        sum.r += colors[j][0]
+                        sum.g += colors[j][1]
+                        sum.b += colors[j][2]
+                    }
+
+                    br = (sum.r / clen) >> 0
+                    bg = (sum.g / clen) >> 0
+                    bb = (sum.b / clen) >> 0
+
+                    r = 0xff - br
+                    g = 0xff - bg
+                    b = 0xff - bb
+
+                    bcolor = '#' + fix([br, bg, bb]).join('')
+                    color = '#' + fix([r, g, b]).join('')
+
+                    var el = document.getElementById('s' + i)
+                    el.style.backgroundColor = bcolor
+                    el.style.color = color
+                    el.innerHTML = bcolor
                 }
             }
-        }
-        return buckets;
-    }
 
-</script>
+            function reset() {
+                buckets.forEach(function (v, i) {
+                    this[i].colors = []
+                }, buckets)
+            }
 
-</body>
+            function fix(color) {
+                color.forEach(function (v, i) {
+                    v = v.toString(16)
+                    return (this[i] = v.length < 2 ? '0' + v : v)
+                }, color)
+                return color
+            }
+
+            function splitColor(colors) {
+                var len = colors.length,
+                    blen = buckets.length,
+                    b,
+                    c,
+                    d,
+                    minDistance = 50
+
+                for (var i = 0; i < len; i += 4) {
+                    c = [colors[i], colors[i + 1], colors[i + 2]]
+
+                    for (var j = 0; j < blen; j++) {
+                        b = buckets[j]
+                        d = Math.sqrt(
+                            Math.pow(c[0] - b.r, 2) +
+                                Math.pow(c[1] - b.g, 2) +
+                                Math.pow(c[2] - b.b, 2)
+                        )
+                        if (d < minDistance) {
+                            buckets[j].colors.push(c)
+                            break
+                        }
+                    }
+                }
+                return buckets
+            }
+        </script>
+    </body>
 </html>
